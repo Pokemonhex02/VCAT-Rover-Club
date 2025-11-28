@@ -7,26 +7,28 @@
     :root {
       --bg: #050816;
       --bg-alt: #080d1f;
-      --panel: #111827;
-      --panel-strong: #151c30;
+      --panel: #0c1222;
+      --panel-strong: #111a2f;
       --accent: #4aa3ff;
       --accent-soft: #7cc4ff;
       --accent-2: #ffaa66;
       --text: #f9fbff;
-      --muted: #a0a9c5;
-      --border: #232a4a;
-      --border-soft: #1c2440;
+      --muted: #a6b1cb;
+      --border: #1f2944;
+      --border-soft: #1a233b;
       --success: #4ade80;
       --warning: #facc15;
       --danger: #fb7185;
       --pilot1: #38bdf8;
       --pilot2: #fbbf24;
+      --shadow: 0 14px 36px rgba(0, 0, 0, 0.38);
+      --radius: 12px;
     }
 
     * {
       box-sizing: border-box;
-      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
-        "Segoe UI", sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
     }
 
     body {
@@ -61,7 +63,7 @@
 
     main.layout {
       display: grid;
-      grid-template-columns: 390px minmax(0, 1fr);
+      grid-template-columns: 400px minmax(0, 1fr);
       gap: 16px;
       padding: 16px 18px 18px;
       min-height: calc(100vh - 74px);
@@ -70,9 +72,9 @@
 
     .panel {
       background: var(--panel);
-      border-radius: 12px;
+      border-radius: var(--radius);
       border: 1px solid var(--border);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+      box-shadow: var(--shadow);
       padding: 16px;
     }
 
@@ -247,74 +249,67 @@
 
     .group-body {
       margin-top: 0;
-      padding: 8px 12px 0;
+      padding: 8px 12px 8px;
       display: grid;
-      gap: 8px;
+      gap: 10px;
     }
 
     .field {
       display: grid;
-      grid-template-columns: 1fr 140px;
-      gap: 8px;
+      grid-template-columns: 1.1fr 150px;
+      gap: 10px;
       align-items: center;
-      font-size: 11px;
+      font-size: 12px;
       color: var(--muted);
     }
 
     .field label {
       white-space: nowrap;
-      font-weight: 600;
-      color: #d6def5;
+      font-weight: 650;
+      color: #d8e1fb;
     }
 
     .field input[type="number"] {
       width: 100%;
-      padding: 7px 9px;
-      border-radius: 8px;
+      padding: 8px 10px;
+      border-radius: 10px;
       border: 1px solid var(--border);
       background: #020617;
       color: var(--text);
       font-size: 12px;
     }
 
-    .inline-input {
+    .solver-row {
       display: flex;
-      gap: 6px;
+      gap: 8px;
       align-items: center;
     }
 
-    .inline-input input {
-      flex: 1;
-    }
-
-    .field-inline-controls {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 8px;
-    }
-
-    .field-inline-controls input[type="number"] {
+    .solver-row input[type="number"] {
       width: 100%;
+      min-width: 0;
     }
 
     .hint {
-      font-size: 10px;
+      font-size: 11px;
       color: var(--muted);
       margin-top: 2px;
+      line-height: 1.4;
     }
 
     .preset-message {
-      font-size: 10px;
+      font-size: 11px;
       color: var(--warning);
-      margin-top: 4px;
+      margin-top: 2px;
       min-height: 12px;
     }
 
     .solver-status {
-      font-size: 10px;
+      font-size: 11px;
       color: var(--danger);
-      margin-top: -2px;
-      min-height: 12px;
+      margin-top: 4px;
+      padding-left: 4px;
+      min-height: 14px;
     }
 
     .input-error {
@@ -330,11 +325,11 @@
     }
 
     button.btn {
-      border-radius: 999px;
+      border-radius: 10px;
       border: 1px solid var(--border);
-      padding: 8px 13px;
-      font-size: 11px;
-      background: linear-gradient(135deg, #1f2937, #020617);
+      padding: 9px 14px;
+      font-size: 12px;
+      background: linear-gradient(135deg, #1f2937, #0a1224);
       color: var(--text);
       cursor: pointer;
       display: inline-flex;
@@ -342,12 +337,14 @@
       gap: 8px;
       transition: all 0.16s ease;
       letter-spacing: 0.15px;
+      min-height: 36px;
     }
 
     button.btn.small {
-      padding: 7px 11px;
-      font-size: 10px;
+      padding: 8px 12px;
+      font-size: 11px;
       white-space: nowrap;
+      min-height: 34px;
     }
 
     button.btn:hover {
@@ -365,13 +362,15 @@
 
     .visual-panel {
       padding: 12px;
+      max-height: calc(100vh - 110px);
+      overflow-y: auto;
     }
 
     .canvas-grid {
       display: grid;
-      grid-template-rows: minmax(280px, 380px) minmax(240px, 300px) auto;
+      grid-template-rows: minmax(300px, 380px) minmax(240px, 300px) auto;
       gap: 12px;
-      height: 100%;
+      min-height: 0;
     }
 
     .canvas-wrapper {
@@ -422,11 +421,12 @@
       padding: 12px;
       display: grid;
       grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-      gap: 12px;
+      gap: 14px;
+      align-items: start;
     }
 
     .output-panel h3 {
-      margin: 0 0 8px;
+      margin: 0 0 10px;
       font-size: 13px;
       color: var(--muted);
       letter-spacing: 0.3px;
@@ -440,11 +440,20 @@
     .summary-output .summary-heading {
       color: #fff;
       font-weight: 700;
+      letter-spacing: 0.4px;
     }
 
     .summary-output pre {
-      margin: 0 0 10px;
+      margin: 0 0 8px;
       white-space: pre-wrap;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border-soft);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .summary-output pre + pre {
+      margin-top: 6px;
     }
 
     .output-text {
@@ -453,12 +462,12 @@
       border: 1px solid var(--border-soft);
       padding: 10px;
       font-family: "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
-      font-size: 11px;
+      font-size: 12px;
       color: var(--text);
       white-space: pre;
       overflow: auto;
-      max-height: 280px;
-      line-height: 1.45;
+      max-height: 300px;
+      line-height: 1.55;
     }
 
     .output-text::-webkit-scrollbar {
@@ -607,12 +616,12 @@
 
     .angle-row {
       display: grid;
-      grid-template-columns: 120px 1fr 86px;
+      grid-template-columns: 140px 1fr 100px;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       font-family: "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
-      font-size: 11px;
-      padding: 6px 0;
+      font-size: 12px;
+      padding: 8px 0;
       border-bottom: 1px dashed rgba(255, 255, 255, 0.06);
     }
 
@@ -628,6 +637,10 @@
     .angle-status {
       text-align: right;
       font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.04);
     }
 
     .angle-bar {
@@ -825,20 +838,22 @@
             </div>
             <div class="field">
               <label for="targetKnee">Target knee angle (deg)</label>
-              <div class="field-inline-controls">
-                <input
-                  id="targetKnee"
-                  type="number"
-                  value="110"
-                  min="60"
-                  max="150"
-                  step="1"
-                />
-                <button type="button" class="btn small" id="solveKnee">
-                  Solve for crank angle
-                </button>
+              <div>
+                <div class="solver-row">
+                  <input
+                    id="targetKnee"
+                    type="number"
+                    value="110"
+                    min="60"
+                    max="150"
+                    step="1"
+                  />
+                  <button type="button" class="btn small" id="solveKnee">
+                    Solve for crank angle
+                  </button>
+                </div>
+                <div class="solver-status" id="kneeSolveStatus"></div>
               </div>
-              <div class="solver-status" id="kneeSolveStatus"></div>
             </div>
           </div>
         </details>
@@ -856,20 +871,22 @@
             </div>
             <div class="field">
               <label for="targetElbow">Target elbow angle (deg)</label>
-              <div class="field-inline-controls">
-                <input
-                  id="targetElbow"
-                  type="number"
-                  value="110"
-                  min="70"
-                  max="150"
-                  step="1"
-                />
-                <button type="button" class="btn small" id="solveElbow">
-                  Solve for elbow angle
-                </button>
+              <div>
+                <div class="solver-row">
+                  <input
+                    id="targetElbow"
+                    type="number"
+                    value="110"
+                    min="70"
+                    max="150"
+                    step="1"
+                  />
+                  <button type="button" class="btn small" id="solveElbow">
+                    Solve for elbow angle
+                  </button>
+                </div>
+                <div class="solver-status" id="elbowSolveStatus"></div>
               </div>
-              <div class="solver-status" id="elbowSolveStatus"></div>
             </div>
           </div>
         </details>
@@ -1571,29 +1588,31 @@
 
       function joint(point, key, name) {
         const offsets = {
-          hip: { x: 16, y: -14 },
-          knee: { x: 16, y: 14 },
-          ankle: { x: 16, y: 12 },
-          shoulder: { x: 14, y: -18 },
-          elbow: { x: 14, y: 16 },
-          hand: { x: 14, y: -14 },
+          hip: { x: 18, y: -16 },
+          knee: { x: 18, y: 16 },
+          ankle: { x: 16, y: 14 },
+          shoulder: { x: 16, y: -18 },
+          elbow: { x: 16, y: 16 },
+          hand: { x: 14, y: -16 },
         };
+
+        const sizes = { hip: 6, shoulder: 6, knee: 5.5, ankle: 5, elbow: 5, hand: 5 };
 
         const s = toScreen(point);
         const isHighlight = highlight === key;
         ctx.beginPath();
-        ctx.arc(s.x, s.y, isHighlight ? 6 : 4.5, 0, Math.PI * 2);
-        ctx.fillStyle = isHighlight ? "#fff" : "#e5e7eb";
+        ctx.arc(s.x, s.y, isHighlight ? sizes[key] + 1 : sizes[key], 0, Math.PI * 2);
+        ctx.fillStyle = "#ffffff";
         ctx.strokeStyle = isHighlight ? color : "#0b1220";
-        ctx.lineWidth = 1.5;
+        ctx.lineWidth = 1.4;
         ctx.fill();
         ctx.stroke();
 
         const text = name;
-        ctx.font = '11px "SFMono-Regular", monospace';
+        ctx.font = '11px "Segoe UI", system-ui, sans-serif';
         const metrics = ctx.measureText(text);
         const textHeight = 12;
-        const padding = 5;
+        const padding = 6;
         const rectW = metrics.width + padding * 2;
         const rectH = textHeight + padding;
         const off = offsets[key] || { x: 12, y: -10 };
@@ -1604,21 +1623,19 @@
         ctx.moveTo(s.x, s.y);
         ctx.lineTo(rectX, rectY + rectH / 2);
         ctx.strokeStyle = isHighlight
-          ? `${color}99`
-          : "rgba(255, 255, 255, 0.25)";
+          ? `${color}aa`
+          : "rgba(255, 255, 255, 0.24)";
         ctx.lineWidth = 1;
         ctx.stroke();
 
-        roundedRect(rectX, rectY, rectW, rectH, 5);
-        ctx.fillStyle = isHighlight ? "rgba(8, 12, 24, 0.95)" : "rgba(12, 18, 33, 0.9)";
-        ctx.strokeStyle = isHighlight
-          ? `${color}cc`
-          : "rgba(255, 255, 255, 0.18)";
+        roundedRect(rectX, rectY, rectW, rectH, 6);
+        ctx.fillStyle = "rgba(7, 11, 24, 0.88)";
+        ctx.strokeStyle = isHighlight ? `${color}cc` : "rgba(255, 255, 255, 0.14)";
         ctx.lineWidth = 1;
         ctx.fill();
         ctx.stroke();
 
-        ctx.fillStyle = "#e5e7eb";
+        ctx.fillStyle = "#f3f4f6";
         ctx.textBaseline = "middle";
         ctx.fillText(text, rectX + padding, rectY + rectH / 2 + 0.5);
       }
@@ -1626,7 +1643,7 @@
       function angleBadge(point, text, offset, themeColor) {
         const s = toScreen(point);
         const textPos = { x: s.x + offset.x, y: s.y + offset.y };
-        ctx.font = '11px "SFMono-Regular", monospace';
+        ctx.font = '10px "Segoe UI", system-ui, sans-serif';
         const padding = 5;
         const metrics = ctx.measureText(text);
         const rectW = metrics.width + padding * 2;
@@ -1641,9 +1658,9 @@
         ctx.lineWidth = 1;
         ctx.stroke();
 
-        roundedRect(rectX, rectY, rectW, rectH, 4);
-        ctx.fillStyle = "rgba(8, 12, 24, 0.9)";
-        ctx.strokeStyle = `${themeColor}77`;
+        roundedRect(rectX, rectY, rectW, rectH, 5);
+        ctx.fillStyle = "rgba(6, 9, 20, 0.92)";
+        ctx.strokeStyle = `${themeColor}88`;
         ctx.lineWidth = 1;
         ctx.fill();
         ctx.stroke();
@@ -1689,8 +1706,9 @@
       joint(elbow, "elbow", "Elbow");
       joint(hand, "hand", "Hand");
 
-      angleBadge(knee, `${angles.knee.toFixed(0)}°`, { x: -20, y: 22 }, color);
-      angleBadge(elbow, `${angles.elbow.toFixed(0)}°`, { x: 18, y: -18 }, COLORS.arms);
+      angleBadge(hip, `Hip ${angles.hip.toFixed(0)}°`, { x: -24, y: -18 }, color);
+      angleBadge(knee, `Knee ${angles.knee.toFixed(0)}°`, { x: -26, y: 24 }, color);
+      angleBadge(elbow, `Elbow ${angles.elbow.toFixed(0)}°`, { x: 18, y: -18 }, COLORS.arms);
 
       // Pilot label
       ctx.fillStyle = color;
@@ -1742,9 +1760,9 @@
       // Axes
       const originS = toScreen({ x: 0, y: 0 });
       sideCtx.save();
-      sideCtx.strokeStyle = COLORS.grid;
-      sideCtx.lineWidth = 1;
-      sideCtx.setLineDash([4, 6]);
+      sideCtx.strokeStyle = "rgba(255,255,255,0.12)";
+      sideCtx.lineWidth = 0.9;
+      sideCtx.setLineDash([4, 8]);
       sideCtx.beginPath();
       sideCtx.moveTo(0, originS.y);
       sideCtx.lineTo(sideCanvas.width, originS.y);
@@ -1756,7 +1774,7 @@
       // Pedal plane reference
       const pedalLineY = toScreen({ x: 0, y: referenceJoints.ankle.y }).y;
       sideCtx.save();
-      sideCtx.setLineDash([3, 6]);
+      sideCtx.setLineDash([3, 7]);
       sideCtx.strokeStyle = "rgba(255,255,255,0.08)";
       sideCtx.beginPath();
       sideCtx.moveTo(0, pedalLineY);
