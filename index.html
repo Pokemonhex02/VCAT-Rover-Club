@@ -1,1409 +1,1389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>VCAT Human-Powered Rover – Seating Position Tool</title>
+  <style>
+    :root {
+      --bg: #050816;
+      --bg-alt: #080d1f;
+      --panel: #111827;
+      --panel-strong: #151c30;
+      --accent: #4aa3ff;
+      --accent-soft: #7cc4ff;
+      --accent-2: #ffaa66;
+      --text: #f9fbff;
+      --muted: #a0a9c5;
+      --border: #232a4a;
+      --border-soft: #1c2440;
+      --success: #4ade80;
+      --warning: #facc15;
+      --danger: #fb7185;
+      --pilot1: #38bdf8;
+      --pilot2: #fbbf24;
+    }
 
- <!DOCTYPE html>
- <html lang="en">
- <head>
-   <meta charset="UTF-8" />
-   <title>VCAT Human-Powered Rover – Seating Tool</title>
-   <style>
-+    :root {
-+      --bg: #0b1020;
-+      --panel: #141a33;
-+      --panel-2: #101527;
-+      --border: #232a4a;
-+      --text: #f5f5f5;
-+      --muted: #9ba3c6;
-+      --accent: #7cf0ff;
-+      --accent-2: #ffb347;
-+      --pilot1: #7cf0ff;
-+      --pilot2: #ff6fb3;
-+      --grid: rgba(255, 255, 255, 0.07);
-+      --ok: #63e6a1;
-+      --warn: #f2d55c;
-+      --bad: #ff7b7b;
-+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-+    }
-+
-     * {
-       box-sizing: border-box;
--      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-     }
- 
-     body {
-       margin: 0;
--      padding: 0;
--      background: #0b1020;
--      color: #f5f5f5;
-+      background: var(--bg);
-+      color: var(--text);
-     }
- 
-     header {
--      padding: 12px 20px;
--      background: #11162b;
--      border-bottom: 1px solid #222844;
-+      padding: 14px 20px;
-+      background: linear-gradient(90deg, #0f1530, #121838);
-+      border-bottom: 1px solid var(--border);
-     }
- 
-     header h1 {
-       margin: 0;
--      font-size: 18px;
-+      font-size: 20px;
-+      letter-spacing: 0.4px;
-     }
- 
-     header p {
--      margin: 2px 0 0;
--      font-size: 12px;
--      opacity: 0.8;
-+      margin: 4px 0 0;
-+      font-size: 13px;
-+      color: var(--muted);
-     }
- 
-     main {
-       display: grid;
--      grid-template-columns: 320px 1fr;
--      gap: 12px;
--      padding: 12px 16px 16px;
--      height: calc(100vh - 60px);
-+      grid-template-columns: 360px 1fr;
-+      gap: 14px;
-+      padding: 14px 16px 18px;
-+      height: calc(100vh - 68px);
-     }
- 
--    .panel {
--      background: #141a33;
--      border-radius: 10px;
-+    aside {
-+      background: var(--panel);
-+      border: 1px solid var(--border);
-+      border-radius: 12px;
-       padding: 12px;
--      border: 1px solid #232a4a;
-+      display: flex;
-+      flex-direction: column;
-+      gap: 10px;
-+      overflow: auto;
-+    }
-+
-+    .inputs-header {
-+      display: flex;
-+      align-items: center;
-+      gap: 8px;
-+      justify-content: space-between;
-+    }
-+
-+    .tabs {
-+      display: inline-flex;
-+      background: #0f1328;
-+      border: 1px solid var(--border);
-+      border-radius: 8px;
-       overflow: hidden;
-     }
- 
--    .panel h2 {
--      font-size: 14px;
--      margin: 0 0 8px;
--      border-bottom: 1px solid #232a4a;
--      padding-bottom: 4px;
-+    .tab {
-+      padding: 8px 12px;
-+      border: none;
-+      background: transparent;
-+      color: var(--muted);
-+      cursor: pointer;
-+      font-weight: 600;
-+      font-size: 13px;
-+      letter-spacing: 0.2px;
-     }
- 
--    form {
--      display: grid;
--      grid-template-columns: 1fr 80px;
--      column-gap: 6px;
--      row-gap: 6px;
--      font-size: 11px;
-+    .tab.active {
-+      background: #182042;
-+      color: var(--text);
-     }
- 
--    label {
-+    .legend {
-       display: flex;
-       align-items: center;
--      justify-content: space-between;
--      gap: 4px;
--      white-space: nowrap;
-+      gap: 10px;
-+      font-size: 12px;
-+      color: var(--muted);
-     }
- 
--    input[type="number"],
--    input[type="range"] {
--      width: 100%;
-+    .swatch {
-+      width: 14px;
-+      height: 14px;
-+      border-radius: 50%;
-+      border: 1px solid var(--border);
-     }
- 
--    .group-title {
--      grid-column: 1 / -1;
--      font-size: 11px;
-+    .actions {
-+      display: grid;
-+      grid-template-columns: repeat(3, 1fr);
-+      gap: 8px;
-       margin-top: 6px;
--      padding-top: 4px;
--      border-top: 1px dashed #232a4a;
--      opacity: 0.9;
-     }
- 
--    .output {
--      font-size: 11px;
--      white-space: pre;
-+    button {
-+      background: #1a2345;
-+      color: var(--text);
-+      border: 1px solid var(--border);
-+      border-radius: 8px;
-+      padding: 8px 10px;
-+      cursor: pointer;
-+      font-weight: 600;
-+      transition: background 0.15s, border-color 0.15s;
-+    }
-+
-+    button:hover {
-+      background: #1f2a55;
-+      border-color: #3a4b8a;
-+    }
-+
-+    select, input[type="number"] {
-+      background: #0f1328;
-+      border: 1px solid var(--border);
-+      color: var(--text);
-+      border-radius: 8px;
-+      padding: 6px 8px;
-+      font-size: 13px;
-+      width: 100%;
-+    }
-+
-+    .preset-row,
-+    .toggles {
-+      display: grid;
-+      grid-template-columns: 1fr;
-+      gap: 8px;
-+    }
-+
-+    .toggle {
-+      display: flex;
-+      align-items: center;
-+      gap: 8px;
-+      font-size: 13px;
-+      color: var(--muted);
-+    }
-+
-+    .toggle input {
-+      width: 18px;
-+      height: 18px;
-+      accent-color: var(--accent);
-+    }
-+
-+    details {
-+      border: 1px solid var(--border);
-+      border-radius: 10px;
-+      padding: 8px;
-       background: #101527;
--      border-radius: 6px;
--      padding: 6px;
--      border: 1px solid #232a4a;
-+    }
-+
-+    details summary {
-+      cursor: pointer;
-+      font-weight: 700;
-+      color: var(--text);
-+      list-style: none;
-+      display: flex;
-+      align-items: center;
-+      justify-content: space-between;
-+    }
-+
-+    details[open] summary {
-+      color: var(--accent);
-+    }
-+
-+    details summary::-webkit-details-marker {
-+      display: none;
-+    }
-+
-+    .inputs-grid {
-+      display: grid;
-+      grid-template-columns: 1fr 120px;
-+      gap: 6px;
-       margin-top: 6px;
--      overflow: auto;
--      max-height: 160px;
-+      align-items: center;
-+      font-size: 13px;
-+    }
-+
-+    label {
-+      color: var(--muted);
-+    }
-+
-+    .content {
-+      display: grid;
-+      grid-template-rows: 1fr 240px 220px;
-+      gap: 10px;
-+      height: 100%;
-+      min-height: 0;
-+    }
-+
-+    .canvas-panel {
-+      background: var(--panel);
-+      border: 1px solid var(--border);
-+      border-radius: 12px;
-+      padding: 10px;
-+      display: flex;
-+      flex-direction: column;
-+      gap: 8px;
-+      min-height: 0;
-+    }
-+
-+    .panel-title {
-+      margin: 0;
-+      font-size: 14px;
-+      letter-spacing: 0.2px;
-     }
- 
-     canvas {
-+      flex: 1;
-       width: 100%;
--      height: 100%;
--      background: radial-gradient(circle at top left, #1e2540, #050815);
-+      background: radial-gradient(circle at 20% 20%, #1b2342, #050815 70%);
-       border-radius: 10px;
--      border: 1px solid #232a4a;
-+      border: 1px solid var(--border);
-       display: block;
-     }
- 
-+    .outputs-wrapper {
-+      display: grid;
-+      grid-template-columns: 1.2fr 1fr;
-+      gap: 8px;
-+      background: var(--panel);
-+      border: 1px solid var(--border);
-+      border-radius: 12px;
-+      padding: 10px;
-+    }
-+
-+    .text-output {
-+      background: var(--panel-2);
-+      border: 1px solid var(--border);
-+      border-radius: 10px;
-+      padding: 10px;
-+      font-family: 'Roboto Mono', 'SFMono-Regular', Consolas, monospace;
-+      font-size: 12px;
-+      white-space: pre;
-+      overflow: auto;
-+      max-height: 200px;
-+    }
-+
-+    .health {
-+      display: grid;
-+      gap: 8px;
-+    }
-+
-+    .health-card {
-+      background: var(--panel-2);
-+      border: 1px solid var(--border);
-+      border-radius: 10px;
-+      padding: 8px 10px;
-+    }
-+
-+    .health-card h4 {
-+      margin: 0 0 6px;
-+      font-size: 13px;
-+      color: var(--muted);
-+    }
-+
-+    .health-row {
-+      display: flex;
-+      align-items: center;
-+      justify-content: space-between;
-+      font-family: 'Roboto Mono', 'SFMono-Regular', Consolas, monospace;
-+      font-size: 12px;
-+    }
-+
-+    .status {
-+      padding: 2px 8px;
-+      border-radius: 6px;
-+      font-weight: 700;
-+    }
-+
-+    .status.ok { background: rgba(99, 230, 161, 0.15); color: var(--ok); border: 1px solid rgba(99, 230, 161, 0.35); }
-+    .status.warn { background: rgba(242, 213, 92, 0.15); color: var(--warn); border: 1px solid rgba(242, 213, 92, 0.35); }
-+    .status.bad { background: rgba(255, 123, 123, 0.15); color: var(--bad); border: 1px solid rgba(255, 123, 123, 0.35); }
-+
-     .hint {
--      font-size: 10px;
--      opacity: 0.75;
--      margin-top: 4px;
-+      color: var(--muted);
-+      font-size: 12px;
-+      line-height: 1.4;
-     }
- 
--    @media (max-width: 900px) {
-+    @media (max-width: 1100px) {
-       main {
-         grid-template-columns: 1fr;
-         height: auto;
-       }
--      canvas {
--        height: 320px;
-+      .content {
-+        grid-template-rows: 320px 240px auto;
-       }
-     }
-   </style>
- </head>
- <body>
-   <header>
-     <h1>VCAT Human-Powered Rover – Seating Position Tool</h1>
--    <p>Adjust dimensions to lay out a recumbent pilot and read off joint angles & coordinates for CAD.</p>
-+    <p>Adjust dimensions to lay out recumbent pilots, visualize clearances, and export coordinates for CAD.</p>
-   </header>
- 
-   <main>
--    <section class="panel">
--      <h2>Inputs (all in mm or degrees)</h2>
-+    <aside>
-+      <div class="inputs-header">
-+        <div class="tabs" role="tablist">
-+          <button class="tab active" id="tab-pilot-1" data-pilot="1" aria-selected="true">Pilot 1</button>
-+          <button class="tab" id="tab-pilot-2" data-pilot="2" aria-selected="false">Pilot 2</button>
-+        </div>
-+        <div class="legend" aria-hidden="true">
-+          <span class="swatch" style="background: var(--pilot1);"></span> P1
-+          <span class="swatch" style="background: var(--pilot2);"></span> P2
-+        </div>
-+      </div>
- 
--      <form id="inputs">
--        <div class="group-title">Rider segments</div>
-+      <div class="preset-row">
-+        <label for="preset">Rider preset</label>
-+        <select id="preset">
-+          <option value="">Choose preset…</option>
-+          <option value="p5">5th percentile</option>
-+          <option value="p50">50th percentile</option>
-+          <option value="p95">95th percentile</option>
-+        </select>
-+      </div>
- 
--        <label for="legLength">Leg length (hip → ankle)</label>
--        <input id="legLength" type="number" value="1000" min="400" max="1300" step="10" />
-+      <div class="toggles">
-+        <label class="toggle"><input type="checkbox" id="showBoth" checked /> Show both pilots</label>
-+        <label class="toggle"><input type="checkbox" id="mirrorCrank" /> Mirror crank angle for Pilot 2</label>
-+      </div>
- 
--        <label for="thighRatio">Thigh % of leg</label>
--        <input id="thighRatio" type="number" value="0.46" min="0.3" max="0.7" step="0.01" />
-+      <div class="actions">
-+        <button id="copyBtn" type="button">Copy summary</button>
-+        <button id="csvBtn" type="button">Download CSV</button>
-+        <button id="jsonBtn" type="button">Download JSON</button>
-+      </div>
- 
--        <label for="torsoLength">Torso length (hip → shoulder)</label>
--        <input id="torsoLength" type="number" value="600" min="300" max="900" step="10" />
-+      <details open>
-+        <summary>Rider segments</summary>
-+        <div class="inputs-grid">
-+          <label for="legLength">Leg length (hip → ankle)</label>
-+          <input id="legLength" data-field="legLength" type="number" min="400" max="1400" step="10" />
- 
--        <label for="armLength">Arm length (shoulder → hand)</label>
--        <input id="armLength" type="number" value="700" min="300" max="900" step="10" />
-+          <label for="thighRatio">Thigh % of leg</label>
-+          <input id="thighRatio" data-field="thighRatio" type="number" min="0.3" max="0.7" step="0.01" />
- 
--        <label for="upperArmRatio">Upper arm % of arm</label>
--        <input id="upperArmRatio" type="number" value="0.48" min="0.3" max="0.7" step="0.01" />
-+          <label for="torsoLength">Torso length (hip → shoulder)</label>
-+          <input id="torsoLength" data-field="torsoLength" type="number" min="350" max="950" step="5" />
- 
--        <div class="group-title">Seat / torso</div>
-+          <label for="armLength">Arm length (shoulder → hand)</label>
-+          <input id="armLength" data-field="armLength" type="number" min="400" max="950" step="5" />
- 
--        <label for="backAngle">Seat-back angle (deg)</label>
--        <input id="backAngle" type="number" value="30" min="5" max="70" step="1" />
-+          <label for="upperArmRatio">Upper arm % of arm</label>
-+          <input id="upperArmRatio" data-field="upperArmRatio" type="number" min="0.35" max="0.65" step="0.01" />
-+        </div>
-+      </details>
- 
--        <div class="hint" style="grid-column: 1 / -1;">
--          Back angle is from horizontal, leaning backwards (0° = fully flat, 30–45° typical recumbent).
-+      <details open>
-+        <summary>Seat / torso</summary>
-+        <div class="inputs-grid">
-+          <label for="backAngle">Seat-back angle (deg)</label>
-+          <input id="backAngle" data-field="backAngle" type="number" min="5" max="70" step="1" />
-         </div>
-+        <p class="hint" style="margin: 6px 4px 0;">Angle from horizontal, leaning backward. (0° = flat, 30–45° typical)</p>
-+      </details>
- 
--        <div class="group-title">Crank / pedal circle (relative to hip)</div>
-+      <details open>
-+        <summary>Crank / pedal circle</summary>
-+        <div class="inputs-grid">
-+          <label for="crankX">Crank center X</label>
-+          <input id="crankX" data-field="crankX" type="number" step="5" />
- 
--        <label for="crankX">Crank center X</label>
--        <input id="crankX" type="number" value="950" step="10" />
-+          <label for="crankY">Crank center Y</label>
-+          <input id="crankY" data-field="crankY" type="number" step="5" />
- 
--        <label for="crankY">Crank center Y</label>
--        <input id="crankY" type="number" value="0" step="10" />
-+          <label for="crankRadius">Crank radius</label>
-+          <input id="crankRadius" data-field="crankRadius" type="number" min="130" max="200" step="1" />
- 
--        <label for="crankRadius">Crank radius</label>
--        <input id="crankRadius" type="number" value="170" min="120" max="200" step="1" />
-+          <label for="crankAngle">Crank angle (deg)</label>
-+          <input id="crankAngle" data-field="crankAngle" type="number" min="-180" max="180" step="1" />
-+        </div>
-+      </details>
- 
--        <label for="crankAngle">Crank angle (deg)</label>
--        <input id="crankAngle" type="number" value="10" min="-180" max="180" step="1" />
-+      <details open>
-+        <summary>Handlebar / hand position</summary>
-+        <div class="inputs-grid">
-+          <label for="barX">Hand X</label>
-+          <input id="barX" data-field="barX" type="number" step="5" />
- 
--        <div class="group-title">Handlebar (hand target, relative to hip)</div>
-+          <label for="barY">Hand Y</label>
-+          <input id="barY" data-field="barY" type="number" step="5" />
-+        </div>
-+      </details>
- 
--        <label for="barX">Bar X</label>
--        <input id="barX" type="number" value="400" step="10" />
-+      <details open>
-+        <summary>Rover geometry (top-down)</summary>
-+        <div class="inputs-grid">
-+          <label for="frontAxleX">Front axle X</label>
-+          <input id="frontAxleX" data-field="frontAxleX" type="number" step="10" />
- 
--        <label for="barY">Bar Y</label>
--        <input id="barY" type="number" value="450" step="10" />
--      </form>
-+          <label for="roverWidth">Rover width</label>
-+          <input id="roverWidth" data-field="roverWidth" type="number" step="10" />
- 
--      <div class="output" id="output"></div>
--      <div class="hint">
--        Coordinates are given with hip at (0, 0), X forward towards the crank, Y up.  
--        You can drop these directly into CAD sketches or param tables.
--      </div>
--    </section>
-+          <label for="roverLength">Rover length</label>
-+          <input id="roverLength" data-field="roverLength" type="number" step="10" />
-+
-+          <label for="turnRadius">Target turn radius</label>
-+          <input id="turnRadius" data-field="turnRadius" type="number" step="10" />
-+        </div>
-+      </details>
-+    </aside>
- 
--    <section class="panel">
--      <h2>Side View (Recumbent Stick Figure)</h2>
--      <canvas id="sideView" width="900" height="500"></canvas>
-+    <section class="content">
-+      <div class="canvas-panel">
-+        <h3 class="panel-title">Side view – recumbent stick figure</h3>
-+        <canvas id="sideView" width="1200" height="520"></canvas>
-+      </div>
-+      <div class="canvas-panel">
-+        <h3 class="panel-title">Top-down steering helper</h3>
-+        <canvas id="topDown" width="1200" height="280"></canvas>
-+      </div>
-+      <div class="outputs-wrapper">
-+        <div>
-+          <h3 class="panel-title" style="margin-bottom: 6px;">Summary (coordinates, lengths, angles)</h3>
-+          <div class="text-output" id="summary"></div>
-+        </div>
-+        <div>
-+          <h3 class="panel-title" style="margin-bottom: 6px;">Angle health</h3>
-+          <div class="health" id="health"></div>
-+        </div>
-+      </div>
-     </section>
-   </main>
- 
-   <script>
--    const inputsForm = document.getElementById('inputs');
--    const canvas = document.getElementById('sideView');
--    const ctx = canvas.getContext('2d');
--    const outputEl = document.getElementById('output');
--
--    function num(id, fallback) {
--      const v = parseFloat(document.getElementById(id).value);
-+    const fields = [
-+      'legLength',
-+      'thighRatio',
-+      'torsoLength',
-+      'armLength',
-+      'upperArmRatio',
-+      'backAngle',
-+      'crankX',
-+      'crankY',
-+      'crankRadius',
-+      'crankAngle',
-+      'barX',
-+      'barY',
-+      'frontAxleX',
-+      'roverWidth',
-+      'roverLength',
-+      'turnRadius'
-+    ];
-+
-+    const presets = {
-+      p5: {
-+        legLength: 880,
-+        thighRatio: 0.45,
-+        torsoLength: 520,
-+        armLength: 640,
-+        upperArmRatio: 0.48,
-+        backAngle: 34,
-+        crankX: 880,
-+        crankY: 10,
-+        crankRadius: 165,
-+        crankAngle: 12,
-+        barX: 360,
-+        barY: 420,
-+        frontAxleX: 860,
-+        roverWidth: 820,
-+        roverLength: 2200,
-+        turnRadius: 3500,
-+      },
-+      p50: {
-+        legLength: 980,
-+        thighRatio: 0.46,
-+        torsoLength: 600,
-+        armLength: 700,
-+        upperArmRatio: 0.48,
-+        backAngle: 32,
-+        crankX: 940,
-+        crankY: 0,
-+        crankRadius: 170,
-+        crankAngle: 10,
-+        barX: 400,
-+        barY: 450,
-+        frontAxleX: 900,
-+        roverWidth: 860,
-+        roverLength: 2350,
-+        turnRadius: 3600,
-+      },
-+      p95: {
-+        legLength: 1080,
-+        thighRatio: 0.47,
-+        torsoLength: 660,
-+        armLength: 760,
-+        upperArmRatio: 0.49,
-+        backAngle: 30,
-+        crankX: 990,
-+        crankY: -10,
-+        crankRadius: 172,
-+        crankAngle: 8,
-+        barX: 430,
-+        barY: 470,
-+        frontAxleX: 940,
-+        roverWidth: 900,
-+        roverLength: 2450,
-+        turnRadius: 3700,
-+      },
-+    };
-+
-+    const defaultPilot = { ...presets.p50 };
-+    const pilotStates = {
-+      1: { ...defaultPilot },
-+      2: { ...defaultPilot },
-+    };
-+
-+    let activePilot = 1;
-+
-+    const sideCanvas = document.getElementById('sideView');
-+    const sideCtx = sideCanvas.getContext('2d');
-+    const topCanvas = document.getElementById('topDown');
-+    const topCtx = topCanvas.getContext('2d');
-+
-+    const summaryEl = document.getElementById('summary');
-+    const healthEl = document.getElementById('health');
-+    const presetSelect = document.getElementById('preset');
-+    const showBothCheckbox = document.getElementById('showBoth');
-+    const mirrorCrankCheckbox = document.getElementById('mirrorCrank');
-+
-+    function degToRad(d) { return (d * Math.PI) / 180; }
-+    function radToDeg(r) { return (r * 180) / Math.PI; }
-+
-+    function readValue(id, fallback) {
-+      const el = document.getElementById(id);
-+      const v = parseFloat(el.value);
-       return Number.isFinite(v) ? v : fallback;
-     }
- 
--    function degToRad(d) {
--      return (d * Math.PI) / 180;
-+    function saveActivePilot() {
-+      const state = pilotStates[activePilot];
-+      fields.forEach((field) => {
-+        const val = readValue(field, state[field]);
-+        state[field] = val;
-+      });
-+      if (activePilot === 2 && !mirrorCrankCheckbox.checked) {
-+        pilotStates[2].crankAngle = readValue('crankAngle', pilotStates[2].crankAngle);
-+      }
-     }
- 
--    function distance(a, b) {
--      const dx = a.x - b.x;
--      const dy = a.y - b.y;
--      return Math.sqrt(dx * dx + dy * dy);
-+    function loadActivePilotToForm() {
-+      const state = pilotStates[activePilot];
-+      fields.forEach((field) => {
-+        const el = document.getElementById(field);
-+        el.value = state[field];
-+      });
-+      applyMirrorInputLock();
-     }
- 
--    function angleBetween(pJoint, p1, p2) {
--      const v1 = { x: p1.x - pJoint.x, y: p1.y - pJoint.y };
--      const v2 = { x: p2.x - pJoint.x, y: p2.y - pJoint.y };
--      const dot = v1.x * v2.x + v1.y * v2.y;
--      const mag1 = Math.sqrt(v1.x * v1.x + v1.y * v1.y);
--      const mag2 = Math.sqrt(v2.x * v2.x + v2.y * v2.y);
--      if (mag1 === 0 || mag2 === 0) return 0;
--      const cos = Math.min(1, Math.max(-1, dot / (mag1 * mag2)));
--      return (Math.acos(cos) * 180) / Math.PI;
-+    function applyMirrorInputLock() {
-+      const crankInput = document.getElementById('crankAngle');
-+      if (activePilot === 2 && mirrorCrankCheckbox.checked) {
-+        crankInput.value = (-pilotStates[1].crankAngle).toFixed(1);
-+        crankInput.disabled = true;
-+      } else {
-+        crankInput.disabled = false;
-+        crankInput.value = pilotStates[activePilot].crankAngle;
-+      }
-     }
- 
--    function computeGeometry() {
--      // Inputs
--      const legLength = num('legLength', 1000);
--      const thighRatio = num('thighRatio', 0.46);
--      const torsoLength = num('torsoLength', 600);
--      const armLength = num('armLength', 700);
--      const upperArmRatio = num('upperArmRatio', 0.48);
-+    function switchPilot(id) {
-+      saveActivePilot();
-+      activePilot = id;
-+      document.querySelectorAll('.tab').forEach((tab) => {
-+        const isActive = Number(tab.dataset.pilot) === id;
-+        tab.classList.toggle('active', isActive);
-+        tab.setAttribute('aria-selected', isActive);
-+      });
-+      loadActivePilotToForm();
-+      drawAll();
-+    }
- 
--      const backAngle = degToRad(num('backAngle', 30));
-+    function applyPreset(key) {
-+      if (!key || !presets[key]) return;
-+      pilotStates[activePilot] = { ...pilotStates[activePilot], ...presets[key] };
-+      loadActivePilotToForm();
-+      drawAll();
-+    }
- 
--      const crankX = num('crankX', 950);
--      const crankY = num('crankY', 0);
--      const crankRadius = num('crankRadius', 170);
--      const crankAngle = degToRad(num('crankAngle', 0));
-+    function computePilotGeometry(state, pilotId) {
-+      const legLength = state.legLength;
-+      const thighLen = legLength * state.thighRatio;
-+      const shankLen = legLength - thighLen;
-+      const torsoLen = state.torsoLength;
-+      const armLen = state.armLength;
-+      const upperArmLen = armLen * state.upperArmRatio;
-+      const forearmLen = armLen - upperArmLen;
- 
--      const barX = num('barX', 400);
--      const barY = num('barY', 450);
-+      const backAngle = degToRad(state.backAngle);
-+      const crankAngleRad = degToRad(state.crankAngle);
- 
--      // Joints in rider coordinate system (hip at 0,0; X forward, Y up)
-       const hip = { x: 0, y: 0 };
--
--      // Pedal / ankle point
-+      const crankCenter = { x: state.crankX, y: state.crankY };
-       const pedal = {
--        x: crankX + crankRadius * Math.cos(crankAngle),
--        y: crankY + crankRadius * Math.sin(crankAngle),
-+        x: crankCenter.x + state.crankRadius * Math.cos(crankAngleRad),
-+        y: crankCenter.y + state.crankRadius * Math.sin(crankAngleRad),
-       };
- 
--      // Split leg into thigh + shank on line hip → pedal
--      const thighLen = legLength * thighRatio;
--      const shankLen = legLength - thighLen;
--
-       const legVector = { x: pedal.x - hip.x, y: pedal.y - hip.y };
--      const legMag = Math.sqrt(legVector.x * legVector.x + legVector.y * legVector.y) || 1;
--
-+      const legMag = Math.hypot(legVector.x, legVector.y) || 1;
-       const knee = {
-         x: hip.x + (legVector.x * thighLen) / legMag,
-         y: hip.y + (legVector.y * thighLen) / legMag,
-       };
--
-       const ankle = pedal;
- 
--      // Torso: back angle measured from +X, leaning backwards (negative X)
-       const shoulder = {
--        x: hip.x - torsoLength * Math.cos(backAngle),
--        y: hip.y + torsoLength * Math.sin(backAngle),
-+        x: hip.x - torsoLen * Math.cos(backAngle),
-+        y: hip.y + torsoLen * Math.sin(backAngle),
-       };
- 
--      // Arms: shoulder to handlebar
--      const hand = { x: barX, y: barY };
--      const upperArmLen = armLength * upperArmRatio;
--      const armVec = { x: hand.x - shoulder.x, y: hand.y - shoulder.y };
--      const armMag = Math.sqrt(armVec.x * armVec.x + armVec.y * armVec.y) || 1;
--
-+      const hand = { x: state.barX, y: state.barY };
-+      const armVector = { x: hand.x - shoulder.x, y: hand.y - shoulder.y };
-+      const armMag = Math.hypot(armVector.x, armVector.y) || 1;
-       const elbow = {
--        x: shoulder.x + (armVec.x * upperArmLen) / armMag,
--        y: shoulder.y + (armVec.y * upperArmLen) / armMag,
-+        x: shoulder.x + (armVector.x * upperArmLen) / armMag,
-+        y: shoulder.y + (armVector.y * upperArmLen) / armMag,
-       };
- 
--      // Simple seat reference line from hip backwards
--      const seatBackBase = { x: hip.x - 100, y: hip.y - 40 };
-+      const seatBackBase = { x: hip.x - 90, y: hip.y - 50 };
-       const seatBackTop = {
--        x: hip.x - (torsoLength + 100) * Math.cos(backAngle),
--        y: hip.y + (torsoLength + 100) * Math.sin(backAngle),
-+        x: hip.x - (torsoLen + 160) * Math.cos(backAngle),
-+        y: hip.y + (torsoLen + 160) * Math.sin(backAngle),
-       };
- 
-+      const hipAngle = angleBetween(hip, shoulder, knee);
-+      const kneeAngle = angleBetween(knee, hip, ankle);
-+      const elbowAngle = angleBetween(elbow, shoulder, hand);
-+
-       return {
--        joints: { hip, knee, ankle, shoulder, elbow, hand, crankCenter: { x: crankX, y: crankY }, seatBackBase, seatBackTop },
--        segments: { thighLen, shankLen, upperArmLen },
-+        pilotId,
-+        joints: { hip, knee, ankle, shoulder, elbow, hand, crankCenter, pedal, seatBackBase, seatBackTop },
-+        segments: { thighLen, shankLen, upperArmLen, forearmLen, torsoLen },
-+        angles: { hipAngle, kneeAngle, elbowAngle },
-       };
-     }
- 
-     function computeBounds(points) {
-       let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
--      for (const p of points) {
--        if (!p) continue;
-+      points.forEach((p) => {
-+        if (!p) return;
-         minX = Math.min(minX, p.x);
-         maxX = Math.max(maxX, p.x);
-         minY = Math.min(minY, p.y);
-         maxY = Math.max(maxY, p.y);
--      }
-+      });
-       if (!isFinite(minX)) {
--        minX = -100; maxX = 100; minY = -100; maxY = 100;
-+        return { minX: -100, maxX: 100, minY: -100, maxY: 100 };
-       }
-       return { minX, maxX, minY, maxY };
-     }
- 
--    function worldToScreenFactory(bounds, canvasWidth, canvasHeight) {
--      const margin = 80; // mm-ish margin in world coords
-+    function worldToScreenFactory(bounds, width, height, margin = 120) {
-       const spanX = bounds.maxX - bounds.minX || 1;
-       const spanY = bounds.maxY - bounds.minY || 1;
--
--      const scaleX = canvasWidth / (spanX + 2 * margin);
--      const scaleY = canvasHeight / (spanY + 2 * margin);
-+      const scaleX = width / (spanX + 2 * margin);
-+      const scaleY = height / (spanY + 2 * margin);
-       const scale = Math.min(scaleX, scaleY);
--
--      return function toScreen(p) {
--        const sx = (p.x - bounds.minX + margin) * scale;
--        const sy = canvasHeight - (p.y - bounds.minY + margin) * scale; // invert Y
--        return { x: sx, y: sy };
--      };
-+      return (p) => ({
-+        x: (p.x - bounds.minX + margin) * scale,
-+        y: height - (p.y - bounds.minY + margin) * scale,
-+      });
-     }
- 
--    function draw() {
--      const { joints, segments } = computeGeometry();
--      const { hip, knee, ankle, shoulder, elbow, hand, crankCenter, seatBackBase, seatBackTop } = joints;
--
--      const allPoints = [hip, knee, ankle, shoulder, elbow, hand, crankCenter, seatBackBase, seatBackTop];
--      const bounds = computeBounds(allPoints);
--      const toScreen = worldToScreenFactory(bounds, canvas.width, canvas.height);
--
--      ctx.clearRect(0, 0, canvas.width, canvas.height);
-+    function angleBetween(pJoint, p1, p2) {
-+      const v1 = { x: p1.x - pJoint.x, y: p1.y - pJoint.y };
-+      const v2 = { x: p2.x - pJoint.x, y: p2.y - pJoint.y };
-+      const dot = v1.x * v2.x + v1.y * v2.y;
-+      const mag1 = Math.hypot(v1.x, v1.y);
-+      const mag2 = Math.hypot(v2.x, v2.y);
-+      if (mag1 === 0 || mag2 === 0) return 0;
-+      const cos = Math.min(1, Math.max(-1, dot / (mag1 * mag2)));
-+      return radToDeg(Math.acos(cos));
-+    }
- 
--      // Draw frame axes (for reference)
-+    function drawGrid(ctx, width, height, spacing = 50) {
-       ctx.save();
--      ctx.strokeStyle = "rgba(255,255,255,0.12)";
-+      ctx.strokeStyle = 'rgba(255,255,255,0.05)';
-       ctx.lineWidth = 1;
--      ctx.setLineDash([4, 4]);
--
--      const hipS = toScreen(hip);
--      ctx.beginPath();
--      ctx.moveTo(0, hipS.y);
--      ctx.lineTo(canvas.width, hipS.y);
--      ctx.moveTo(hipS.x, 0);
--      ctx.lineTo(hipS.x, canvas.height);
--      ctx.stroke();
--      ctx.restore();
--
--      // Draw seat back
--      ctx.save();
--      ctx.strokeStyle = "#4aa3ff";
--      ctx.lineWidth = 3;
--      ctx.beginPath();
--      const sb0 = toScreen(seatBackBase);
--      const sb1 = toScreen(seatBackTop);
--      ctx.moveTo(sb0.x, sb0.y);
--      ctx.lineTo(sb1.x, sb1.y);
--      ctx.stroke();
-+      for (let x = 0; x <= width; x += spacing) {
-+        ctx.beginPath();
-+        ctx.moveTo(x, 0);
-+        ctx.lineTo(x, height);
-+        ctx.stroke();
-+      }
-+      for (let y = 0; y <= height; y += spacing) {
-+        ctx.beginPath();
-+        ctx.moveTo(0, y);
-+        ctx.lineTo(width, y);
-+        ctx.stroke();
-+      }
-       ctx.restore();
-+    }
- 
--      // Draw crank circle
--      ctx.save();
--      ctx.strokeStyle = "#ffaa33";
--      ctx.lineWidth = 2;
--      const cc = toScreen(crankCenter);
--      const pedalS = toScreen(ankle);
--      const crankRadiusScreen = Math.hypot(pedalS.x - cc.x, pedalS.y - cc.y);
--      ctx.beginPath();
--      ctx.arc(cc.x, cc.y, crankRadiusScreen, 0, Math.PI * 2);
--      ctx.stroke();
--      ctx.restore();
-+    function drawPilot(ctx, toScreen, geom, colors) {
-+      const { hip, knee, ankle, shoulder, elbow, hand, crankCenter, pedal, seatBackBase, seatBackTop } = geom.joints;
-+      const jointStyle = '#ffffff';
- 
--      // Helper to draw segment
--      function drawSegment(a, b, color) {
-+      const drawSegment = (a, b, color, width = 4) => {
-         const A = toScreen(a);
-         const B = toScreen(b);
-         ctx.beginPath();
-         ctx.moveTo(A.x, A.y);
-         ctx.lineTo(B.x, B.y);
-         ctx.strokeStyle = color;
--        ctx.lineWidth = 4;
--        ctx.lineCap = "round";
-+        ctx.lineWidth = width;
-+        ctx.lineCap = 'round';
-         ctx.stroke();
--      }
-+      };
- 
--      // Helper to draw joint
--      function drawJoint(p, color, r = 6) {
-+      const drawJoint = (p, label) => {
-         const s = toScreen(p);
-         ctx.beginPath();
--        ctx.arc(s.x, s.y, r, 0, Math.PI * 2);
--        ctx.fillStyle = color;
-+        ctx.arc(s.x, s.y, 6, 0, Math.PI * 2);
-+        ctx.fillStyle = jointStyle;
-         ctx.fill();
--        ctx.strokeStyle = "#0b1020";
--        ctx.lineWidth = 1;
-+        ctx.strokeStyle = '#0b1020';
-+        ctx.lineWidth = 1.5;
-         ctx.stroke();
--      }
-+        ctx.fillStyle = '#e7ecff';
-+        ctx.font = '11px "Roboto Mono", monospace';
-+        ctx.textBaseline = 'bottom';
-+        ctx.fillText(label, s.x + 8, s.y - 8);
-+      };
-+
-+      // seat back
-+      drawSegment(seatBackBase, seatBackTop, colors.seat, 3);
-+
-+      // crank circle
-+      const cc = toScreen(crankCenter);
-+      const pedalS = toScreen(pedal);
-+      const radius = Math.hypot(pedalS.x - cc.x, pedalS.y - cc.y);
-+      ctx.save();
-+      ctx.strokeStyle = colors.accent;
-+      ctx.lineWidth = 2;
-+      ctx.setLineDash([6, 4]);
-+      ctx.beginPath();
-+      ctx.arc(cc.x, cc.y, radius, 0, Math.PI * 2);
-+      ctx.stroke();
-+      ctx.setLineDash([]);
-+      ctx.beginPath();
-+      ctx.moveTo(cc.x, cc.y);
-+      ctx.lineTo(pedalS.x, pedalS.y);
-+      ctx.stroke();
-+      ctx.restore();
-+
-+      // skeleton
-+      drawSegment(hip, knee, colors.primary);
-+      drawSegment(knee, ankle, colors.primary);
-+      drawSegment(hip, shoulder, colors.torso);
-+      drawSegment(shoulder, elbow, colors.arm);
-+      drawSegment(elbow, hand, colors.arm);
-+
-+      // joints
-+      drawJoint(hip, 'Hip');
-+      drawJoint(knee, 'Knee');
-+      drawJoint(ankle, 'Ankle');
-+      drawJoint(shoulder, 'Shoulder');
-+      drawJoint(elbow, 'Elbow');
-+      drawJoint(hand, 'Hand');
-+
-+      // angles
-+      const angleLabel = (p, text) => {
-+        const s = toScreen(p);
-+        ctx.save();
-+        ctx.fillStyle = '#dfe6ff';
-+        ctx.font = '11px "Roboto Mono", monospace';
-+        ctx.fillText(text, s.x + 10, s.y + 12);
-+        ctx.restore();
-+      };
-+      angleLabel(knee, `Knee ${geom.angles.kneeAngle.toFixed(1)}°`);
-+      angleLabel(hip, `Hip ${geom.angles.hipAngle.toFixed(1)}°`);
-+      angleLabel(elbow, `Elbow ${geom.angles.elbowAngle.toFixed(1)}°`);
- 
--      // Skeleton segments
-+      // origin label
-+      const hipScreen = toScreen(hip);
-       ctx.save();
--      drawSegment(hip, knee, "#7cf0ff");      // thigh
--      drawSegment(knee, ankle, "#7cf0ff");    // shank
--      drawSegment(hip, shoulder, "#ff6fb3");  // torso
--      drawSegment(shoulder, elbow, "#ffd27f");// upper arm
--      drawSegment(elbow, hand, "#ffd27f");    // forearm
-+      ctx.fillStyle = '#b6c1f0';
-+      ctx.font = '11px "Roboto Mono", monospace';
-+      ctx.fillText('(0,0)', hipScreen.x + 6, hipScreen.y + 14);
-       ctx.restore();
-+    }
- 
--      // Joints
--      drawJoint(hip, "#ffffff", 7);
--      drawJoint(knee, "#ffffff", 6);
--      drawJoint(ankle, "#ffffff", 5);
--      drawJoint(shoulder, "#ffffff", 6);
--      drawJoint(elbow, "#ffffff", 5);
--      drawJoint(hand, "#ffffff", 4);
-+    function drawSideView() {
-+      const pilotsToShow = getPilotsToRender();
-+      const points = pilotsToShow.flatMap((p) => Object.values(p.joints));
-+      const bounds = computeBounds(points);
-+      const toScreen = worldToScreenFactory(bounds, sideCanvas.width, sideCanvas.height, 140);
-+
-+      sideCtx.clearRect(0, 0, sideCanvas.width, sideCanvas.height);
-+      drawGrid(sideCtx, sideCanvas.width, sideCanvas.height, 60);
-+
-+      // axis lines through hip origin of first pilot
-+      const origin = toScreen(pilotsToShow[0].joints.hip);
-+      sideCtx.save();
-+      sideCtx.strokeStyle = 'rgba(255,255,255,0.1)';
-+      sideCtx.lineWidth = 1;
-+      sideCtx.setLineDash([4, 6]);
-+      sideCtx.beginPath();
-+      sideCtx.moveTo(0, origin.y);
-+      sideCtx.lineTo(sideCanvas.width, origin.y);
-+      sideCtx.moveTo(origin.x, 0);
-+      sideCtx.lineTo(origin.x, sideCanvas.height);
-+      sideCtx.stroke();
-+      sideCtx.restore();
-+
-+      pilotsToShow.forEach((geom) => {
-+        const colors = geom.pilotId === 1
-+          ? { primary: 'var(--pilot1)', torso: '#ffcf99', arm: '#ffd27f', seat: '#4aa3ff', accent: '#ffaa33' }
-+          : { primary: 'var(--pilot2)', torso: '#9ae7ff', arm: '#c3f0ff', seat: '#ff7fd1', accent: '#ffd27f' };
-+        drawPilot(sideCtx, toScreen, geom, colors);
-+        sideCtx.save();
-+        const hip = toScreen(geom.joints.hip);
-+        sideCtx.fillStyle = colors.primary;
-+        sideCtx.font = '12px "Inter", sans-serif';
-+        sideCtx.fillText(`Pilot ${geom.pilotId}`, hip.x + 10, hip.y - 14);
-+        sideCtx.restore();
-+      });
-+    }
- 
--      // Compute angles
--      const kneeAngle = angleBetween(knee, hip, ankle);
--      const hipAngle = angleBetween(hip, shoulder, knee);
--      const elbowAngle = angleBetween(elbow, shoulder, hand);
-+    function drawTopDown() {
-+      const pilotsToShow = getPilotsToRender();
-+      const roverDims = pilotStates[activePilot];
-+      const width = topCanvas.width;
-+      const height = topCanvas.height;
-+      const margin = 120;
-+
-+      const maxRadius = Math.max(roverDims.turnRadius, roverDims.roverWidth / 2 + margin);
-+      const bounds = {
-+        minX: -maxRadius,
-+        maxX: Math.max(roverDims.roverLength, maxRadius),
-+        minY: -maxRadius,
-+        maxY: maxRadius,
-+      };
-+      const toScreen = worldToScreenFactory(bounds, width, height, margin);
-+
-+      topCtx.clearRect(0, 0, width, height);
-+      drawGrid(topCtx, width, height, 60);
-+
-+      // target turning radius
-+      topCtx.save();
-+      const hipScreen = toScreen({ x: 0, y: 0 });
-+      topCtx.strokeStyle = 'rgba(255,255,255,0.18)';
-+      topCtx.setLineDash([6, 6]);
-+      const radiusScreen = Math.abs(toScreen({ x: roverDims.turnRadius, y: 0 }).x - hipScreen.x);
-+      topCtx.beginPath();
-+      topCtx.arc(hipScreen.x, hipScreen.y, radiusScreen, 0, Math.PI * 2);
-+      topCtx.stroke();
-+      topCtx.fillStyle = '#dfe6ff';
-+      topCtx.font = '12px "Roboto Mono", monospace';
-+      topCtx.fillText('Target radius', hipScreen.x + 10, hipScreen.y - 6);
-+      topCtx.restore();
-+
-+      // rover footprint
-+      const halfWidth = roverDims.roverWidth / 2;
-+      const rearX = -200;
-+      const frontX = roverDims.roverLength - 200;
-+      const corners = [
-+        { x: rearX, y: -halfWidth },
-+        { x: frontX, y: -halfWidth },
-+        { x: frontX, y: halfWidth },
-+        { x: rearX, y: halfWidth },
-+      ];
-+      topCtx.save();
-+      topCtx.strokeStyle = 'rgba(255,255,255,0.4)';
-+      topCtx.setLineDash([8, 6]);
-+      topCtx.beginPath();
-+      corners.forEach((c, idx) => {
-+        const s = toScreen(c);
-+        if (idx === 0) topCtx.moveTo(s.x, s.y);
-+        else topCtx.lineTo(s.x, s.y);
-+      });
-+      const first = toScreen(corners[0]);
-+      topCtx.lineTo(first.x, first.y);
-+      topCtx.stroke();
-+      topCtx.restore();
-+
-+      // front axle
-+      const axleY1 = -halfWidth;
-+      const axleY2 = halfWidth;
-+      const axleX = roverDims.frontAxleX;
-+      const axleStart = toScreen({ x: axleX, y: axleY1 });
-+      const axleEnd = toScreen({ x: axleX, y: axleY2 });
-+      topCtx.save();
-+      topCtx.strokeStyle = '#7cf0ff';
-+      topCtx.lineWidth = 2;
-+      topCtx.beginPath();
-+      topCtx.moveTo(axleStart.x, axleStart.y);
-+      topCtx.lineTo(axleEnd.x, axleEnd.y);
-+      topCtx.stroke();
-+      topCtx.setLineDash([4, 4]);
-+      topCtx.beginPath();
-+      topCtx.arc(axleStart.x, axleStart.y, 12, 0, Math.PI * 2);
-+      topCtx.arc(axleEnd.x, axleEnd.y, 12, 0, Math.PI * 2);
-+      topCtx.stroke();
-+      topCtx.setLineDash([]);
-+      topCtx.fillStyle = '#dfe6ff';
-+      topCtx.font = '12px "Roboto Mono", monospace';
-+      topCtx.fillText('Front axle', axleEnd.x + 10, axleEnd.y);
-+      topCtx.restore();
-+
-+      // hip references and labels
-+      pilotsToShow.forEach((geom) => {
-+        const hipS = toScreen(geom.joints.hip);
-+        topCtx.save();
-+        topCtx.fillStyle = geom.pilotId === 1 ? 'var(--pilot1)' : 'var(--pilot2)';
-+        topCtx.beginPath();
-+        topCtx.arc(hipS.x, hipS.y, 6, 0, Math.PI * 2);
-+        topCtx.fill();
-+        topCtx.fillStyle = '#e7ecff';
-+        topCtx.font = '12px "Roboto Mono", monospace';
-+        topCtx.fillText(`Hip reference P${geom.pilotId}`, hipS.x + 10, hipS.y + 4);
-+        topCtx.restore();
-+      });
-+    }
-+
-+    function getPilotsToRender() {
-+      const list = [];
-+      const mirror = mirrorCrankCheckbox.checked;
-+      const basePilot1 = { ...pilotStates[1] };
-+      const pilot1Geom = computePilotGeometry(basePilot1, 1);
-+      list.push(pilot1Geom);
-+      const showBoth = showBothCheckbox.checked;
-+      if (showBoth || activePilot === 2) {
-+        const state2 = { ...pilotStates[2] };
-+        if (mirror) {
-+          state2.crankAngle = -pilotStates[1].crankAngle;
-+        }
-+        list.push(computePilotGeometry(state2, 2));
-+      }
-+      return showBoth ? list : [list[activePilot - 1]];
-+    }
- 
--      // Numeric output for CAD
-+    function formatSummary(geom) {
-+      const { joints, segments, angles, pilotId } = geom;
-       const fmt = (v) => v.toFixed(1);
-       const lines = [];
-+      lines.push(`Pilot ${pilotId}`);
-+      lines.push('  JOINT COORDINATES (mm) hip=(0,0), X forward, Y up');
-+      lines.push(`    Hip      (${fmt(joints.hip.x)}, ${fmt(joints.hip.y)})`);
-+      lines.push(`    Knee     (${fmt(joints.knee.x)}, ${fmt(joints.knee.y)})`);
-+      lines.push(`    Ankle    (${fmt(joints.ankle.x)}, ${fmt(joints.ankle.y)})`);
-+      lines.push(`    Shoulder (${fmt(joints.shoulder.x)}, ${fmt(joints.shoulder.y)})`);
-+      lines.push(`    Elbow    (${fmt(joints.elbow.x)}, ${fmt(joints.elbow.y)})`);
-+      lines.push(`    Hand     (${fmt(joints.hand.x)}, ${fmt(joints.hand.y)})`);
-+      lines.push('  SEGMENT LENGTHS (mm)');
-+      lines.push(`    Thigh ${fmt(segments.thighLen)}, Shank ${fmt(segments.shankLen)}`);
-+      lines.push(`    Upper arm ${fmt(segments.upperArmLen)}, Forearm ${fmt(segments.forearmLen)}, Torso ${fmt(segments.torsoLen)}`);
-+      lines.push('  KEY ANGLES (deg)');
-+      lines.push(`    Hip ${fmt(angles.hipAngle)}, Knee ${fmt(angles.kneeAngle)}, Elbow ${fmt(angles.elbowAngle)}`);
-+      return lines.join('\n');
-+    }
-+
-+    function buildSummaryPanel() {
-+      const pilots = getPilotsToRender();
-+      const text = pilots.map((p) => formatSummary(p)).join('\n\n');
-+      summaryEl.textContent = text;
-+    }
-+
-+    const comfortRanges = {
-+      knee: { ok: [110, 150], warn: [90, 170] },
-+      hip: { ok: [90, 120], warn: [70, 140] },
-+      elbow: { ok: [90, 140], warn: [70, 160] },
-+    };
-+
-+    function classifyAngle(angle, range) {
-+      if (angle >= range.ok[0] && angle <= range.ok[1]) return 'ok';
-+      if (angle >= range.warn[0] && angle <= range.warn[1]) return 'warn';
-+      return 'bad';
-+    }
-+
-+    function buildHealthPanel() {
-+      const pilots = getPilotsToRender();
-+      healthEl.innerHTML = '';
-+      pilots.forEach((geom) => {
-+        const card = document.createElement('div');
-+        card.className = 'health-card';
-+        const title = document.createElement('h4');
-+        title.textContent = `Pilot ${geom.pilotId}`;
-+        card.appendChild(title);
-+
-+        const angles = [
-+          { key: 'hip', label: 'Hip', value: geom.angles.hipAngle },
-+          { key: 'knee', label: 'Knee', value: geom.angles.kneeAngle },
-+          { key: 'elbow', label: 'Elbow', value: geom.angles.elbowAngle },
-+        ];
-+
-+        angles.forEach(({ key, label, value }) => {
-+          const row = document.createElement('div');
-+          row.className = 'health-row';
-+          const status = classifyAngle(value, comfortRanges[key]);
-+          const badge = document.createElement('span');
-+          badge.className = `status ${status}`;
-+          badge.textContent = status === 'ok' ? 'OK' : status === 'warn' ? 'Check' : 'Alert';
-+          const valueEl = document.createElement('span');
-+          valueEl.textContent = `${label} ${value.toFixed(1)}°`;
-+          row.appendChild(valueEl);
-+          row.appendChild(badge);
-+          card.appendChild(row);
-+        });
-+        healthEl.appendChild(card);
-+      });
-+    }
- 
--      lines.push("JOINT COORDINATES (hip at 0,0; X forward, Y up) [mm]");
--      lines.push(`  Hip      : (${fmt(hip.x)}, ${fmt(hip.y)})`);
--      lines.push(`  Knee     : (${fmt(knee.x)}, ${fmt(knee.y)})`);
--      lines.push(`  Ankle    : (${fmt(ankle.x)}, ${fmt(ankle.y)})`);
--      lines.push(`  Shoulder : (${fmt(shoulder.x)}, ${fmt(shoulder.y)})`);
--      lines.push(`  Elbow    : (${fmt(elbow.x)}, ${fmt(elbow.y)})`);
--      lines.push(`  Hand     : (${fmt(hand.x)}, ${fmt(hand.y)})`);
--      lines.push("");
--      lines.push("KEY ANGLES [deg]");
--      lines.push(`  Knee flexion : ${fmt(kneeAngle)}`);
--      lines.push(`  Hip angle    : ${fmt(hipAngle)}`);
--      lines.push(`  Elbow angle  : ${fmt(elbowAngle)}`);
--      lines.push("");
--      lines.push("SEGMENT LENGTHS [mm]");
--      lines.push(`  Thigh : ${fmt(segments.thighLen)}`);
--      lines.push(`  Shank : ${fmt(segments.shankLen)}`);
--      lines.push(`  Upper arm : ${fmt(segments.upperArmLen)}`);
--
--      outputEl.textContent = lines.join("\n");
--    }
--
--    // Hook up inputs
--    Array.from(inputsForm.elements).forEach((el) => {
--      if (el.tagName === "INPUT") {
--        el.addEventListener("input", draw);
-+    function collectPilotDataForExport(geom) {
-+      const { joints, segments, angles, pilotId } = geom;
-+      return {
-+        pilot: pilotId,
-+        joints,
-+        segments,
-+        angles,
-+      };
-+    }
-+
-+    function copySummary() {
-+      const text = summaryEl.textContent;
-+      if (!navigator.clipboard) {
-+        alert('Clipboard access not available in this browser.');
-+        return;
-       }
-+      navigator.clipboard.writeText(text).then(() => {
-+        const btn = document.getElementById('copyBtn');
-+        btn.textContent = 'Copied!';
-+        setTimeout(() => (btn.textContent = 'Copy summary'), 1200);
-+      });
-+    }
-+
-+    function downloadFile(filename, content, mime) {
-+      const blob = new Blob([content], { type: mime });
-+      const url = URL.createObjectURL(blob);
-+      const a = document.createElement('a');
-+      a.href = url;
-+      a.download = filename;
-+      a.click();
-+      URL.revokeObjectURL(url);
-+    }
-+
-+    function downloadCSV() {
-+      const pilots = getPilotsToRender();
-+      const rows = ['pilot,joint,x_mm,y_mm'];
-+      pilots.forEach((geom) => {
-+        const { joints } = geom;
-+        Object.entries(joints).forEach(([name, p]) => {
-+          rows.push(`${geom.pilotId},${name},${p.x.toFixed(2)},${p.y.toFixed(2)}`);
-+        });
-+      });
-+      downloadFile('seating-tool.csv', rows.join('\n'), 'text/csv');
-+    }
-+
-+    function downloadJSON() {
-+      const pilots = getPilotsToRender();
-+      const data = pilots.map((p) => collectPilotDataForExport(p));
-+      downloadFile('seating-tool.json', JSON.stringify(data, null, 2), 'application/json');
-+    }
-+
-+    function drawAll() {
-+      drawSideView();
-+      drawTopDown();
-+      buildSummaryPanel();
-+      buildHealthPanel();
-+    }
-+
-+    // Event listeners
-+    document.querySelectorAll('.tab').forEach((tab) => {
-+      tab.addEventListener('click', () => switchPilot(Number(tab.dataset.pilot)));
-+    });
-+
-+    fields.forEach((field) => {
-+      const el = document.getElementById(field);
-+      el.addEventListener('input', () => {
-+        pilotStates[activePilot][field] = readValue(field, pilotStates[activePilot][field]);
-+        if (activePilot === 2 && field === 'crankAngle' && mirrorCrankCheckbox.checked) return;
-+        drawAll();
-+      });
-     });
- 
--    window.addEventListener("load", draw);
-+    presetSelect.addEventListener('change', (e) => applyPreset(e.target.value));
-+    showBothCheckbox.addEventListener('change', drawAll);
-+    mirrorCrankCheckbox.addEventListener('change', () => {
-+      applyMirrorInputLock();
-+      drawAll();
-+    });
-+
-+    document.getElementById('copyBtn').addEventListener('click', copySummary);
-+    document.getElementById('csvBtn').addEventListener('click', downloadCSV);
-+    document.getElementById('jsonBtn').addEventListener('click', downloadJSON);
-+
-+    window.addEventListener('load', () => {
-+      loadActivePilotToForm();
-+      drawAll();
-+    });
-   </script>
- </body>
- </html>
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top left, #0b1220, #020617);
+      color: var(--text);
+    }
+
+    header {
+      padding: 14px 22px 12px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(90deg, #020617, #020617 40%, #060c1f);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 20px;
+      letter-spacing: 0.2px;
+    }
+
+    header p {
+      margin: 0;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    main.layout {
+      display: grid;
+      grid-template-columns: 360px minmax(0, 1fr);
+      gap: 14px;
+      padding: 14px 16px 16px;
+      min-height: calc(100vh - 70px);
+    }
+
+    .panel {
+      background: var(--panel);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+      padding: 12px;
+    }
+
+    .panel h2 {
+      margin: 0 0 8px;
+      font-size: 15px;
+      letter-spacing: 0.2px;
+    }
+
+    .inputs-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* Pilot tabs */
+
+    .pilot-tabs {
+      display: flex;
+      gap: 8px;
+    }
+
+    .pilot-tab {
+      flex: 1;
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 12px;
+      border: 1px solid var(--border-soft);
+      background: #020617;
+      color: var(--muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .pilot-tab span.swatch {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      border: 1px solid #000;
+    }
+
+    .pilot-tab[data-pilot="1"] span.swatch {
+      background: var(--pilot1);
+    }
+
+    .pilot-tab[data-pilot="2"] span.swatch {
+      background: var(--pilot2);
+    }
+
+    .pilot-tab.active {
+      background: linear-gradient(135deg, #1f2937, #020617);
+      color: var(--text);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(74, 163, 255, 0.4);
+    }
+
+    .top-row-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .top-row-controls label {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .preset-select {
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #020617;
+      color: var(--text);
+      font-size: 12px;
+    }
+
+    /* Form groups */
+
+    form#inputs {
+      margin-top: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    details.group {
+      border-radius: 10px;
+      border: 1px solid var(--border-soft);
+      background: var(--panel-strong);
+      padding: 6px 8px 8px;
+    }
+
+    details.group[open] {
+      box-shadow: inset 0 0 0 1px rgba(74, 163, 255, 0.18);
+    }
+
+    details.group summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text);
+    }
+
+    details.group summary::-webkit-details-marker {
+      display: none;
+    }
+
+    details.group summary::after {
+      content: "▾";
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    details.group[open] summary::after {
+      content: "▴";
+    }
+
+    .group-body {
+      margin-top: 6px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .field {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 6px;
+      align-items: center;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .field label {
+      white-space: nowrap;
+    }
+
+    .field input[type="number"] {
+      width: 100%;
+      padding: 5px 7px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: #020617;
+      color: var(--text);
+      font-size: 11px;
+    }
+
+    .hint {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .actions {
+      margin-top: 8px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    button.btn {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 7px 12px;
+      font-size: 11px;
+      background: linear-gradient(135deg, #1f2937, #020617);
+      color: var(--text);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    button.btn:hover {
+      border-color: var(--accent);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
+      transform: translateY(-1px);
+    }
+
+    button.btn.secondary {
+      background: #020617;
+    }
+
+    /* Right side */
+
+    .visual-panel {
+      padding: 12px;
+    }
+
+    .canvas-grid {
+      display: grid;
+      grid-template-rows: minmax(260px, 360px) minmax(220px, 280px) auto;
+      gap: 10px;
+      height: 100%;
+    }
+
+    .canvas-wrapper {
+      position: relative;
+      background: radial-gradient(circle at top left, #111827, #020617);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .canvas-title {
+      position: absolute;
+      inset: 0 auto auto 0;
+      padding: 8px 10px;
+      font-size: 12px;
+      color: var(--muted);
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.54), transparent);
+      pointer-events: none;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .output-panel {
+      background: #020617;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 10px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 10px;
+    }
+
+    .output-panel h3 {
+      margin: 0 0 6px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .output-text {
+      background: #020617;
+      border-radius: 8px;
+      border: 1px solid var(--border-soft);
+      padding: 8px;
+      font-family: "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 11px;
+      color: var(--text);
+      white-space: pre;
+      overflow: auto;
+      max-height: 260px;
+    }
+
+    .angle-text {
+      font-family: "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 11px;
+      color: var(--text);
+    }
+
+    .status-ok {
+      color: var(--success);
+    }
+
+    .status-warn {
+      color: var(--warning);
+    }
+
+    .status-bad {
+      color: var(--danger);
+    }
+
+    .legend {
+      margin-top: 6px;
+      font-size: 10px;
+      color: var(--muted);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .legend .swatch {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      border: 1px solid #000;
+    }
+
+    .legend .pilot1 {
+      background: var(--pilot1);
+    }
+
+    .legend .pilot2 {
+      background: var(--pilot2);
+    }
+
+    @media (max-width: 1100px) {
+      main.layout {
+        grid-template-columns: 1fr;
+      }
+      .canvas-grid {
+        grid-template-rows: 320px 240px auto;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .output-panel {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>VCAT Human-Powered Rover – Seating Position Tool</h1>
+    <p>Adjust dimensions to lay out recumbent pilots, visualize clearances, and export CAD-ready coordinates.</p>
+  </header>
+
+  <main class="layout">
+    <!-- LEFT: INPUTS -->
+    <section class="panel inputs-panel">
+      <h2>Inputs (all in mm or degrees)</h2>
+
+      <div class="pilot-tabs">
+        <button class="pilot-tab active" type="button" data-pilot="1">
+          <span class="swatch"></span>
+          <span>Pilot 1</span>
+        </button>
+        <button class="pilot-tab" type="button" data-pilot="2">
+          <span class="swatch"></span>
+          <span>Pilot 2</span>
+        </button>
+      </div>
+
+      <div class="top-row-controls">
+        <div>
+          <label>
+            <input type="checkbox" id="showBoth" />
+            Show both pilots
+          </label>
+          <label>
+            <input type="checkbox" id="mirrorFeet" />
+            Mirror crank angle for Pilot 2
+          </label>
+        </div>
+        <select id="presetSelect" class="preset-select">
+          <option value="">Rider preset…</option>
+          <option value="p5">5th percentile</option>
+          <option value="p50">50th percentile</option>
+          <option value="p95">95th percentile</option>
+        </select>
+      </div>
+
+      <form id="inputs">
+        <details class="group" open>
+          <summary>Rider segments</summary>
+          <div class="group-body">
+            <div class="field">
+              <label for="legLength">Leg length (hip→ankle)</label>
+              <input id="legLength" data-field="legLength" type="number" value="1000" min="400" max="1300" step="10" />
+            </div>
+            <div class="field">
+              <label for="thighRatio">Thigh % of leg</label>
+              <input id="thighRatio" data-field="thighRatio" type="number" value="0.46" min="0.3" max="0.7" step="0.01" />
+            </div>
+            <div class="field">
+              <label for="torsoLength">Torso length (hip→shoulder)</label>
+              <input id="torsoLength" data-field="torsoLength" type="number" value="600" min="300" max="900" step="10" />
+            </div>
+            <div class="field">
+              <label for="armLength">Arm length (shoulder→hand)</label>
+              <input id="armLength" data-field="armLength" type="number" value="700" min="300" max="900" step="10" />
+            </div>
+            <div class="field">
+              <label for="upperArmRatio">Upper arm % of arm</label>
+              <input id="upperArmRatio" data-field="upperArmRatio" type="number" value="0.48" min="0.3" max="0.7" step="0.01" />
+            </div>
+          </div>
+        </details>
+
+        <details class="group" open>
+          <summary>Seat / torso</summary>
+          <div class="group-body">
+            <div class="field">
+              <label for="backAngle">Seat-back angle (deg)</label>
+              <input id="backAngle" data-field="backAngle" type="number" value="30" min="5" max="70" step="1" />
+            </div>
+            <div class="hint">
+              Angle from horizontal (+X), leaning backward. 0° = flat, 30–45° typical recumbent.
+            </div>
+          </div>
+        </details>
+
+        <details class="group" open>
+          <summary>Crank / pedal circle</summary>
+          <div class="group-body">
+            <div class="field">
+              <label for="crankX">Crank center X</label>
+              <input id="crankX" data-field="crankX" type="number" value="950" step="10" />
+            </div>
+            <div class="field">
+              <label for="crankY">Crank center Y</label>
+              <input id="crankY" data-field="crankY" type="number" value="0" step="10" />
+            </div>
+            <div class="field">
+              <label for="crankRadius">Crank radius</label>
+              <input id="crankRadius" data-field="crankRadius" type="number" value="170" min="120" max="200" step="1" />
+            </div>
+            <div class="field">
+              <label for="crankAngle">Crank angle (deg)</label>
+              <input id="crankAngle" data-field="crankAngle" type="number" value="10" min="-180" max="180" step="1" />
+            </div>
+          </div>
+        </details>
+
+        <details class="group" open>
+          <summary>Handlebar / hands</summary>
+          <div class="group-body">
+            <div class="field">
+              <label for="barX">Bar X</label>
+              <input id="barX" data-field="barX" type="number" value="400" step="10" />
+            </div>
+            <div class="field">
+              <label for="barY">Bar Y</label>
+              <input id="barY" data-field="barY" type="number" value="450" step="10" />
+            </div>
+          </div>
+        </details>
+
+        <details class="group" open>
+          <summary>Rover geometry (top-down)</summary>
+          <div class="group-body">
+            <div class="field">
+              <label for="trackWidth">Front track width</label>
+              <input id="trackWidth" data-field="trackWidth" type="number" value="800" step="10" />
+            </div>
+            <div class="field">
+              <label for="wheelbase">Wheelbase (hip→front axle)</label>
+              <input id="wheelbase" data-field="wheelbase" type="number" value="1300" step="10" />
+            </div>
+            <div class="field">
+              <label for="crankWidth">Crank width</label>
+              <input id="crankWidth" data-field="crankWidth" type="number" value="160" step="5" />
+            </div>
+            <div class="field">
+              <label for="targetRadius">Target turning radius (m)</label>
+              <input id="targetRadius" data-field="targetRadius" type="number" value="5" min="2" max="12" step="0.1" />
+            </div>
+            <div class="hint">
+              Used for the top-down steering helper only (shared for both pilots).
+            </div>
+          </div>
+        </details>
+      </form>
+
+      <div class="actions">
+        <button type="button" class="btn" id="copySummary">Copy summary</button>
+        <button type="button" class="btn secondary" id="downloadCsv">Download CSV</button>
+        <button type="button" class="btn secondary" id="downloadJson">Download JSON</button>
+      </div>
+    </section>
+
+    <!-- RIGHT: VISUALS + OUTPUTS -->
+    <section class="panel visual-panel">
+      <div class="canvas-grid">
+        <div class="canvas-wrapper">
+          <div class="canvas-title">Side view – recumbent stick figures</div>
+          <canvas id="sideView" width="1000" height="520"></canvas>
+        </div>
+        <div class="canvas-wrapper">
+          <div class="canvas-title">Top-down steering helper</div>
+          <canvas id="topView" width="1000" height="320"></canvas>
+        </div>
+        <div class="output-panel">
+          <div>
+            <h3>Summary (coordinates, lengths, angles)</h3>
+            <pre class="output-text" id="summaryOutput"></pre>
+          </div>
+          <div>
+            <h3>Angle health</h3>
+            <div class="output-text angle-text" id="angleOutput"></div>
+            <div class="legend">
+              <span class="swatch pilot1"></span> Pilot 1
+              <span class="swatch pilot2"></span> Pilot 2
+              <span>• <span class="status-ok">OK</span> &nbsp;• <span class="status-warn">Check</span> &nbsp;• <span class="status-bad">Outside range</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // ---------------- CONFIG ----------------
+    const COLORS = {
+      seat: "#4aa3ff",
+      crank: "#fbbf24",
+      torso: "#e879f9",
+      legs: "#7dd3fc",
+      arms: "#fed7aa",
+      joint: "#ffffff",
+      pilot1: "#38bdf8",
+      pilot2: "#fbbf24",
+      grid: "rgba(248, 250, 252, 0.12)",
+    };
+
+    const COMFORT = {
+      hip: { min: 70, max: 120 },
+      knee: { min: 90, max: 140 },
+      elbow: { min: 70, max: 150 },
+      ankle: { min: 80, max: 120 },
+    };
+
+    const PRESETS = {
+      p5: {
+        legLength: 910,
+        thighRatio: 0.46,
+        torsoLength: 540,
+        armLength: 640,
+        upperArmRatio: 0.48,
+      },
+      p50: {
+        legLength: 1000,
+        thighRatio: 0.46,
+        torsoLength: 600,
+        armLength: 700,
+        upperArmRatio: 0.48,
+      },
+      p95: {
+        legLength: 1090,
+        thighRatio: 0.47,
+        torsoLength: 650,
+        armLength: 760,
+        upperArmRatio: 0.50,
+      },
+    };
+
+    const DEFAULT_PILOT = {
+      legLength: 1000,
+      thighRatio: 0.46,
+      torsoLength: 600,
+      armLength: 700,
+      upperArmRatio: 0.48,
+      backAngle: 30,
+      crankX: 950,
+      crankY: 0,
+      crankRadius: 170,
+      crankAngle: 10,
+      barX: 400,
+      barY: 450,
+    };
+
+    const SHARED_GEOMETRY = {
+      trackWidth: 800,
+      wheelbase: 1300,
+      crankWidth: 160,
+      targetRadius: 5,
+    };
+
+    const pilots = {
+      1: { ...DEFAULT_PILOT },
+      2: { ...DEFAULT_PILOT, crankAngle: -10, barX: 380 },
+    };
+
+    let activePilot = 1;
+
+    // --------------- UTILITIES ----------------
+    const degToRad = (d) => (d * Math.PI) / 180;
+    const radToDeg = (r) => (r * 180) / Math.PI;
+
+    function angleBetween(joint, p1, p2) {
+      const v1 = { x: p1.x - joint.x, y: p1.y - joint.y };
+      const v2 = { x: p2.x - joint.x, y: p2.y - joint.y };
+      const dot = v1.x * v2.x + v1.y * v2.y;
+      const mag1 = Math.hypot(v1.x, v1.y);
+      const mag2 = Math.hypot(v2.x, v2.y);
+      if (!mag1 || !mag2) return 0;
+      const cos = Math.min(1, Math.max(-1, dot / (mag1 * mag2)));
+      return radToDeg(Math.acos(cos));
+    }
+
+    function comfortStatus(name, value) {
+      const range = COMFORT[name];
+      if (!range) return { status: "OK", className: "status-ok", warn: false };
+      if (value < range.min || value > range.max) {
+        const severe = value < range.min - 10 || value > range.max + 10;
+        return {
+          status: "Check",
+          className: severe ? "status-bad" : "status-warn",
+          warn: true,
+        };
+      }
+      return { status: "OK", className: "status-ok", warn: false };
+    }
+
+    function computeBounds(points) {
+      let minX = Infinity,
+        maxX = -Infinity,
+        minY = Infinity,
+        maxY = -Infinity;
+      for (const p of points) {
+        if (!p) continue;
+        minX = Math.min(minX, p.x);
+        maxX = Math.max(maxX, p.x);
+        minY = Math.min(minY, p.y);
+        maxY = Math.max(maxY, p.y);
+      }
+      if (!isFinite(minX)) {
+        return { minX: -100, maxX: 100, minY: -100, maxY: 100 };
+      }
+      return { minX, maxX, minY, maxY };
+    }
+
+    function worldToScreenFactory(bounds, width, height) {
+      const margin = 120;
+      const spanX = bounds.maxX - bounds.minX || 1;
+      const spanY = bounds.maxY - bounds.minY || 1;
+      const scale = Math.min(
+        width / (spanX + 2 * margin),
+        height / (spanY + 2 * margin)
+      );
+
+      return function toScreen(p) {
+        const x = (p.x - bounds.minX + margin) * scale;
+        const y = height - (p.y - bounds.minY + margin) * scale;
+        return { x, y };
+      };
+    }
+
+    // --------------- GEOMETRY ----------------
+
+    function computePilotGeometry(pilot) {
+      const {
+        legLength,
+        thighRatio,
+        torsoLength,
+        armLength,
+        upperArmRatio,
+        backAngle,
+        crankX,
+        crankY,
+        crankRadius,
+        crankAngle,
+        barX,
+        barY,
+      } = pilot;
+
+      const hip = { x: 0, y: 0 };
+      const crankRad = degToRad(crankAngle);
+      const backRad = degToRad(backAngle);
+
+      const pedal = {
+        x: crankX + crankRadius * Math.cos(crankRad),
+        y: crankY + crankRadius * Math.sin(crankRad),
+      };
+
+      const thighLen = legLength * thighRatio;
+      const shankLen = legLength - thighLen;
+
+      const legVec = { x: pedal.x - hip.x, y: pedal.y - hip.y };
+      const legMag = Math.hypot(legVec.x, legVec.y) || 1;
+      const knee = {
+        x: hip.x + (legVec.x * thighLen) / legMag,
+        y: hip.y + (legVec.y * thighLen) / legMag,
+      };
+      const ankle = pedal;
+
+      const shoulder = {
+        x: hip.x - torsoLength * Math.cos(backRad),
+        y: hip.y + torsoLength * Math.sin(backRad),
+      };
+
+      const hand = { x: barX, y: barY };
+      const upperArmLen = armLength * upperArmRatio;
+      const armVec = { x: hand.x - shoulder.x, y: hand.y - shoulder.y };
+      const armMag = Math.hypot(armVec.x, armVec.y) || 1;
+      const elbow = {
+        x: shoulder.x + (armVec.x * upperArmLen) / armMag,
+        y: shoulder.y + (armVec.y * upperArmLen) / armMag,
+      };
+
+      const seatBackBase = { x: hip.x - 100, y: hip.y - 40 };
+      const seatBackTop = {
+        x: hip.x - (torsoLength + 120) * Math.cos(backRad),
+        y: hip.y + (torsoLength + 120) * Math.sin(backRad),
+      };
+
+      const hipAngle = angleBetween(hip, shoulder, knee);
+      const kneeAngle = angleBetween(knee, hip, ankle);
+      const elbowAngle = angleBetween(elbow, shoulder, hand);
+      const ankleAngle = angleBetween(ankle, knee, {
+        x: ankle.x + 50,
+        y: ankle.y,
+      });
+
+      return {
+        joints: {
+          hip,
+          knee,
+          ankle,
+          shoulder,
+          elbow,
+          hand,
+          crankCenter: { x: crankX, y: crankY },
+          seatBackBase,
+          seatBackTop,
+        },
+        segments: {
+          thighLen,
+          shankLen,
+          upperArmLen,
+          foreArmLen: armLength - upperArmLen,
+          torsoLength,
+        },
+        angles: { hip: hipAngle, knee: kneeAngle, elbow: elbowAngle, ankle: ankleAngle },
+      };
+    }
+
+    // --------------- DOM REFERENCES ----------------
+    const inputsForm = document.getElementById("inputs");
+    const sideCanvas = document.getElementById("sideView");
+    const sideCtx = sideCanvas.getContext("2d");
+    const topCanvas = document.getElementById("topView");
+    const topCtx = topCanvas.getContext("2d");
+    const summaryOutput = document.getElementById("summaryOutput");
+    const angleOutput = document.getElementById("angleOutput");
+
+    const presetSelect = document.getElementById("presetSelect");
+    const showBothCheckbox = document.getElementById("showBoth");
+    const mirrorFeetCheckbox = document.getElementById("mirrorFeet");
+    const pilotTabs = document.querySelectorAll(".pilot-tab");
+
+    // --------------- FORM <-> STATE ----------------
+
+    function readFormIntoState() {
+      const pilot = pilots[activePilot];
+      inputsForm.querySelectorAll("[data-field]").forEach((el) => {
+        const key = el.dataset.field;
+        const val = parseFloat(el.value);
+        if (!Number.isFinite(val)) return;
+
+        if (key in SHARED_GEOMETRY) {
+          SHARED_GEOMETRY[key] = val;
+        } else {
+          pilot[key] = val;
+        }
+      });
+    }
+
+    function fillFormFromState(pilotIndex) {
+      const pilot = pilots[pilotIndex];
+      inputsForm.querySelectorAll("[data-field]").forEach((el) => {
+        const key = el.dataset.field;
+        if (key in SHARED_GEOMETRY) {
+          el.value = SHARED_GEOMETRY[key];
+        } else if (pilot[key] !== undefined) {
+          el.value = pilot[key];
+        }
+      });
+    }
+
+    function applyPreset(name) {
+      if (!PRESETS[name]) return;
+      Object.assign(pilots[activePilot], PRESETS[name]);
+      fillFormFromState(activePilot);
+      render();
+    }
+
+    // --------------- DRAWING: SIDE VIEW ----------------
+
+    function drawPilot(ctx, toScreen, data, color, label) {
+      const { joints, angles } = data;
+      const { hip, knee, ankle, shoulder, elbow, hand, crankCenter, seatBackBase, seatBackTop } =
+        joints;
+
+      function seg(a, b, stroke, width = 4) {
+        const A = toScreen(a);
+        const B = toScreen(b);
+        ctx.beginPath();
+        ctx.moveTo(A.x, A.y);
+        ctx.lineTo(B.x, B.y);
+        ctx.strokeStyle = stroke;
+        ctx.lineWidth = width;
+        ctx.lineCap = "round";
+        ctx.stroke();
+      }
+
+      function joint(point, name) {
+        const s = toScreen(point);
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, 6, 0, Math.PI * 2);
+        ctx.fillStyle = COLORS.joint;
+        ctx.strokeStyle = "#020617";
+        ctx.lineWidth = 1.4;
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = "#e5e7eb";
+        ctx.font = '11px "SFMono-Regular", monospace';
+        ctx.textBaseline = "bottom";
+        ctx.fillText(name, s.x + 8, s.y - 1);
+      }
+
+      // Seat back
+      seg(seatBackBase, seatBackTop, COLORS.seat, 3);
+
+      // Crank circle
+      const cc = toScreen(crankCenter);
+      const pedalS = toScreen(ankle);
+      const crankR = Math.hypot(pedalS.x - cc.x, pedalS.y - cc.y);
+      ctx.beginPath();
+      ctx.arc(cc.x, cc.y, crankR, 0, Math.PI * 2);
+      ctx.strokeStyle = COLORS.crank;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Skeleton
+      seg(hip, shoulder, COLORS.torso, 5);
+      seg(hip, knee, color, 5);
+      seg(knee, ankle, color, 5);
+      seg(shoulder, elbow, COLORS.arms, 4.5);
+      seg(elbow, hand, COLORS.arms, 4);
+
+      joint(hip, "Hip");
+      joint(knee, "Knee");
+      joint(ankle, "Ankle");
+      joint(shoulder, "Shoulder");
+      joint(elbow, "Elbow");
+      joint(hand, "Hand");
+
+      // Angle labels
+      ctx.fillStyle = "#e5e7eb";
+      ctx.font = '11px "SFMono-Regular", monospace';
+      const labels = [
+        { p: hip, text: `Hip ${angles.hip.toFixed(1)}°` },
+        { p: knee, text: `Knee ${angles.knee.toFixed(1)}°` },
+        { p: elbow, text: `Elbow ${angles.elbow.toFixed(1)}°` },
+      ];
+      labels.forEach(({ p, text }) => {
+        const s = toScreen(p);
+        ctx.textBaseline = "top";
+        ctx.fillText(text, s.x + 10, s.y + 4);
+      });
+
+      // Pilot label
+      ctx.fillStyle = color;
+      ctx.font = '13px "Segoe UI", sans-serif';
+      ctx.fillText(label, 14, 20 + (label === "Pilot 2" ? 18 : 0));
+    }
+
+    function drawSideView() {
+      const data1 = computePilotGeometry(pilots[1]);
+      const data2 = computePilotGeometry(pilots[2]);
+
+      const showBoth = showBothCheckbox.checked;
+      const pilotsToDraw = showBoth ? [1, 2] : [activePilot];
+
+      const points = [];
+      for (const idx of pilotsToDraw) {
+        const joints = (idx === 1 ? data1 : data2).joints;
+        points.push(...Object.values(joints));
+      }
+      const bounds = computeBounds(points);
+      const toScreen = worldToScreenFactory(
+        bounds,
+        sideCanvas.width,
+        sideCanvas.height
+      );
+
+      sideCtx.clearRect(0, 0, sideCanvas.width, sideCanvas.height);
+
+      // Axes
+      const originS = toScreen({ x: 0, y: 0 });
+      sideCtx.save();
+      sideCtx.strokeStyle = COLORS.grid;
+      sideCtx.lineWidth = 1;
+      sideCtx.setLineDash([6, 6]);
+      sideCtx.beginPath();
+      sideCtx.moveTo(0, originS.y);
+      sideCtx.lineTo(sideCanvas.width, originS.y);
+      sideCtx.moveTo(originS.x, 0);
+      sideCtx.lineTo(originS.x, sideCanvas.height);
+      sideCtx.stroke();
+      sideCtx.restore();
+
+      // Origin label
+      sideCtx.fillStyle = "#9ca3af";
+      sideCtx.font = '11px "SFMono-Regular", monospace';
+      sideCtx.fillText("(0,0) hip", originS.x + 6, originS.y - 4);
+
+      const drawOne = (idx) => {
+        const data = idx === 1 ? data1 : data2;
+        const color = idx === 1 ? COLORS.pilot1 : COLORS.pilot2;
+        drawPilot(sideCtx, toScreen, data, color, `Pilot ${idx}`);
+      };
+
+      if (showBoth) {
+        drawOne(1);
+        drawOne(2);
+      } else {
+        drawOne(activePilot);
+      }
+    }
+
+    // --------------- DRAWING: TOP-DOWN ----------------
+
+    function drawTopDown() {
+      const { trackWidth, wheelbase, crankWidth, targetRadius } =
+        SHARED_GEOMETRY;
+
+      topCtx.clearRect(0, 0, topCanvas.width, topCanvas.height);
+
+      const margin = 180;
+      const spanX = wheelbase + 2 * margin;
+      const spanY = trackWidth + 2 * margin;
+      const scale = Math.min(
+        topCanvas.width / spanX,
+        topCanvas.height / spanY
+      );
+
+      const toScreen = (p) => ({
+        x: (p.x + margin) * scale,
+        y: topCanvas.height - (p.y + margin) * scale,
+      });
+
+      // Centerline
+      topCtx.save();
+      topCtx.strokeStyle = COLORS.grid;
+      topCtx.lineWidth = 1;
+      topCtx.setLineDash([8, 8]);
+      const origin = toScreen({ x: 0, y: 0 });
+      topCtx.beginPath();
+      topCtx.moveTo(0, origin.y);
+      topCtx.lineTo(topCanvas.width, origin.y);
+      topCtx.stroke();
+
+      // Turning circle
+      const radiusMm = targetRadius * 1000;
+      const circleCenter = toScreen({ x: 0, y: radiusMm });
+      const rPx = radiusMm * scale;
+      topCtx.setLineDash([4, 6]);
+      topCtx.beginPath();
+      topCtx.arc(circleCenter.x, circleCenter.y, rPx, 0, Math.PI * 2);
+      topCtx.stroke();
+      topCtx.restore();
+
+      // Wheels
+      const leftWheel = toScreen({ x: wheelbase, y: trackWidth / 2 });
+      const rightWheel = toScreen({ x: wheelbase, y: -trackWidth / 2 });
+      const wheelR = 20;
+      topCtx.fillStyle = "#020617";
+      topCtx.strokeStyle = COLORS.accent;
+      topCtx.lineWidth = 2;
+      [leftWheel, rightWheel].forEach((w) => {
+        topCtx.beginPath();
+        topCtx.arc(w.x, w.y, wheelR, 0, Math.PI * 2);
+        topCtx.fill();
+        topCtx.stroke();
+      });
+
+      // Hips
+      const hip1 = toScreen({ x: 0, y: crankWidth / 2 });
+      const hip2 = toScreen({ x: 0, y: -crankWidth / 2 });
+      topCtx.beginPath();
+      topCtx.arc(hip1.x, hip1.y, 6, 0, Math.PI * 2);
+      topCtx.fillStyle = COLORS.pilot1;
+      topCtx.fill();
+      topCtx.beginPath();
+      topCtx.arc(hip2.x, hip2.y, 6, 0, Math.PI * 2);
+      topCtx.fillStyle = COLORS.pilot2;
+      topCtx.fill();
+
+      // Outer footprint rectangle
+      const outerWidth = trackWidth + 200;
+      const rectTopLeft = toScreen({
+        x: wheelbase - 150,
+        y: outerWidth / 2,
+      });
+      const rectBottomRight = toScreen({
+        x: -200,
+        y: -outerWidth / 2,
+      });
+      topCtx.save();
+      topCtx.setLineDash([10, 6]);
+      topCtx.strokeStyle = "rgba(248,250,252,0.25)";
+      topCtx.strokeRect(
+        rectBottomRight.x,
+        rectTopLeft.y,
+        rectTopLeft.x - rectBottomRight.x,
+        rectBottomRight.y - rectTopLeft.y
+      );
+      topCtx.restore();
+
+      // Labels
+      topCtx.fillStyle = "#e5e7eb";
+      topCtx.font = '11px "SFMono-Regular", monospace';
+      topCtx.fillText("Front axle", leftWheel.x - 40, leftWheel.y - 26);
+      topCtx.fillText("Hip P1", hip1.x + 8, hip1.y - 4);
+      topCtx.fillText("Hip P2", hip2.x + 8, hip2.y - 4);
+      topCtx.fillText(
+        "Target radius",
+        circleCenter.x + 8,
+        circleCenter.y - rPx - 6
+      );
+    }
+
+    // --------------- OUTPUTS ----------------
+
+    function roverOutputs() {
+      const radiusMm = SHARED_GEOMETRY.targetRadius * 1000;
+      const steeringAngle = radToDeg(
+        Math.atan(SHARED_GEOMETRY.wheelbase / radiusMm)
+      );
+      const outerWidth = SHARED_GEOMETRY.trackWidth + 200;
+      return { radiusMm, steeringAngle, outerWidth };
+    }
+
+    function buildPilotSummary(pilotIndex) {
+      const pilot = pilots[pilotIndex];
+      const { joints, segments, angles } = computePilotGeometry(pilot);
+      const fmt = (v) => v.toFixed(1);
+
+      const pad = (t, n) =>
+        t.length >= n ? t.slice(0, n) : t + " ".repeat(n - t.length);
+
+      const coordsLines = [
+        "Joint     , X (mm) , Y (mm)",
+        `${pad("Hip", 9)}, ${pad(fmt(joints.hip.x), 7)}, ${pad(
+          fmt(joints.hip.y),
+          7
+        )}`,
+        `${pad("Knee", 9)}, ${pad(fmt(joints.knee.x), 7)}, ${pad(
+          fmt(joints.knee.y),
+          7
+        )}`,
+        `${pad("Ankle", 9)}, ${pad(fmt(joints.ankle.x), 7)}, ${pad(
+          fmt(joints.ankle.y),
+          7
+        )}`,
+        `${pad("Shoulder", 9)}, ${pad(fmt(joints.shoulder.x), 7)}, ${pad(
+          fmt(joints.shoulder.y),
+          7
+        )}`,
+        `${pad("Elbow", 9)}, ${pad(fmt(joints.elbow.x), 7)}, ${pad(
+          fmt(joints.elbow.y),
+          7
+        )}`,
+        `${pad("Hand", 9)}, ${pad(fmt(joints.hand.x), 7)}, ${pad(
+          fmt(joints.hand.y),
+          7
+        )}`,
+      ];
+
+      const segLines = [
+        "Segment   , Length (mm)",
+        `${pad("Thigh", 9)}, ${fmt(segments.thighLen)}`,
+        `${pad("Shank", 9)}, ${fmt(segments.shankLen)}`,
+        `${pad("Upper arm", 9)}, ${fmt(segments.upperArmLen)}`,
+        `${pad("Forearm", 9)}, ${fmt(segments.foreArmLen)}`,
+        `${pad("Torso", 9)}, ${fmt(segments.torsoLength)}`,
+      ];
+
+      const angleTable = Object.entries(angles).map(([name, val]) => {
+        const status = comfortStatus(name, val);
+        return { name, val, status };
+      });
+
+      const angleLines = [
+        "Angle     , Value (deg) , Status",
+        ...angleTable.map(({ name, val, status }) => {
+          const label = `${name[0].toUpperCase()}${name.slice(1)} angle`;
+          return `${pad(label, 11)}, ${pad(fmt(val), 6)}, ${status.status}`;
+        }),
+      ];
+
+      const inputsLines = [
+        "Inputs (pilot parameters)",
+        ...Object.entries(pilot).map(
+          ([k, v]) => `${k}, ${typeof v === "number" ? fmt(v) : v}`
+        ),
+      ];
+
+      return {
+        text: [
+          `Pilot ${pilotIndex}`,
+          "JOINT COORDINATES (hip at 0,0; X forward, Y up) [mm]",
+          ...coordsLines,
+          "",
+          "SEGMENT LENGTHS [mm]",
+          ...segLines,
+          "",
+          "ANGLES [deg]",
+          ...angleLines,
+          "",
+          ...inputsLines,
+        ].join("\n"),
+        angleTable,
+      };
+    }
+
+    function renderOutputs() {
+      const showBoth = showBothCheckbox.checked;
+      const pilotsToShow = showBoth ? [1, 2] : [activePilot];
+      const sections = [];
+      const angleBlocks = [];
+
+      pilotsToShow.forEach((idx) => {
+        const summary = buildPilotSummary(idx);
+        sections.push(summary.text);
+
+        const colorClass = idx === 1 ? "pilot1" : "pilot2";
+        const lines = [`<strong>Pilot ${idx}</strong>`];
+        summary.angleTable.forEach(({ name, val, status }) => {
+          const label = `${name[0].toUpperCase()}${name.slice(1)} angle`;
+          lines.push(
+            `<span class="${status.className}">${label}: ${val.toFixed(
+              1
+            )}° (${status.status}${
+              status.warn ? " ⚠" : ""
+            })</span>`
+          );
+        });
+        angleBlocks.push(
+          `<div class="${colorClass}">${lines.join("<br>")}</div>`
+        );
+      });
+
+      const rover = roverOutputs();
+      sections.push(
+        [
+          "ROVER GEOMETRY HELPER",
+          `Wheelbase (hip→axle): ${SHARED_GEOMETRY.wheelbase.toFixed(1)} mm`,
+          `Front track width: ${SHARED_GEOMETRY.trackWidth.toFixed(1)} mm`,
+          `Turning radius target: ${SHARED_GEOMETRY.targetRadius.toFixed(
+            2
+          )} m (${rover.radiusMm.toFixed(0)} mm)`,
+          `Steering angle (approx): ${rover.steeringAngle.toFixed(1)} deg`,
+          `Suggested outer footprint width: ${rover.outerWidth.toFixed(
+            1
+          )} mm`,
+        ].join("\n")
+      );
+
+      summaryOutput.textContent = sections.join("\n\n");
+      angleOutput.innerHTML = angleBlocks.join("<br><br>");
+    }
+
+    // --------------- EXPORT HELPERS ----------------
+
+    function downloadFile(filename, content, mime) {
+      const blob = new Blob([content], { type: mime });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function buildCsv() {
+      const rows = [];
+      const showBoth = showBothCheckbox.checked;
+      const pilotsToShow = showBoth ? [1, 2] : [activePilot];
+
+      pilotsToShow.forEach((idx) => {
+        const { joints, segments, angles } = computePilotGeometry(pilots[idx]);
+
+        rows.push(`Pilot ${idx} – joints`);
+        rows.push("Type,Pilot,Name,X (mm),Y (mm)");
+        Object.entries(joints).forEach(([name, p]) => {
+          if (
+            name === "crankCenter" ||
+            name === "seatBackBase" ||
+            name === "seatBackTop"
+          )
+            return;
+          rows.push(
+            `Joint,${idx},${name},${p.x.toFixed(1)},${p.y.toFixed(1)}`
+          );
+        });
+        rows.push("");
+
+        rows.push("Type,Pilot,Segment,Length (mm)");
+        Object.entries(segments).forEach(([name, len]) => {
+          rows.push(`Segment,${idx},${name},${len.toFixed(1)}`);
+        });
+        rows.push("");
+
+        rows.push("Type,Pilot,Angle,Value (deg),Status");
+        Object.entries(angles).forEach(([name, val]) => {
+          const status = comfortStatus(name, val);
+          rows.push(`Angle,${idx},${name},${val.toFixed(1)},${status.status}`);
+        });
+        rows.push("");
+      });
+
+      rows.push("Rover geometry,,,,");
+
+      const rover = roverOutputs();
+      Object.entries(SHARED_GEOMETRY).forEach(([k, v]) =>
+        rows.push(`Geometry,,${k},${v}`)
+      );
+      rows.push(`Geometry,,steeringAngleDeg,${rover.steeringAngle.toFixed(2)}`);
+      rows.push(
+        `Geometry,,outerFootprintWidth,${rover.outerWidth.toFixed(1)}`
+      );
+
+      return rows.join("\n");
+    }
+
+    function buildJson() {
+      const payload = {
+        pilot1: { inputs: pilots[1], ...computePilotGeometry(pilots[1]) },
+        pilot2: { inputs: pilots[2], ...computePilotGeometry(pilots[2]) },
+        rover: { ...SHARED_GEOMETRY, ...roverOutputs() },
+      };
+      return JSON.stringify(payload, null, 2);
+    }
+
+    // --------------- MAIN RENDER ----------------
+
+    function render() {
+      readFormIntoState();
+      drawSideView();
+      drawTopDown();
+      renderOutputs();
+    }
+
+    // --------------- EVENTS ----------------
+
+    // Pilot tab switching
+    pilotTabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        readFormIntoState();
+        activePilot = Number(tab.dataset.pilot);
+        pilotTabs.forEach((t) => t.classList.remove("active"));
+        tab.classList.add("active");
+        fillFormFromState(activePilot);
+        render();
+      });
+    });
+
+    inputsForm.addEventListener("input", () => {
+      render();
+    });
+
+    presetSelect.addEventListener("change", (e) => {
+      const val = e.target.value;
+      if (val) applyPreset(val);
+      e.target.value = "";
+    });
+
+    showBothCheckbox.addEventListener("change", render);
+
+    mirrorFeetCheckbox.addEventListener("change", (e) => {
+      if (e.target.checked) {
+        pilots[2].crankAngle = -pilots[1].crankAngle;
+        if (activePilot === 2) fillFormFromState(2);
+      }
+      render();
+    });
+
+    document
+      .getElementById("copySummary")
+      .addEventListener("click", async () => {
+        const text = summaryOutput.textContent;
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch {
+          const temp = document.createElement("textarea");
+          temp.value = text;
+          document.body.appendChild(temp);
+          temp.select();
+          document.execCommand("copy");
+          temp.remove();
+        }
+      });
+
+    document
+      .getElementById("downloadCsv")
+      .addEventListener("click", () => {
+        const csv = buildCsv();
+        downloadFile(
+          `pilot${activePilot}_seating_export.csv`,
+          csv,
+          "text/csv"
+        );
+      });
+
+    document
+      .getElementById("downloadJson")
+      .addEventListener("click", () => {
+        const json = buildJson();
+        downloadFile("seating_export.json", json, "application/json");
+      });
+
+    window.addEventListener("resize", render);
+
+    // Initial load
+    window.addEventListener("load", () => {
+      fillFormFromState(activePilot);
+      render();
+    });
+  </script>
+</body>
+</html>
