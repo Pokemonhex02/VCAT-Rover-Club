@@ -239,6 +239,16 @@
       flex: 1;
     }
 
+    .field-inline-controls {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 6px;
+    }
+
+    .field-inline-controls input[type="number"] {
+      width: 100%;
+    }
+
     .hint {
       font-size: 10px;
       color: var(--muted);
@@ -509,7 +519,7 @@
             </div>
             <div class="field">
               <label for="targetKnee">Target knee angle (deg)</label>
-              <div class="inline-input">
+              <div class="field-inline-controls">
                 <input
                   id="targetKnee"
                   type="number"
@@ -536,6 +546,22 @@
             <div class="field">
               <label for="barY">Bar Y</label>
               <input id="barY" data-field="barY" type="number" value="450" step="10" />
+            </div>
+            <div class="field">
+              <label for="targetElbow">Target elbow angle (deg)</label>
+              <div class="field-inline-controls">
+                <input
+                  id="targetElbow"
+                  type="number"
+                  value="110"
+                  min="70"
+                  max="150"
+                  step="1"
+                />
+                <button type="button" class="btn small" id="solveElbow">
+                  Solve for elbow angle
+                </button>
+              </div>
             </div>
           </div>
         </details>
@@ -742,6 +768,25 @@
 
     // --------------- GEOMETRY ----------------
 
+    function computeHingePoint(start, target, lenA, lenB, bendSign = 1) {
+      const dx = target.x - start.x;
+      const dy = target.y - start.y;
+      const dist = Math.hypot(dx, dy) || 1e-6;
+
+      const alongUnit = { x: dx / dist, y: dy / dist };
+      const perpUnit = { x: -alongUnit.y, y: alongUnit.x };
+
+      let along = (lenA * lenA - lenB * lenB + dist * dist) / (2 * dist);
+      along = Math.max(0, Math.min(along, lenA));
+      const heightSq = lenA * lenA - along * along;
+      const height = Math.sqrt(Math.max(heightSq, 0));
+
+      return {
+        x: start.x + alongUnit.x * along + perpUnit.x * height * bendSign,
+        y: start.y + alongUnit.y * along + perpUnit.y * height * bendSign,
+      };
+    }
+
     function computePilotGeometry(pilot) {
       const {
         legLength,
@@ -770,12 +815,7 @@
       const thighLen = legLength * thighRatio;
       const shankLen = legLength - thighLen;
 
-      const legVec = { x: pedal.x - hip.x, y: pedal.y - hip.y };
-      const legMag = Math.hypot(legVec.x, legVec.y) || 1;
-      const knee = {
-        x: hip.x + (legVec.x * thighLen) / legMag,
-        y: hip.y + (legVec.y * thighLen) / legMag,
-      };
+      const knee = computeHingePoint(hip, pedal, thighLen, shankLen, 1);
       const ankle = pedal;
 
       const shoulder = {
@@ -785,12 +825,8 @@
 
       const hand = { x: barX, y: barY };
       const upperArmLen = armLength * upperArmRatio;
-      const armVec = { x: hand.x - shoulder.x, y: hand.y - shoulder.y };
-      const armMag = Math.hypot(armVec.x, armVec.y) || 1;
-      const elbow = {
-        x: shoulder.x + (armVec.x * upperArmLen) / armMag,
-        y: shoulder.y + (armVec.y * upperArmLen) / armMag,
-      };
+      const foreArmLen = armLength - upperArmLen;
+      const elbow = computeHingePoint(shoulder, hand, upperArmLen, foreArmLen, 1);
 
       const seatBackBase = { x: hip.x - 100, y: hip.y - 40 };
       const seatBackTop = {
@@ -822,7 +858,7 @@
           thighLen,
           shankLen,
           upperArmLen,
-          foreArmLen: armLength - upperArmLen,
+          foreArmLen,
           torsoLength,
         },
         angles: { hip: hipAngle, knee: kneeAngle, elbow: elbowAngle, ankle: ankleAngle },
@@ -838,8 +874,11 @@
     const summaryOutput = document.getElementById("summaryOutput");
     const angleOutput = document.getElementById("angleOutput");
     const targetKneeInput = document.getElementById("targetKnee");
+    const targetElbowInput = document.getElementById("targetElbow");
     const crankAngleInput = document.getElementById("crankAngle");
+    const barXInput = document.getElementById("barX");
     const solveKneeButton = document.getElementById("solveKnee");
+    const solveElbowButton = document.getElementById("solveElbow");
 
     const presetSelect = document.getElementById("presetSelect");
     const showBothCheckbox = document.getElementById("showBoth");
@@ -914,6 +953,66 @@
         const other = activePilot === 1 ? 2 : 1;
         pilots[other].crankAngle = -bestAngle;
       }
+
+      const solvedKneeAngle = computePilotGeometry(pilots[activePilot]).angles.knee;
+      console.log(
+        `Solved crank angle ${bestAngle.toFixed(1)}° → knee angle ${solvedKneeAngle.toFixed(
+          1
+        )}° (target ${target.toFixed(1)}°)`
+      );
+
+      render();
+    }
+
+    // Solve for the handlebar X location that most closely matches the target elbow angle.
+    function solveElbowAngleForActivePilot() {
+      readFormIntoState();
+      const target = parseFloat(targetElbowInput.value);
+      if (!Number.isFinite(target)) return;
+
+      const pilot = pilots[activePilot];
+      const barY = pilot.barY;
+      const { shoulder } = computePilotGeometry(pilot).joints;
+
+      // Scan a generous window in front of and slightly behind the shoulder to search for a solution.
+      const minX = shoulder.x - 400;
+      const maxX = Math.max(shoulder.x + 200, pilot.barX + 300);
+
+      let bestX = pilot.barX;
+      let bestDiff = Infinity;
+
+      const evaluate = (x) => {
+        const angle = computePilotGeometry({ ...pilot, barX: x, barY }).angles.elbow;
+        const diff = Math.abs(angle - target);
+        if (diff < bestDiff) {
+          bestDiff = diff;
+          bestX = x;
+        }
+      };
+
+      for (let x = minX; x <= maxX; x += 10) evaluate(x);
+      for (let x = bestX - 50; x <= bestX + 50; x += 1) evaluate(x);
+
+      const tolerance = 8;
+      if (bestDiff > tolerance) {
+        console.warn(
+          `Elbow solver: no solution within ${tolerance}° of target ${target.toFixed(
+            1
+          )}° across the scan range.`
+        );
+        render();
+        return;
+      }
+
+      pilots[activePilot].barX = bestX;
+      barXInput.value = bestX.toFixed(1);
+
+      const solvedElbowAngle = computePilotGeometry(pilots[activePilot]).angles.elbow;
+      console.log(
+        `Solved bar X ${bestX.toFixed(1)}mm → elbow angle ${solvedElbowAngle.toFixed(1)}° (target ${target.toFixed(
+          1
+        )}°)`
+      );
 
       render();
     }
@@ -1426,6 +1525,7 @@
     });
 
     solveKneeButton.addEventListener("click", solveKneeAngleForActivePilot);
+    solveElbowButton.addEventListener("click", solveElbowAngleForActivePilot);
 
     presetSelect.addEventListener("change", (e) => {
       const val = e.target.value;
