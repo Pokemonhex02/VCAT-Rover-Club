@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>VCAT Human-Powered Rover – Seating Tool</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #0b1020;
+      color: #f5f5f5;
+    }
+
+    header {
+      padding: 12px 20px;
+      background: #11162b;
+      border-bottom: 1px solid #222844;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    header p {
+      margin: 2px 0 0;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 12px;
+      padding: 12px 16px 16px;
+      height: calc(100vh - 60px);
+    }
+
+    .panel {
+      background: #141a33;
+      border-radius: 10px;
+      padding: 12px;
+      border: 1px solid #232a4a;
+      overflow: hidden;
+    }
+
+    .panel h2 {
+      font-size: 14px;
+      margin: 0 0 8px;
+      border-bottom: 1px solid #232a4a;
+      padding-bottom: 4px;
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: 1fr 80px;
+      column-gap: 6px;
+      row-gap: 6px;
+      font-size: 11px;
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    input[type="number"],
+    input[type="range"] {
+      width: 100%;
+    }
+
+    .group-title {
+      grid-column: 1 / -1;
+      font-size: 11px;
+      margin-top: 6px;
+      padding-top: 4px;
+      border-top: 1px dashed #232a4a;
+      opacity: 0.9;
+    }
+
+    .output {
+      font-size: 11px;
+      white-space: pre;
+      background: #101527;
+      border-radius: 6px;
+      padding: 6px;
+      border: 1px solid #232a4a;
+      margin-top: 6px;
+      overflow: auto;
+      max-height: 160px;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at top left, #1e2540, #050815);
+      border-radius: 10px;
+      border: 1px solid #232a4a;
+      display: block;
+    }
+
+    .hint {
+      font-size: 10px;
+      opacity: 0.75;
+      margin-top: 4px;
+    }
+
+    @media (max-width: 900px) {
+      main {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+      canvas {
+        height: 320px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>VCAT Human-Powered Rover – Seating Position Tool</h1>
+    <p>Adjust dimensions to lay out a recumbent pilot and read off joint angles & coordinates for CAD.</p>
+  </header>
+
+  <main>
+    <section class="panel">
+      <h2>Inputs (all in mm or degrees)</h2>
+
+      <form id="inputs">
+        <div class="group-title">Rider segments</div>
+
+        <label for="legLength">Leg length (hip → ankle)</label>
+        <input id="legLength" type="number" value="1000" min="400" max="1300" step="10" />
+
+        <label for="thighRatio">Thigh % of leg</label>
+        <input id="thighRatio" type="number" value="0.46" min="0.3" max="0.7" step="0.01" />
+
+        <label for="torsoLength">Torso length (hip → shoulder)</label>
+        <input id="torsoLength" type="number" value="600" min="300" max="900" step="10" />
+
+        <label for="armLength">Arm length (shoulder → hand)</label>
+        <input id="armLength" type="number" value="700" min="300" max="900" step="10" />
+
+        <label for="upperArmRatio">Upper arm % of arm</label>
+        <input id="upperArmRatio" type="number" value="0.48" min="0.3" max="0.7" step="0.01" />
+
+        <div class="group-title">Seat / torso</div>
+
+        <label for="backAngle">Seat-back angle (deg)</label>
+        <input id="backAngle" type="number" value="30" min="5" max="70" step="1" />
+
+        <div class="hint" style="grid-column: 1 / -1;">
+          Back angle is from horizontal, leaning backwards (0° = fully flat, 30–45° typical recumbent).
+        </div>
+
+        <div class="group-title">Crank / pedal circle (relative to hip)</div>
+
+        <label for="crankX">Crank center X</label>
+        <input id="crankX" type="number" value="950" step="10" />
+
+        <label for="crankY">Crank center Y</label>
+        <input id="crankY" type="number" value="0" step="10" />
+
+        <label for="crankRadius">Crank radius</label>
+        <input id="crankRadius" type="number" value="170" min="120" max="200" step="1" />
+
+        <label for="crankAngle">Crank angle (deg)</label>
+        <input id="crankAngle" type="number" value="10" min="-180" max="180" step="1" />
+
+        <div class="group-title">Handlebar (hand target, relative to hip)</div>
+
+        <label for="barX">Bar X</label>
+        <input id="barX" type="number" value="400" step="10" />
+
+        <label for="barY">Bar Y</label>
+        <input id="barY" type="number" value="450" step="10" />
+      </form>
+
+      <div class="output" id="output"></div>
+      <div class="hint">
+        Coordinates are given with hip at (0, 0), X forward towards the crank, Y up.  
+        You can drop these directly into CAD sketches or param tables.
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Side View (Recumbent Stick Figure)</h2>
+      <canvas id="sideView" width="900" height="500"></canvas>
+    </section>
+  </main>
+
+  <script>
+    const inputsForm = document.getElementById('inputs');
+    const canvas = document.getElementById('sideView');
+    const ctx = canvas.getContext('2d');
+    const outputEl = document.getElementById('output');
+
+    function num(id, fallback) {
+      const v = parseFloat(document.getElementById(id).value);
+      return Number.isFinite(v) ? v : fallback;
+    }
+
+    function degToRad(d) {
+      return (d * Math.PI) / 180;
+    }
+
+    function distance(a, b) {
+      const dx = a.x - b.x;
+      const dy = a.y - b.y;
+      return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    function angleBetween(pJoint, p1, p2) {
+      const v1 = { x: p1.x - pJoint.x, y: p1.y - pJoint.y };
+      const v2 = { x: p2.x - pJoint.x, y: p2.y - pJoint.y };
+      const dot = v1.x * v2.x + v1.y * v2.y;
+      const mag1 = Math.sqrt(v1.x * v1.x + v1.y * v1.y);
+      const mag2 = Math.sqrt(v2.x * v2.x + v2.y * v2.y);
+      if (mag1 === 0 || mag2 === 0) return 0;
+      const cos = Math.min(1, Math.max(-1, dot / (mag1 * mag2)));
+      return (Math.acos(cos) * 180) / Math.PI;
+    }
+
+    function computeGeometry() {
+      // Inputs
+      const legLength = num('legLength', 1000);
+      const thighRatio = num('thighRatio', 0.46);
+      const torsoLength = num('torsoLength', 600);
+      const armLength = num('armLength', 700);
+      const upperArmRatio = num('upperArmRatio', 0.48);
+
+      const backAngle = degToRad(num('backAngle', 30));
+
+      const crankX = num('crankX', 950);
+      const crankY = num('crankY', 0);
+      const crankRadius = num('crankRadius', 170);
+      const crankAngle = degToRad(num('crankAngle', 0));
+
+      const barX = num('barX', 400);
+      const barY = num('barY', 450);
+
+      // Joints in rider coordinate system (hip at 0,0; X forward, Y up)
+      const hip = { x: 0, y: 0 };
+
+      // Pedal / ankle point
+      const pedal = {
+        x: crankX + crankRadius * Math.cos(crankAngle),
+        y: crankY + crankRadius * Math.sin(crankAngle),
+      };
+
+      // Split leg into thigh + shank on line hip → pedal
+      const thighLen = legLength * thighRatio;
+      const shankLen = legLength - thighLen;
+
+      const legVector = { x: pedal.x - hip.x, y: pedal.y - hip.y };
+      const legMag = Math.sqrt(legVector.x * legVector.x + legVector.y * legVector.y) || 1;
+
+      const knee = {
+        x: hip.x + (legVector.x * thighLen) / legMag,
+        y: hip.y + (legVector.y * thighLen) / legMag,
+      };
+
+      const ankle = pedal;
+
+      // Torso: back angle measured from +X, leaning backwards (negative X)
+      const shoulder = {
+        x: hip.x - torsoLength * Math.cos(backAngle),
+        y: hip.y + torsoLength * Math.sin(backAngle),
+      };
+
+      // Arms: shoulder to handlebar
+      const hand = { x: barX, y: barY };
+      const upperArmLen = armLength * upperArmRatio;
+      const armVec = { x: hand.x - shoulder.x, y: hand.y - shoulder.y };
+      const armMag = Math.sqrt(armVec.x * armVec.x + armVec.y * armVec.y) || 1;
+
+      const elbow = {
+        x: shoulder.x + (armVec.x * upperArmLen) / armMag,
+        y: shoulder.y + (armVec.y * upperArmLen) / armMag,
+      };
+
+      // Simple seat reference line from hip backwards
+      const seatBackBase = { x: hip.x - 100, y: hip.y - 40 };
+      const seatBackTop = {
+        x: hip.x - (torsoLength + 100) * Math.cos(backAngle),
+        y: hip.y + (torsoLength + 100) * Math.sin(backAngle),
+      };
+
+      return {
+        joints: { hip, knee, ankle, shoulder, elbow, hand, crankCenter: { x: crankX, y: crankY }, seatBackBase, seatBackTop },
+        segments: { thighLen, shankLen, upperArmLen },
+      };
+    }
+
+    function computeBounds(points) {
+      let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+      for (const p of points) {
+        if (!p) continue;
+        minX = Math.min(minX, p.x);
+        maxX = Math.max(maxX, p.x);
+        minY = Math.min(minY, p.y);
+        maxY = Math.max(maxY, p.y);
+      }
+      if (!isFinite(minX)) {
+        minX = -100; maxX = 100; minY = -100; maxY = 100;
+      }
+      return { minX, maxX, minY, maxY };
+    }
+
+    function worldToScreenFactory(bounds, canvasWidth, canvasHeight) {
+      const margin = 80; // mm-ish margin in world coords
+      const spanX = bounds.maxX - bounds.minX || 1;
+      const spanY = bounds.maxY - bounds.minY || 1;
+
+      const scaleX = canvasWidth / (spanX + 2 * margin);
+      const scaleY = canvasHeight / (spanY + 2 * margin);
+      const scale = Math.min(scaleX, scaleY);
+
+      return function toScreen(p) {
+        const sx = (p.x - bounds.minX + margin) * scale;
+        const sy = canvasHeight - (p.y - bounds.minY + margin) * scale; // invert Y
+        return { x: sx, y: sy };
+      };
+    }
+
+    function draw() {
+      const { joints, segments } = computeGeometry();
+      const { hip, knee, ankle, shoulder, elbow, hand, crankCenter, seatBackBase, seatBackTop } = joints;
+
+      const allPoints = [hip, knee, ankle, shoulder, elbow, hand, crankCenter, seatBackBase, seatBackTop];
+      const bounds = computeBounds(allPoints);
+      const toScreen = worldToScreenFactory(bounds, canvas.width, canvas.height);
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw frame axes (for reference)
+      ctx.save();
+      ctx.strokeStyle = "rgba(255,255,255,0.12)";
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+
+      const hipS = toScreen(hip);
+      ctx.beginPath();
+      ctx.moveTo(0, hipS.y);
+      ctx.lineTo(canvas.width, hipS.y);
+      ctx.moveTo(hipS.x, 0);
+      ctx.lineTo(hipS.x, canvas.height);
+      ctx.stroke();
+      ctx.restore();
+
+      // Draw seat back
+      ctx.save();
+      ctx.strokeStyle = "#4aa3ff";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      const sb0 = toScreen(seatBackBase);
+      const sb1 = toScreen(seatBackTop);
+      ctx.moveTo(sb0.x, sb0.y);
+      ctx.lineTo(sb1.x, sb1.y);
+      ctx.stroke();
+      ctx.restore();
+
+      // Draw crank circle
+      ctx.save();
+      ctx.strokeStyle = "#ffaa33";
+      ctx.lineWidth = 2;
+      const cc = toScreen(crankCenter);
+      const pedalS = toScreen(ankle);
+      const crankRadiusScreen = Math.hypot(pedalS.x - cc.x, pedalS.y - cc.y);
+      ctx.beginPath();
+      ctx.arc(cc.x, cc.y, crankRadiusScreen, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+
+      // Helper to draw segment
+      function drawSegment(a, b, color) {
+        const A = toScreen(a);
+        const B = toScreen(b);
+        ctx.beginPath();
+        ctx.moveTo(A.x, A.y);
+        ctx.lineTo(B.x, B.y);
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 4;
+        ctx.lineCap = "round";
+        ctx.stroke();
+      }
+
+      // Helper to draw joint
+      function drawJoint(p, color, r = 6) {
+        const s = toScreen(p);
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, r, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.strokeStyle = "#0b1020";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+
+      // Skeleton segments
+      ctx.save();
+      drawSegment(hip, knee, "#7cf0ff");      // thigh
+      drawSegment(knee, ankle, "#7cf0ff");    // shank
+      drawSegment(hip, shoulder, "#ff6fb3");  // torso
+      drawSegment(shoulder, elbow, "#ffd27f");// upper arm
+      drawSegment(elbow, hand, "#ffd27f");    // forearm
+      ctx.restore();
+
+      // Joints
+      drawJoint(hip, "#ffffff", 7);
+      drawJoint(knee, "#ffffff", 6);
+      drawJoint(ankle, "#ffffff", 5);
+      drawJoint(shoulder, "#ffffff", 6);
+      drawJoint(elbow, "#ffffff", 5);
+      drawJoint(hand, "#ffffff", 4);
+
+      // Compute angles
+      const kneeAngle = angleBetween(knee, hip, ankle);
+      const hipAngle = angleBetween(hip, shoulder, knee);
+      const elbowAngle = angleBetween(elbow, shoulder, hand);
+
+      // Numeric output for CAD
+      const fmt = (v) => v.toFixed(1);
+      const lines = [];
+
+      lines.push("JOINT COORDINATES (hip at 0,0; X forward, Y up) [mm]");
+      lines.push(`  Hip      : (${fmt(hip.x)}, ${fmt(hip.y)})`);
+      lines.push(`  Knee     : (${fmt(knee.x)}, ${fmt(knee.y)})`);
+      lines.push(`  Ankle    : (${fmt(ankle.x)}, ${fmt(ankle.y)})`);
+      lines.push(`  Shoulder : (${fmt(shoulder.x)}, ${fmt(shoulder.y)})`);
+      lines.push(`  Elbow    : (${fmt(elbow.x)}, ${fmt(elbow.y)})`);
+      lines.push(`  Hand     : (${fmt(hand.x)}, ${fmt(hand.y)})`);
+      lines.push("");
+      lines.push("KEY ANGLES [deg]");
+      lines.push(`  Knee flexion : ${fmt(kneeAngle)}`);
+      lines.push(`  Hip angle    : ${fmt(hipAngle)}`);
+      lines.push(`  Elbow angle  : ${fmt(elbowAngle)}`);
+      lines.push("");
+      lines.push("SEGMENT LENGTHS [mm]");
+      lines.push(`  Thigh : ${fmt(segments.thighLen)}`);
+      lines.push(`  Shank : ${fmt(segments.shankLen)}`);
+      lines.push(`  Upper arm : ${fmt(segments.upperArmLen)}`);
+
+      outputEl.textContent = lines.join("\n");
+    }
+
+    // Hook up inputs
+    Array.from(inputsForm.elements).forEach((el) => {
+      if (el.tagName === "INPUT") {
+        el.addEventListener("input", draw);
+      }
+    });
+
+    window.addEventListener("load", draw);
+  </script>
+</body>
+</html>
