@@ -25,7 +25,7 @@
 
     * {
       box-sizing: border-box;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont,
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
         "Segoe UI", sans-serif;
     }
 
@@ -33,35 +33,39 @@
       margin: 0;
       background: radial-gradient(circle at top left, #0b1220, #020617);
       color: var(--text);
+      line-height: 1.45;
     }
 
     header {
-      padding: 14px 22px 12px;
+      padding: 16px 22px 14px;
       border-bottom: 1px solid var(--border);
-      background: linear-gradient(90deg, #020617, #020617 40%, #060c1f);
+      background: linear-gradient(90deg, #020617, #020617 45%, #060c1f);
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 6px;
     }
 
     header h1 {
       margin: 0;
       font-size: 20px;
       letter-spacing: 0.2px;
+      font-weight: 700;
     }
 
     header p {
       margin: 0;
       font-size: 12px;
       color: var(--muted);
+      max-width: 980px;
     }
 
     main.layout {
       display: grid;
-      grid-template-columns: 360px minmax(0, 1fr);
-      gap: 14px;
-      padding: 14px 16px 16px;
-      min-height: calc(100vh - 70px);
+      grid-template-columns: 390px minmax(0, 1fr);
+      gap: 16px;
+      padding: 16px 18px 18px;
+      min-height: calc(100vh - 74px);
+      align-items: start;
     }
 
     .panel {
@@ -69,47 +73,49 @@
       border-radius: 12px;
       border: 1px solid var(--border);
       box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
-      padding: 14px;
+      padding: 16px;
     }
 
     .panel h2 {
       margin: 0 0 8px;
       font-size: 15px;
-      letter-spacing: 0.2px;
+      letter-spacing: 0.25px;
+      color: var(--text);
     }
 
     .inputs-panel {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
     }
 
     /* Pilot tabs */
 
     .pilot-tabs {
       display: flex;
-      gap: 8px;
+      gap: 10px;
     }
 
     .pilot-tab {
       flex: 1;
       border-radius: 999px;
-      padding: 7px 10px;
+      padding: 8px 12px;
       font-size: 12px;
       border: 1px solid var(--border-soft);
-      background: #020617;
+      background: linear-gradient(135deg, #0b1220, #020617);
       color: var(--muted);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      transition: all 0.15s ease;
+      transition: all 0.18s ease;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
     }
 
     .pilot-tab span.swatch {
-      width: 10px;
-      height: 10px;
+      width: 11px;
+      height: 11px;
       border-radius: 999px;
       border: 1px solid #000;
     }
@@ -123,37 +129,64 @@
     }
 
     .pilot-tab.active {
-      background: linear-gradient(135deg, #1f2937, #020617);
+      background: linear-gradient(135deg, #1f2937, #0b1220);
       color: var(--text);
       border-color: var(--accent);
-      box-shadow: 0 0 0 1px rgba(74, 163, 255, 0.4);
+      box-shadow: 0 0 0 1px rgba(74, 163, 255, 0.35),
+        0 10px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    .pilot-tab:focus-visible,
+    button.btn:focus-visible,
+    select:focus-visible,
+    input[type="number"]:focus-visible {
+      outline: 2px solid rgba(74, 163, 255, 0.55);
+      outline-offset: 2px;
+      box-shadow: 0 0 0 2px rgba(74, 163, 255, 0.15);
     }
 
     .top-row-controls {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 10px;
       align-items: center;
       justify-content: space-between;
       font-size: 11px;
       color: var(--muted);
-      margin-top: 2px;
+      margin-top: 6px;
     }
 
     .top-row-controls label {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
       cursor: pointer;
+      padding: 4px 6px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-soft);
+    }
+
+    .preset-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .preset-select {
-      padding: 6px 8px;
-      border-radius: 8px;
+      padding: 7px 10px;
+      border-radius: 10px;
       border: 1px solid var(--border);
       background: #020617;
       color: var(--text);
       font-size: 12px;
+      min-width: 150px;
+    }
+
+    .active-pilot-indicator {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
     }
 
     /* Form groups */
@@ -162,18 +195,19 @@
       margin-top: 6px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
     }
 
     details.group {
       border-radius: 10px;
       border: 1px solid var(--border-soft);
       background: var(--panel-strong);
-      padding: 6px 8px 8px;
+      padding: 0 0 10px;
+      overflow: hidden;
     }
 
     details.group[open] {
-      box-shadow: inset 0 0 0 1px rgba(74, 163, 255, 0.18);
+      box-shadow: inset 0 0 0 1px rgba(74, 163, 255, 0.12);
     }
 
     details.group summary {
@@ -184,32 +218,42 @@
       justify-content: space-between;
       font-size: 12px;
       color: var(--text);
+      padding: 10px 12px;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.02), transparent);
+      border-left: 3px solid var(--border);
     }
 
     details.group summary::-webkit-details-marker {
       display: none;
     }
 
-    details.group summary::after {
-      content: "▾";
-      font-size: 10px;
-      color: var(--muted);
+    details.group summary::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-left: 2px solid var(--muted);
+      border-bottom: 2px solid var(--muted);
+      transform: rotate(-45deg);
+      margin-right: 8px;
+      transition: transform 0.2s ease, border-color 0.2s ease;
     }
 
-    details.group[open] summary::after {
-      content: "▴";
+    details.group[open] summary::before {
+      transform: rotate(45deg);
+      border-color: var(--accent);
     }
 
     .group-body {
-      margin-top: 6px;
+      margin-top: 0;
+      padding: 8px 12px 0;
       display: grid;
-      gap: 6px;
+      gap: 8px;
     }
 
     .field {
       display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 6px;
+      grid-template-columns: 1fr 140px;
+      gap: 8px;
       align-items: center;
       font-size: 11px;
       color: var(--muted);
@@ -217,16 +261,18 @@
 
     .field label {
       white-space: nowrap;
+      font-weight: 600;
+      color: #d6def5;
     }
 
     .field input[type="number"] {
       width: 100%;
-      padding: 5px 7px;
-      border-radius: 6px;
+      padding: 7px 9px;
+      border-radius: 8px;
       border: 1px solid var(--border);
       background: #020617;
       color: var(--text);
-      font-size: 11px;
+      font-size: 12px;
     }
 
     .inline-input {
@@ -242,7 +288,7 @@
     .field-inline-controls {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
-      gap: 6px;
+      gap: 8px;
     }
 
     .field-inline-controls input[type="number"] {
@@ -255,41 +301,50 @@
       margin-top: 2px;
     }
 
+    .solver-status {
+      font-size: 10px;
+      color: var(--danger);
+      margin-top: -2px;
+      min-height: 12px;
+    }
+
     .actions {
-      margin-top: 8px;
+      margin-top: 10px;
       display: flex;
-      gap: 8px;
+      gap: 10px;
       flex-wrap: wrap;
     }
 
     button.btn {
       border-radius: 999px;
       border: 1px solid var(--border);
-      padding: 7px 12px;
+      padding: 8px 13px;
       font-size: 11px;
       background: linear-gradient(135deg, #1f2937, #020617);
       color: var(--text);
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      transition: all 0.15s ease;
+      gap: 8px;
+      transition: all 0.16s ease;
+      letter-spacing: 0.15px;
     }
 
     button.btn.small {
-      padding: 6px 10px;
+      padding: 7px 11px;
       font-size: 10px;
       white-space: nowrap;
     }
 
     button.btn:hover {
       border-color: var(--accent);
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.45);
       transform: translateY(-1px);
+      background: linear-gradient(135deg, #22304a, #0b1220);
     }
 
     button.btn.secondary {
-      background: #020617;
+      background: linear-gradient(135deg, #0b1220, #020617);
     }
 
     /* Right side */
@@ -300,8 +355,8 @@
 
     .canvas-grid {
       display: grid;
-      grid-template-rows: minmax(260px, 360px) minmax(220px, 280px) auto;
-      gap: 10px;
+      grid-template-rows: minmax(280px, 380px) minmax(240px, 300px) auto;
+      gap: 12px;
       height: 100%;
     }
 
@@ -316,11 +371,12 @@
     .canvas-title {
       position: absolute;
       inset: 0 auto auto 0;
-      padding: 8px 10px;
+      padding: 10px 12px;
       font-size: 12px;
       color: var(--muted);
       background: linear-gradient(180deg, rgba(0, 0, 0, 0.54), transparent);
       pointer-events: none;
+      letter-spacing: 0.2px;
     }
 
     canvas {
@@ -333,35 +389,53 @@
       background: #020617;
       border-radius: 12px;
       border: 1px solid var(--border);
-      padding: 10px;
+      padding: 12px;
       display: grid;
       grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-      gap: 10px;
+      gap: 12px;
     }
 
     .output-panel h3 {
-      margin: 0 0 6px;
+      margin: 0 0 8px;
       font-size: 13px;
       color: var(--muted);
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
     }
 
     .output-text {
       background: #020617;
-      border-radius: 8px;
+      border-radius: 10px;
       border: 1px solid var(--border-soft);
-      padding: 8px;
+      padding: 10px;
       font-family: "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
       font-size: 11px;
       color: var(--text);
       white-space: pre;
       overflow: auto;
-      max-height: 260px;
+      max-height: 280px;
+      line-height: 1.45;
+    }
+
+    .output-text::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    .output-text::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+    }
+
+    .output-text::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.03);
     }
 
     .angle-text {
-      font-family: "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
-      font-size: 11px;
+      font-size: 12px;
       color: var(--text);
+      display: grid;
+      gap: 10px;
     }
 
     .status-ok {
@@ -377,11 +451,11 @@
     }
 
     .legend {
-      margin-top: 6px;
+      margin-top: 8px;
       font-size: 10px;
       color: var(--muted);
       display: flex;
-      gap: 8px;
+      gap: 10px;
       align-items: center;
       flex-wrap: wrap;
     }
@@ -401,12 +475,103 @@
       background: var(--pilot2);
     }
 
+    .angle-block {
+      padding: 10px;
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
+    }
+
+    .angle-block + .angle-block {
+      margin-top: 8px;
+    }
+
+    .angle-block.pilot1 {
+      border-color: rgba(56, 189, 248, 0.28);
+    }
+
+    .angle-block.pilot2 {
+      border-color: rgba(251, 191, 36, 0.28);
+    }
+
+    .angle-block h4 {
+      margin: 0 0 6px;
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.2px;
+    }
+
+    .angle-block.pilot1 h4 {
+      color: var(--pilot1);
+    }
+
+    .angle-block.pilot2 h4 {
+      color: var(--pilot2);
+    }
+
+    .angle-summary {
+      font-size: 12px;
+      color: #e5e7eb;
+      margin-bottom: 6px;
+    }
+
+    .angle-row {
+      display: grid;
+      grid-template-columns: auto 1fr auto auto;
+      align-items: center;
+      gap: 8px;
+      font-family: "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 11px;
+      padding: 4px 0;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.06);
+    }
+
+    .angle-name {
+      color: #dbeafe;
+    }
+
+    .angle-value {
+      text-align: right;
+      color: #e5e7eb;
+    }
+
+    .angle-status {
+      text-align: right;
+      font-weight: 700;
+    }
+
+    .angle-row:last-child {
+      border-bottom: none;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      display: inline-block;
+    }
+
+    .status-dot.status-ok {
+      background: var(--success);
+      box-shadow: 0 0 0 4px rgba(74, 222, 128, 0.08);
+    }
+
+    .status-dot.status-warn {
+      background: var(--warning);
+      box-shadow: 0 0 0 4px rgba(250, 204, 21, 0.08);
+    }
+
+    .status-dot.status-bad {
+      background: var(--danger);
+      box-shadow: 0 0 0 4px rgba(251, 113, 133, 0.1);
+    }
+
     @media (max-width: 1100px) {
       main.layout {
         grid-template-columns: 1fr;
       }
       .canvas-grid {
-        grid-template-rows: 320px 240px auto;
+        grid-template-rows: 340px 250px auto;
       }
     }
 
@@ -419,8 +584,8 @@
 </head>
 <body>
   <header>
-    <h1>VCAT Human-Powered Rover – Seating Position Tool</h1>
-    <p>Adjust dimensions to lay out recumbent pilots, visualize clearances, and export CAD-ready coordinates.</p>
+    <h1>VCAT Human-Powered Rover — Seating Position Tool</h1>
+    <p>Recumbent two-pilot layout helper with side/top views, joint angles, and CAD-ready exports.</p>
   </header>
 
   <main class="layout">
@@ -439,6 +604,10 @@
         </button>
       </div>
 
+      <div class="active-pilot-indicator" id="activePilotIndicator">
+        Active pilot: Pilot 1
+      </div>
+
       <div class="top-row-controls">
         <div>
           <label>
@@ -450,12 +619,15 @@
             Mirror crank angle for Pilot 2
           </label>
         </div>
-        <select id="presetSelect" class="preset-select">
-          <option value="">Rider preset…</option>
-          <option value="p5">5th percentile</option>
-          <option value="p50">50th percentile</option>
-          <option value="p95">95th percentile</option>
-        </select>
+        <div class="preset-row">
+          <select id="presetSelect" class="preset-select">
+            <option value="">Rider preset…</option>
+            <option value="p5">5th percentile</option>
+            <option value="p50">50th percentile</option>
+            <option value="p95">95th percentile</option>
+          </select>
+          <button type="button" class="btn small" id="resetPilot">Reset pilot</button>
+        </div>
       </div>
 
       <form id="inputs">
@@ -532,6 +704,7 @@
                   Solve for crank angle
                 </button>
               </div>
+              <div class="solver-status" id="kneeSolveStatus"></div>
             </div>
           </div>
         </details>
@@ -562,6 +735,7 @@
                   Solve for elbow angle
                 </button>
               </div>
+              <div class="solver-status" id="elbowSolveStatus"></div>
             </div>
           </div>
         </details>
@@ -689,6 +863,11 @@
       barY: 450,
     };
 
+    const BASELINE_PILOTS = {
+      1: { ...DEFAULT_PILOT },
+      2: { ...DEFAULT_PILOT, crankAngle: -10, barX: 380 },
+    };
+
     const SHARED_GEOMETRY = {
       trackWidth: 800,
       wheelbase: 1300,
@@ -697,11 +876,12 @@
     };
 
     const pilots = {
-      1: { ...DEFAULT_PILOT },
-      2: { ...DEFAULT_PILOT, crankAngle: -10, barX: 380 },
+      1: { ...BASELINE_PILOTS[1] },
+      2: { ...BASELINE_PILOTS[2] },
     };
 
     let activePilot = 1;
+    let lastPreset = "p50";
 
     // --------------- UTILITIES ----------------
     const degToRad = (d) => (d * Math.PI) / 180;
@@ -879,11 +1059,15 @@
     const barXInput = document.getElementById("barX");
     const solveKneeButton = document.getElementById("solveKnee");
     const solveElbowButton = document.getElementById("solveElbow");
+    const kneeSolveStatus = document.getElementById("kneeSolveStatus");
+    const elbowSolveStatus = document.getElementById("elbowSolveStatus");
 
     const presetSelect = document.getElementById("presetSelect");
+    const resetPilotButton = document.getElementById("resetPilot");
     const showBothCheckbox = document.getElementById("showBoth");
     const mirrorFeetCheckbox = document.getElementById("mirrorFeet");
     const pilotTabs = document.querySelectorAll(".pilot-tab");
+    const activePilotIndicator = document.getElementById("activePilotIndicator");
 
     // --------------- FORM <-> STATE ----------------
 
@@ -916,9 +1100,31 @@
 
     function applyPreset(name) {
       if (!PRESETS[name]) return;
+      lastPreset = name;
       Object.assign(pilots[activePilot], PRESETS[name]);
       fillFormFromState(activePilot);
       render();
+    }
+
+    function resetPilotToPreset() {
+      const presetKey = lastPreset || "p50";
+      const presetValues = PRESETS[presetKey] || PRESETS.p50;
+      pilots[activePilot] = { ...BASELINE_PILOTS[activePilot], ...presetValues };
+      fillFormFromState(activePilot);
+      setSolveNotice("knee", "");
+      setSolveNotice("elbow", "");
+      render();
+    }
+
+    function setSolveNotice(target, message = "", isError = false) {
+      const el = target === "knee" ? kneeSolveStatus : elbowSolveStatus;
+      if (!el) return;
+      el.textContent = message;
+      el.style.color = isError ? "var(--danger)" : "var(--muted)";
+    }
+
+    function updateActivePilotIndicator() {
+      activePilotIndicator.textContent = `Active pilot: Pilot ${activePilot}`;
     }
 
     // --------------- SOLVERS ----------------
@@ -928,6 +1134,8 @@
       readFormIntoState();
       const target = parseFloat(targetKneeInput.value);
       if (!Number.isFinite(target)) return;
+
+      setSolveNotice("knee", "");
 
       const pilot = pilots[activePilot];
       let bestAngle = pilot.crankAngle;
@@ -946,6 +1154,18 @@
       for (let a = bestAngle - 10; a <= bestAngle + 10; a += 0.5) evaluate(a);
 
       bestAngle = Math.max(-180, Math.min(180, bestAngle));
+
+      const tolerance = 12;
+      if (bestDiff > tolerance) {
+        setSolveNotice(
+          "knee",
+          "No solution found in range for that knee angle.",
+          true
+        );
+        render();
+        return;
+      }
+
       pilots[activePilot].crankAngle = bestAngle;
       crankAngleInput.value = bestAngle.toFixed(1);
 
@@ -961,6 +1181,13 @@
         )}° (target ${target.toFixed(1)}°)`
       );
 
+      setSolveNotice(
+        "knee",
+        `Solved crank to ${bestAngle.toFixed(1)}° for knee ${solvedKneeAngle.toFixed(
+          1
+        )}°`
+      );
+
       render();
     }
 
@@ -969,6 +1196,8 @@
       readFormIntoState();
       const target = parseFloat(targetElbowInput.value);
       if (!Number.isFinite(target)) return;
+
+      setSolveNotice("elbow", "");
 
       const pilot = pilots[activePilot];
       const barY = pilot.barY;
@@ -1000,6 +1229,11 @@
             1
           )}° across the scan range.`
         );
+        setSolveNotice(
+          "elbow",
+          "No solution found in range for that elbow angle.",
+          true
+        );
         render();
         return;
       }
@@ -1014,13 +1248,20 @@
         )}°)`
       );
 
+      setSolveNotice(
+        "elbow",
+        `Solved bar X to ${bestX.toFixed(1)} mm for elbow ${solvedElbowAngle.toFixed(
+          1
+        )}°`
+      );
+
       render();
     }
 
     // --------------- DRAWING: SIDE VIEW ----------------
 
     function drawPilot(ctx, toScreen, data, color, label) {
-      const { joints } = data;
+      const { joints, angles } = data;
       const { hip, knee, ankle, shoulder, elbow, hand, crankCenter, seatBackBase, seatBackTop } =
         joints;
 
@@ -1053,12 +1294,12 @@
 
       function joint(point, name) {
         const offsets = {
-          Hip: { x: 12, y: -12 },
-          Knee: { x: 12, y: 10 },
-          Ankle: { x: 12, y: 12 },
-          Shoulder: { x: 12, y: -16 },
-          Elbow: { x: 12, y: 12 },
-          Hand: { x: 12, y: -12 },
+          Hip: { x: 16, y: -14 },
+          Knee: { x: 16, y: 14 },
+          Ankle: { x: 16, y: 12 },
+          Shoulder: { x: 14, y: -18 },
+          Elbow: { x: 14, y: 16 },
+          Hand: { x: 14, y: -14 },
         };
 
         const s = toScreen(point);
@@ -1071,19 +1312,26 @@
         ctx.stroke();
 
         const text = name;
-        ctx.font = '10px "SFMono-Regular", monospace';
+        ctx.font = '11px "SFMono-Regular", monospace';
         const metrics = ctx.measureText(text);
-        const textHeight = 11;
-        const padding = 4;
+        const textHeight = 12;
+        const padding = 5;
         const rectW = metrics.width + padding * 2;
         const rectH = textHeight + padding;
-        const off = offsets[name] || { x: 10, y: -10 };
+        const off = offsets[name] || { x: 12, y: -10 };
         const rectX = s.x + off.x;
         const rectY = s.y + off.y - rectH / 2;
 
-        roundedRect(rectX, rectY, rectW, rectH, 4);
-        ctx.fillStyle = "rgba(15, 23, 42, 0.85)";
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
+        ctx.beginPath();
+        ctx.moveTo(s.x, s.y);
+        ctx.lineTo(rectX, rectY + rectH / 2);
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.25)";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        roundedRect(rectX, rectY, rectW, rectH, 5);
+        ctx.fillStyle = "rgba(12, 18, 33, 0.9)";
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.18)";
         ctx.lineWidth = 1;
         ctx.fill();
         ctx.stroke();
@@ -1093,25 +1341,64 @@
         ctx.fillText(text, rectX + padding, rectY + rectH / 2 + 0.5);
       }
 
+      function angleBadge(point, text, offset, themeColor) {
+        const s = toScreen(point);
+        const textPos = { x: s.x + offset.x, y: s.y + offset.y };
+        ctx.font = '11px "SFMono-Regular", monospace';
+        const padding = 5;
+        const metrics = ctx.measureText(text);
+        const rectW = metrics.width + padding * 2;
+        const rectH = 14 + padding;
+        const rectX = textPos.x;
+        const rectY = textPos.y - rectH / 2;
+
+        ctx.beginPath();
+        ctx.moveTo(s.x, s.y);
+        ctx.lineTo(textPos.x, textPos.y);
+        ctx.strokeStyle = `${themeColor}55`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        roundedRect(rectX, rectY, rectW, rectH, 4);
+        ctx.fillStyle = "rgba(8, 12, 24, 0.9)";
+        ctx.strokeStyle = `${themeColor}77`;
+        ctx.lineWidth = 1;
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = "#f8fafc";
+        ctx.textBaseline = "middle";
+        ctx.fillText(text, rectX + padding, rectY + rectH / 2 + 0.5);
+      }
+
       // Seat back
-      seg(seatBackBase, seatBackTop, COLORS.seat, 3);
+      seg(seatBackBase, seatBackTop, COLORS.seat, 4.2);
 
       // Crank circle
       const cc = toScreen(crankCenter);
       const pedalS = toScreen(ankle);
       const crankR = Math.hypot(pedalS.x - cc.x, pedalS.y - cc.y);
       ctx.beginPath();
+      ctx.setLineDash([]);
       ctx.arc(cc.x, cc.y, crankR, 0, Math.PI * 2);
       ctx.strokeStyle = COLORS.crank;
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 2.2;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(pedalS.x, pedalS.y, 5.5, 0, Math.PI * 2);
+      ctx.fillStyle = COLORS.crank;
+      ctx.strokeStyle = "#0b1220";
+      ctx.lineWidth = 1.2;
+      ctx.fill();
       ctx.stroke();
 
       // Skeleton
-      seg(hip, shoulder, COLORS.torso, 5);
-      seg(hip, knee, color, 5);
-      seg(knee, ankle, color, 5);
+      seg(hip, shoulder, COLORS.torso, 5.2);
+      seg(hip, knee, color, 5.2);
+      seg(knee, ankle, color, 5.2);
       seg(shoulder, elbow, COLORS.arms, 4.5);
-      seg(elbow, hand, COLORS.arms, 4);
+      seg(elbow, hand, COLORS.arms, 4.2);
 
       joint(hip, "Hip");
       joint(knee, "Knee");
@@ -1119,6 +1406,9 @@
       joint(shoulder, "Shoulder");
       joint(elbow, "Elbow");
       joint(hand, "Hand");
+
+      angleBadge(knee, `${angles.knee.toFixed(0)}°`, { x: -20, y: 22 }, color);
+      angleBadge(elbow, `${angles.elbow.toFixed(0)}°`, { x: 18, y: -18 }, COLORS.arms);
 
       // Pilot label
       ctx.fillStyle = color;
@@ -1147,17 +1437,30 @@
 
       sideCtx.clearRect(0, 0, sideCanvas.width, sideCanvas.height);
 
+      const referenceJoints = (activePilot === 1 ? data1 : data2).joints;
+
       // Axes
       const originS = toScreen({ x: 0, y: 0 });
       sideCtx.save();
       sideCtx.strokeStyle = COLORS.grid;
       sideCtx.lineWidth = 1;
-      sideCtx.setLineDash([6, 6]);
+      sideCtx.setLineDash([4, 6]);
       sideCtx.beginPath();
       sideCtx.moveTo(0, originS.y);
       sideCtx.lineTo(sideCanvas.width, originS.y);
       sideCtx.moveTo(originS.x, 0);
       sideCtx.lineTo(originS.x, sideCanvas.height);
+      sideCtx.stroke();
+      sideCtx.restore();
+
+      // Pedal plane reference
+      const pedalLineY = toScreen({ x: 0, y: referenceJoints.ankle.y }).y;
+      sideCtx.save();
+      sideCtx.setLineDash([3, 6]);
+      sideCtx.strokeStyle = "rgba(255,255,255,0.08)";
+      sideCtx.beginPath();
+      sideCtx.moveTo(0, pedalLineY);
+      sideCtx.lineTo(sideCanvas.width, pedalLineY);
       sideCtx.stroke();
       sideCtx.restore();
 
@@ -1201,6 +1504,45 @@
         y: topCanvas.height - (p.y + margin) * scale,
       });
 
+      const roundedRectPath = (ctx, x, y, w, h, r = 4) => {
+        const radius = Math.min(r, w / 2, h / 2);
+        ctx.beginPath();
+        ctx.moveTo(x + radius, y);
+        ctx.lineTo(x + w - radius, y);
+        ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
+        ctx.lineTo(x + w, y + h - radius);
+        ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
+        ctx.lineTo(x + radius, y + h);
+        ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
+        ctx.lineTo(x, y + radius);
+        ctx.quadraticCurveTo(x, y, x + radius, y);
+        ctx.closePath();
+      };
+
+      // Light grid for scale
+      const gridStep = 250;
+      topCtx.save();
+      topCtx.strokeStyle = "rgba(255,255,255,0.06)";
+      topCtx.lineWidth = 1;
+      topCtx.setLineDash([2, 10]);
+      for (let x = -margin; x <= wheelbase + margin; x += gridStep) {
+        const start = toScreen({ x, y: -margin });
+        const end = toScreen({ x, y: trackWidth + margin });
+        topCtx.beginPath();
+        topCtx.moveTo(start.x, start.y);
+        topCtx.lineTo(end.x, end.y);
+        topCtx.stroke();
+      }
+      for (let y = -margin; y <= trackWidth + margin; y += gridStep) {
+        const start = toScreen({ x: -margin, y });
+        const end = toScreen({ x: wheelbase + margin, y });
+        topCtx.beginPath();
+        topCtx.moveTo(start.x, start.y);
+        topCtx.lineTo(end.x, end.y);
+        topCtx.stroke();
+      }
+      topCtx.restore();
+
       // Centerline
       topCtx.save();
       topCtx.strokeStyle = COLORS.grid;
@@ -1225,14 +1567,20 @@
       // Wheels
       const leftWheel = toScreen({ x: wheelbase, y: trackWidth / 2 });
       const rightWheel = toScreen({ x: wheelbase, y: -trackWidth / 2 });
-      const wheelR = 20;
-      topCtx.fillStyle = "#020617";
-      topCtx.strokeStyle = COLORS.accent;
-      topCtx.lineWidth = 2;
+      const wheelR = 24;
       [leftWheel, rightWheel].forEach((w) => {
         topCtx.beginPath();
         topCtx.arc(w.x, w.y, wheelR, 0, Math.PI * 2);
+        topCtx.fillStyle = "rgba(74,163,255,0.08)";
+        topCtx.strokeStyle = COLORS.accent;
+        topCtx.lineWidth = 2;
         topCtx.fill();
+        topCtx.stroke();
+
+        topCtx.beginPath();
+        topCtx.arc(w.x, w.y, 10, 0, Math.PI * 2);
+        topCtx.strokeStyle = "rgba(255,255,255,0.35)";
+        topCtx.lineWidth = 1.2;
         topCtx.stroke();
       });
 
@@ -1247,6 +1595,29 @@
       topCtx.arc(hip2.x, hip2.y, 6, 0, Math.PI * 2);
       topCtx.fillStyle = COLORS.pilot2;
       topCtx.fill();
+
+      // Hip labels
+      const labelHip = (p, text, color) => {
+        topCtx.font = '11px "SFMono-Regular", monospace';
+        const padding = 5;
+        const metrics = topCtx.measureText(text);
+        const rectW = metrics.width + padding * 2;
+        const rectH = 14 + padding;
+        const rectX = p.x + 10;
+        const rectY = p.y - rectH / 2;
+        topCtx.fillStyle = "rgba(8, 12, 24, 0.9)";
+        topCtx.strokeStyle = `${color}66`;
+        topCtx.lineWidth = 1;
+        roundedRectPath(topCtx, rectX, rectY, rectW, rectH, 4);
+        topCtx.fill();
+        topCtx.stroke();
+        topCtx.fillStyle = "#e5e7eb";
+        topCtx.textBaseline = "middle";
+        topCtx.fillText(text, rectX + padding, rectY + rectH / 2 + 0.5);
+      };
+
+      labelHip(hip1, "Hip P1", COLORS.pilot1);
+      labelHip(hip2, "Hip P2", COLORS.pilot2);
 
       // Outer footprint rectangle
       const outerWidth = trackWidth + 200;
@@ -1272,14 +1643,26 @@
       // Labels
       topCtx.fillStyle = "#e5e7eb";
       topCtx.font = '11px "SFMono-Regular", monospace';
-      topCtx.fillText("Front axle", leftWheel.x - 40, leftWheel.y - 26);
-      topCtx.fillText("Hip P1", hip1.x + 8, hip1.y - 4);
-      topCtx.fillText("Hip P2", hip2.x + 8, hip2.y - 4);
+      const frontLabelX = (leftWheel.x + rightWheel.x) / 2 - 34;
+      topCtx.fillText("Front axle", frontLabelX, leftWheel.y - 30);
       topCtx.fillText(
         "Target radius",
         circleCenter.x + 8,
         circleCenter.y - rPx - 6
       );
+
+      // Scale legend
+      const legendText = `Grid ≈ ${gridStep} mm`;
+      const legendW = topCtx.measureText(legendText).width + 10;
+      topCtx.fillStyle = "rgba(8, 12, 24, 0.92)";
+      topCtx.strokeStyle = "rgba(255,255,255,0.12)";
+      topCtx.lineWidth = 1;
+      roundedRectPath(topCtx, topCanvas.width - legendW - 14, topCanvas.height - 28, legendW, 20, 6);
+      topCtx.fill();
+      topCtx.stroke();
+      topCtx.fillStyle = "#e5e7eb";
+      topCtx.textBaseline = "middle";
+      topCtx.fillText(legendText, topCanvas.width - legendW - 8, topCanvas.height - 13);
     }
 
     // --------------- OUTPUTS ----------------
@@ -1387,20 +1770,34 @@
         sections.push(summary.text);
 
         const colorClass = idx === 1 ? "pilot1" : "pilot2";
-        const lines = [`<strong>Pilot ${idx}</strong>`];
-        summary.angleTable.forEach(({ name, val, status }) => {
-          const label = `${name[0].toUpperCase()}${name.slice(1)} angle`;
-          lines.push(
-            `<span class="${status.className}">${label}: ${val.toFixed(
-              1
-            )}° (${status.status}${
-              status.warn ? " ⚠" : ""
-            })</span>`
-          );
-        });
-        angleBlocks.push(
-          `<div class="${colorClass}">${lines.join("<br>")}</div>`
-        );
+        const total = summary.angleTable.length;
+        const warnCount = summary.angleTable.filter((a) => a.status.warn).length;
+        const okCount = total - warnCount;
+
+        const rows = summary.angleTable
+          .map(({ name, val, status }) => {
+            const label = `${name[0].toUpperCase()}${name.slice(1)}`;
+            const statusLabel = status.warn ? "Check Δ" : "OK";
+            return `
+              <div class="angle-row">
+                <span class="status-dot ${status.className}"></span>
+                <span class="angle-name">${label}</span>
+                <span class="angle-value">${val.toFixed(1)}°</span>
+                <span class="angle-status ${status.className}">${statusLabel}</span>
+              </div>
+            `;
+          })
+          .join("");
+
+        angleBlocks.push(`
+          <div class="angle-block ${colorClass}">
+            <h4>Pilot ${idx}</h4>
+            <div class="angle-summary">Pilot ${idx}: ${okCount}/${total} angles OK${
+          warnCount ? ` (${warnCount} check${warnCount > 1 ? "s" : ""})` : ""
+        }</div>
+            ${rows}
+          </div>
+        `);
       });
 
       const rover = roverOutputs();
@@ -1504,6 +1901,7 @@
       drawSideView();
       drawTopDown();
       renderOutputs();
+      updateActivePilotIndicator();
     }
 
     // --------------- EVENTS ----------------
@@ -1516,11 +1914,15 @@
         pilotTabs.forEach((t) => t.classList.remove("active"));
         tab.classList.add("active");
         fillFormFromState(activePilot);
+        setSolveNotice("knee", "");
+        setSolveNotice("elbow", "");
         render();
       });
     });
 
-    inputsForm.addEventListener("input", () => {
+    inputsForm.addEventListener("input", (e) => {
+      if (e.target === targetKneeInput) setSolveNotice("knee", "");
+      if (e.target === targetElbowInput) setSolveNotice("elbow", "");
       render();
     });
 
@@ -1532,6 +1934,8 @@
       if (val) applyPreset(val);
       e.target.value = "";
     });
+
+    resetPilotButton.addEventListener("click", resetPilotToPreset);
 
     showBothCheckbox.addEventListener("change", render);
 
