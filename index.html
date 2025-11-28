@@ -69,7 +69,7 @@
       border-radius: 12px;
       border: 1px solid var(--border);
       box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
-      padding: 12px;
+      padding: 14px;
     }
 
     .panel h2 {
@@ -229,6 +229,16 @@
       font-size: 11px;
     }
 
+    .inline-input {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .inline-input input {
+      flex: 1;
+    }
+
     .hint {
       font-size: 10px;
       color: var(--muted);
@@ -254,6 +264,12 @@
       align-items: center;
       gap: 6px;
       transition: all 0.15s ease;
+    }
+
+    button.btn.small {
+      padding: 6px 10px;
+      font-size: 10px;
+      white-space: nowrap;
     }
 
     button.btn:hover {
@@ -490,6 +506,22 @@
             <div class="field">
               <label for="crankAngle">Crank angle (deg)</label>
               <input id="crankAngle" data-field="crankAngle" type="number" value="10" min="-180" max="180" step="1" />
+            </div>
+            <div class="field">
+              <label for="targetKnee">Target knee angle (deg)</label>
+              <div class="inline-input">
+                <input
+                  id="targetKnee"
+                  type="number"
+                  value="110"
+                  min="60"
+                  max="150"
+                  step="1"
+                />
+                <button type="button" class="btn small" id="solveKnee">
+                  Solve for crank angle
+                </button>
+              </div>
             </div>
           </div>
         </details>
@@ -805,6 +837,9 @@
     const topCtx = topCanvas.getContext("2d");
     const summaryOutput = document.getElementById("summaryOutput");
     const angleOutput = document.getElementById("angleOutput");
+    const targetKneeInput = document.getElementById("targetKnee");
+    const crankAngleInput = document.getElementById("crankAngle");
+    const solveKneeButton = document.getElementById("solveKnee");
 
     const presetSelect = document.getElementById("presetSelect");
     const showBothCheckbox = document.getElementById("showBoth");
@@ -847,10 +882,46 @@
       render();
     }
 
+    // --------------- SOLVERS ----------------
+
+    // Solve for the crank angle that most closely matches the target knee angle.
+    function solveKneeAngleForActivePilot() {
+      readFormIntoState();
+      const target = parseFloat(targetKneeInput.value);
+      if (!Number.isFinite(target)) return;
+
+      const pilot = pilots[activePilot];
+      let bestAngle = pilot.crankAngle;
+      let bestDiff = Infinity;
+
+      const evaluate = (angle) => {
+        const knee = computePilotGeometry({ ...pilot, crankAngle: angle }).angles.knee;
+        const diff = Math.abs(knee - target);
+        if (diff < bestDiff) {
+          bestDiff = diff;
+          bestAngle = angle;
+        }
+      };
+
+      for (let a = -170; a <= 170; a += 5) evaluate(a);
+      for (let a = bestAngle - 10; a <= bestAngle + 10; a += 0.5) evaluate(a);
+
+      bestAngle = Math.max(-180, Math.min(180, bestAngle));
+      pilots[activePilot].crankAngle = bestAngle;
+      crankAngleInput.value = bestAngle.toFixed(1);
+
+      if (mirrorFeetCheckbox.checked) {
+        const other = activePilot === 1 ? 2 : 1;
+        pilots[other].crankAngle = -bestAngle;
+      }
+
+      render();
+    }
+
     // --------------- DRAWING: SIDE VIEW ----------------
 
     function drawPilot(ctx, toScreen, data, color, label) {
-      const { joints, angles } = data;
+      const { joints } = data;
       const { hip, knee, ankle, shoulder, elbow, hand, crankCenter, seatBackBase, seatBackTop } =
         joints;
 
@@ -866,20 +937,61 @@
         ctx.stroke();
       }
 
+      function roundedRect(x, y, w, h, r) {
+        const radius = Math.min(r, w / 2, h / 2);
+        ctx.beginPath();
+        ctx.moveTo(x + radius, y);
+        ctx.lineTo(x + w - radius, y);
+        ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
+        ctx.lineTo(x + w, y + h - radius);
+        ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
+        ctx.lineTo(x + radius, y + h);
+        ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
+        ctx.lineTo(x, y + radius);
+        ctx.quadraticCurveTo(x, y, x + radius, y);
+        ctx.closePath();
+      }
+
       function joint(point, name) {
+        const offsets = {
+          Hip: { x: 12, y: -12 },
+          Knee: { x: 12, y: 10 },
+          Ankle: { x: 12, y: 12 },
+          Shoulder: { x: 12, y: -16 },
+          Elbow: { x: 12, y: 12 },
+          Hand: { x: 12, y: -12 },
+        };
+
         const s = toScreen(point);
         ctx.beginPath();
-        ctx.arc(s.x, s.y, 6, 0, Math.PI * 2);
-        ctx.fillStyle = COLORS.joint;
-        ctx.strokeStyle = "#020617";
-        ctx.lineWidth = 1.4;
+        ctx.arc(s.x, s.y, 4.5, 0, Math.PI * 2);
+        ctx.fillStyle = "#ffffff";
+        ctx.strokeStyle = "#0b1220";
+        ctx.lineWidth = 1.5;
+        ctx.fill();
+        ctx.stroke();
+
+        const text = name;
+        ctx.font = '10px "SFMono-Regular", monospace';
+        const metrics = ctx.measureText(text);
+        const textHeight = 11;
+        const padding = 4;
+        const rectW = metrics.width + padding * 2;
+        const rectH = textHeight + padding;
+        const off = offsets[name] || { x: 10, y: -10 };
+        const rectX = s.x + off.x;
+        const rectY = s.y + off.y - rectH / 2;
+
+        roundedRect(rectX, rectY, rectW, rectH, 4);
+        ctx.fillStyle = "rgba(15, 23, 42, 0.85)";
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
+        ctx.lineWidth = 1;
         ctx.fill();
         ctx.stroke();
 
         ctx.fillStyle = "#e5e7eb";
-        ctx.font = '11px "SFMono-Regular", monospace';
-        ctx.textBaseline = "bottom";
-        ctx.fillText(name, s.x + 8, s.y - 1);
+        ctx.textBaseline = "middle";
+        ctx.fillText(text, rectX + padding, rectY + rectH / 2 + 0.5);
       }
 
       // Seat back
@@ -908,20 +1020,6 @@
       joint(shoulder, "Shoulder");
       joint(elbow, "Elbow");
       joint(hand, "Hand");
-
-      // Angle labels
-      ctx.fillStyle = "#e5e7eb";
-      ctx.font = '11px "SFMono-Regular", monospace';
-      const labels = [
-        { p: hip, text: `Hip ${angles.hip.toFixed(1)}°` },
-        { p: knee, text: `Knee ${angles.knee.toFixed(1)}°` },
-        { p: elbow, text: `Elbow ${angles.elbow.toFixed(1)}°` },
-      ];
-      labels.forEach(({ p, text }) => {
-        const s = toScreen(p);
-        ctx.textBaseline = "top";
-        ctx.fillText(text, s.x + 10, s.y + 4);
-      });
 
       // Pilot label
       ctx.fillStyle = color;
@@ -1326,6 +1424,8 @@
     inputsForm.addEventListener("input", () => {
       render();
     });
+
+    solveKneeButton.addEventListener("click", solveKneeAngleForActivePilot);
 
     presetSelect.addEventListener("change", (e) => {
       const val = e.target.value;
