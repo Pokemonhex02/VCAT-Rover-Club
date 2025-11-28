@@ -139,7 +139,9 @@
     .pilot-tab:focus-visible,
     button.btn:focus-visible,
     select:focus-visible,
-    input[type="number"]:focus-visible {
+    input[type="number"]:focus-visible,
+    details summary:focus-visible,
+    details[open] summary:focus-visible {
       outline: 2px solid rgba(74, 163, 255, 0.55);
       outline-offset: 2px;
       box-shadow: 0 0 0 2px rgba(74, 163, 255, 0.15);
@@ -301,11 +303,23 @@
       margin-top: 2px;
     }
 
+    .preset-message {
+      font-size: 10px;
+      color: var(--warning);
+      margin-top: 4px;
+      min-height: 12px;
+    }
+
     .solver-status {
       font-size: 10px;
       color: var(--danger);
       margin-top: -2px;
       min-height: 12px;
+    }
+
+    .input-error {
+      border-color: var(--danger) !important;
+      box-shadow: 0 0 0 2px rgba(251, 113, 133, 0.15);
     }
 
     .actions {
@@ -385,6 +399,22 @@
       display: block;
     }
 
+    .canvas-tooltip {
+      position: absolute;
+      pointer-events: none;
+      background: rgba(5, 8, 22, 0.92);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      padding: 8px 10px;
+      color: #e5e7eb;
+      font-size: 11px;
+      font-family: "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+      transform: translate(10px, -10px);
+      min-width: 140px;
+      z-index: 2;
+    }
+
     .output-panel {
       background: #020617;
       border-radius: 12px;
@@ -401,6 +431,20 @@
       color: var(--muted);
       letter-spacing: 0.3px;
       text-transform: uppercase;
+    }
+
+    .summary-output {
+      line-height: 1.6;
+    }
+
+    .summary-output .summary-heading {
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .summary-output pre {
+      margin: 0 0 10px;
+      white-space: pre-wrap;
     }
 
     .output-text {
@@ -429,6 +473,48 @@
 
     .output-text::-webkit-scrollbar-track {
       background: rgba(255, 255, 255, 0.03);
+    }
+
+    .envelope-card {
+      margin-top: 12px;
+      padding: 10px;
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
+    }
+
+    .envelope-card h4 {
+      margin: 0 0 6px;
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.2px;
+    }
+
+    .envelope-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 11px;
+      padding: 6px 0;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.06);
+    }
+
+    .envelope-row:last-child {
+      border-bottom: none;
+    }
+
+    .envelope-status {
+      font-weight: 700;
+    }
+
+    #envelopeChart {
+      width: 100%;
+      height: 140px;
+      margin-top: 10px;
+      border: 1px solid var(--border-soft);
+      border-radius: 8px;
+      background: radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.06), transparent);
     }
 
     .angle-text {
@@ -480,6 +566,9 @@
       border: 1px solid var(--border-soft);
       border-radius: 10px;
       background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
     }
 
     .angle-block + .angle-block {
@@ -512,17 +601,18 @@
     .angle-summary {
       font-size: 12px;
       color: #e5e7eb;
-      margin-bottom: 6px;
+      margin: 0;
+      font-weight: 600;
     }
 
     .angle-row {
       display: grid;
-      grid-template-columns: auto 1fr auto auto;
+      grid-template-columns: 120px 1fr 86px;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       font-family: "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
       font-size: 11px;
-      padding: 4px 0;
+      padding: 6px 0;
       border-bottom: 1px dashed rgba(255, 255, 255, 0.06);
     }
 
@@ -538,6 +628,48 @@
     .angle-status {
       text-align: right;
       font-weight: 700;
+    }
+
+    .angle-bar {
+      position: relative;
+      height: 14px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+    }
+
+    .angle-bar .range {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      background: rgba(74, 222, 128, 0.18);
+      border-left: 1px solid rgba(74, 222, 128, 0.4);
+      border-right: 1px solid rgba(74, 222, 128, 0.4);
+    }
+
+    .angle-bar .marker {
+      position: absolute;
+      top: -2px;
+      width: 10px;
+      height: 18px;
+      border-radius: 8px;
+      border: 1px solid #0b1220;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+      background: var(--text);
+      transform: translateX(-50%);
+    }
+
+    .angle-bar .marker.ok {
+      background: var(--success);
+    }
+
+    .angle-bar .marker.warn {
+      background: var(--warning);
+    }
+
+    .angle-bar .marker.bad {
+      background: var(--danger);
     }
 
     .angle-row:last-child {
@@ -626,8 +758,10 @@
             <option value="p50">50th percentile</option>
             <option value="p95">95th percentile</option>
           </select>
+          <button type="button" class="btn small" id="savePreset">Save preset…</button>
           <button type="button" class="btn small" id="resetPilot">Reset pilot</button>
         </div>
+        <div class="preset-message" id="presetMessage"></div>
       </div>
 
       <form id="inputs">
@@ -787,7 +921,7 @@
         <div class="output-panel">
           <div>
             <h3>Summary (coordinates, lengths, angles)</h3>
-            <pre class="output-text" id="summaryOutput"></pre>
+            <div class="output-text summary-output" id="summaryOutput"></div>
           </div>
           <div>
             <h3>Angle health</h3>
@@ -797,6 +931,7 @@
               <span class="swatch pilot2"></span> Pilot 2
               <span>• <span class="status-ok">OK</span> &nbsp;• <span class="status-warn">Check</span> &nbsp;• <span class="status-bad">Outside range</span></span>
             </div>
+            <div class="envelope-card" id="envelopeOutput"></div>
           </div>
         </div>
       </div>
@@ -823,6 +958,9 @@
       elbow: { min: 70, max: 150 },
       ankle: { min: 80, max: 120 },
     };
+
+    const STORAGE_KEY = "vcat_rover_state_v1";
+    const PRESET_STORAGE_KEY = "vcat_rover_custom_presets_v1";
 
     const PRESETS = {
       p5: {
@@ -882,10 +1020,27 @@
 
     let activePilot = 1;
     let lastPreset = "p50";
+    let customPresets = {};
+    let lastSideViewState = null;
+    const interactionState = {
+      hover: null,
+      dragging: null,
+      mouse: null,
+    };
 
     // --------------- UTILITIES ----------------
     const degToRad = (d) => (d * Math.PI) / 180;
     const radToDeg = (r) => (r * 180) / Math.PI;
+    const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
+
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
 
     function angleBetween(joint, p1, p2) {
       const v1 = { x: p1.x - joint.x, y: p1.y - joint.y };
@@ -939,11 +1094,21 @@
         height / (spanY + 2 * margin)
       );
 
-      return function toScreen(p) {
+      function toScreen(p) {
         const x = (p.x - bounds.minX + margin) * scale;
         const y = height - (p.y - bounds.minY + margin) * scale;
         return { x, y };
+      }
+
+      toScreen.toWorld = (p) => {
+        const x = p.x / scale + bounds.minX - margin;
+        const y = (height - p.y) / scale + bounds.minY - margin;
+        return { x, y };
       };
+
+      toScreen.meta = { bounds, margin, scale, width, height };
+
+      return toScreen;
     }
 
     // --------------- GEOMETRY ----------------
@@ -1053,6 +1218,7 @@
     const topCtx = topCanvas.getContext("2d");
     const summaryOutput = document.getElementById("summaryOutput");
     const angleOutput = document.getElementById("angleOutput");
+    const envelopeOutput = document.getElementById("envelopeOutput");
     const targetKneeInput = document.getElementById("targetKnee");
     const targetElbowInput = document.getElementById("targetElbow");
     const crankAngleInput = document.getElementById("crankAngle");
@@ -1064,10 +1230,12 @@
 
     const presetSelect = document.getElementById("presetSelect");
     const resetPilotButton = document.getElementById("resetPilot");
+    const savePresetButton = document.getElementById("savePreset");
     const showBothCheckbox = document.getElementById("showBoth");
     const mirrorFeetCheckbox = document.getElementById("mirrorFeet");
     const pilotTabs = document.querySelectorAll(".pilot-tab");
     const activePilotIndicator = document.getElementById("activePilotIndicator");
+    const presetMessage = document.getElementById("presetMessage");
 
     // --------------- FORM <-> STATE ----------------
 
@@ -1098,11 +1266,43 @@
       });
     }
 
+    function setPresetMessage(message = "") {
+      if (!presetMessage) return;
+      presetMessage.textContent = message;
+    }
+
+    function refreshPresetOptions() {
+      const baseOptions = [
+        '<option value="">Rider preset…</option>',
+        '<optgroup label="Standard">',
+        '<option value="p5">5th percentile</option>',
+        '<option value="p50">50th percentile</option>',
+        '<option value="p95">95th percentile</option>',
+        "</optgroup>",
+      ];
+
+      const customKeys = Object.keys(customPresets);
+      if (customKeys.length) {
+        baseOptions.push('<optgroup label="Custom">');
+        customKeys.forEach((key) => {
+          baseOptions.push(`<option value="${key}">${escapeHtml(key)}</option>`);
+        });
+        baseOptions.push("</optgroup>");
+      }
+
+      presetSelect.innerHTML = baseOptions.join("\n");
+    }
+
     function applyPreset(name) {
-      if (!PRESETS[name]) return;
+      const presetValues = PRESETS[name] || customPresets[name];
+      if (!presetValues) {
+        setPresetMessage("Preset missing or corrupt. Ignoring.");
+        return;
+      }
       lastPreset = name;
-      Object.assign(pilots[activePilot], PRESETS[name]);
+      Object.assign(pilots[activePilot], presetValues);
       fillFormFromState(activePilot);
+      setPresetMessage("");
       render();
     }
 
@@ -1116,6 +1316,69 @@
       render();
     }
 
+    function persistState() {
+      try {
+        const payload = {
+          pilots,
+          sharedGeometry: { ...SHARED_GEOMETRY },
+          activePilot,
+          lastPreset,
+          showBoth: showBothCheckbox.checked,
+          mirrorFeet: mirrorFeetCheckbox.checked,
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+        localStorage.setItem(PRESET_STORAGE_KEY, JSON.stringify(customPresets));
+      } catch (err) {
+        console.warn("Unable to persist state", err);
+      }
+    }
+
+    function loadStateFromStorage() {
+      try {
+        const storedPresets = localStorage.getItem(PRESET_STORAGE_KEY);
+        if (storedPresets) {
+          const parsed = JSON.parse(storedPresets);
+          if (parsed && typeof parsed === "object") customPresets = parsed;
+        }
+      } catch (err) {
+        console.warn("Failed to load custom presets", err);
+      }
+
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (!saved) return;
+        const parsed = JSON.parse(saved);
+        if (parsed.pilots) {
+          pilots[1] = { ...pilots[1], ...parsed.pilots[1] };
+          pilots[2] = { ...pilots[2], ...parsed.pilots[2] };
+        }
+        if (parsed.sharedGeometry) Object.assign(SHARED_GEOMETRY, parsed.sharedGeometry);
+        if (parsed.activePilot) activePilot = parsed.activePilot;
+        if (parsed.lastPreset) lastPreset = parsed.lastPreset;
+        if (parsed.showBoth !== undefined)
+          showBothCheckbox.checked = Boolean(parsed.showBoth);
+        if (parsed.mirrorFeet !== undefined)
+          mirrorFeetCheckbox.checked = Boolean(parsed.mirrorFeet);
+      } catch (err) {
+        console.warn("Failed to restore saved state", err);
+      }
+    }
+
+    function saveCustomPreset() {
+      const label = prompt(
+        "Save current pilot as preset (name or slot, e.g., Custom A):",
+        "Custom A"
+      );
+      if (!label) return;
+      const key = label.trim();
+      if (!key) return;
+
+      customPresets[key] = { ...pilots[activePilot] };
+      localStorage.setItem(PRESET_STORAGE_KEY, JSON.stringify(customPresets));
+      refreshPresetOptions();
+      setPresetMessage(`Saved ${key} for Pilot ${activePilot}.`);
+    }
+
     function setSolveNotice(target, message = "", isError = false) {
       const el = target === "knee" ? kneeSolveStatus : elbowSolveStatus;
       if (!el) return;
@@ -1125,6 +1388,9 @@
 
     function updateActivePilotIndicator() {
       activePilotIndicator.textContent = `Active pilot: Pilot ${activePilot}`;
+      pilotTabs.forEach((t) =>
+        t.classList.toggle("active", Number(t.dataset.pilot) === activePilot)
+      );
     }
 
     // --------------- SOLVERS ----------------
@@ -1136,6 +1402,7 @@
       if (!Number.isFinite(target)) return;
 
       setSolveNotice("knee", "");
+      targetKneeInput.classList.remove("input-error");
 
       const pilot = pilots[activePilot];
       let bestAngle = pilot.crankAngle;
@@ -1162,6 +1429,7 @@
           "No solution found in range for that knee angle.",
           true
         );
+        targetKneeInput.classList.add("input-error");
         render();
         return;
       }
@@ -1188,6 +1456,8 @@
         )}°`
       );
 
+      targetKneeInput.classList.remove("input-error");
+
       render();
     }
 
@@ -1198,6 +1468,7 @@
       if (!Number.isFinite(target)) return;
 
       setSolveNotice("elbow", "");
+      targetElbowInput.classList.remove("input-error");
 
       const pilot = pilots[activePilot];
       const barY = pilot.barY;
@@ -1234,6 +1505,7 @@
           "No solution found in range for that elbow angle.",
           true
         );
+        targetElbowInput.classList.add("input-error");
         render();
         return;
       }
@@ -1255,24 +1527,29 @@
         )}°`
       );
 
+      targetElbowInput.classList.remove("input-error");
+
       render();
     }
 
     // --------------- DRAWING: SIDE VIEW ----------------
 
-    function drawPilot(ctx, toScreen, data, color, label) {
+    function drawPilot(ctx, toScreen, data, color, label, opts = {}) {
       const { joints, angles } = data;
       const { hip, knee, ankle, shoulder, elbow, hand, crankCenter, seatBackBase, seatBackTop } =
         joints;
+      const highlight =
+        opts.highlightPilot === opts.pilotIndex ? opts.highlightJoint : null;
 
-      function seg(a, b, stroke, width = 4) {
+      function segNamed(nameA, nameB, a, b, stroke, width = 4) {
         const A = toScreen(a);
         const B = toScreen(b);
+        const isHighlight = highlight && (highlight === nameA || highlight === nameB);
         ctx.beginPath();
         ctx.moveTo(A.x, A.y);
         ctx.lineTo(B.x, B.y);
-        ctx.strokeStyle = stroke;
-        ctx.lineWidth = width;
+        ctx.strokeStyle = isHighlight ? "#fff" : stroke;
+        ctx.lineWidth = isHighlight ? width + 2 : width;
         ctx.lineCap = "round";
         ctx.stroke();
       }
@@ -1292,21 +1569,22 @@
         ctx.closePath();
       }
 
-      function joint(point, name) {
+      function joint(point, key, name) {
         const offsets = {
-          Hip: { x: 16, y: -14 },
-          Knee: { x: 16, y: 14 },
-          Ankle: { x: 16, y: 12 },
-          Shoulder: { x: 14, y: -18 },
-          Elbow: { x: 14, y: 16 },
-          Hand: { x: 14, y: -14 },
+          hip: { x: 16, y: -14 },
+          knee: { x: 16, y: 14 },
+          ankle: { x: 16, y: 12 },
+          shoulder: { x: 14, y: -18 },
+          elbow: { x: 14, y: 16 },
+          hand: { x: 14, y: -14 },
         };
 
         const s = toScreen(point);
+        const isHighlight = highlight === key;
         ctx.beginPath();
-        ctx.arc(s.x, s.y, 4.5, 0, Math.PI * 2);
-        ctx.fillStyle = "#ffffff";
-        ctx.strokeStyle = "#0b1220";
+        ctx.arc(s.x, s.y, isHighlight ? 6 : 4.5, 0, Math.PI * 2);
+        ctx.fillStyle = isHighlight ? "#fff" : "#e5e7eb";
+        ctx.strokeStyle = isHighlight ? color : "#0b1220";
         ctx.lineWidth = 1.5;
         ctx.fill();
         ctx.stroke();
@@ -1318,20 +1596,24 @@
         const padding = 5;
         const rectW = metrics.width + padding * 2;
         const rectH = textHeight + padding;
-        const off = offsets[name] || { x: 12, y: -10 };
+        const off = offsets[key] || { x: 12, y: -10 };
         const rectX = s.x + off.x;
         const rectY = s.y + off.y - rectH / 2;
 
         ctx.beginPath();
         ctx.moveTo(s.x, s.y);
         ctx.lineTo(rectX, rectY + rectH / 2);
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.25)";
+        ctx.strokeStyle = isHighlight
+          ? `${color}99`
+          : "rgba(255, 255, 255, 0.25)";
         ctx.lineWidth = 1;
         ctx.stroke();
 
         roundedRect(rectX, rectY, rectW, rectH, 5);
-        ctx.fillStyle = "rgba(12, 18, 33, 0.9)";
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.18)";
+        ctx.fillStyle = isHighlight ? "rgba(8, 12, 24, 0.95)" : "rgba(12, 18, 33, 0.9)";
+        ctx.strokeStyle = isHighlight
+          ? `${color}cc`
+          : "rgba(255, 255, 255, 0.18)";
         ctx.lineWidth = 1;
         ctx.fill();
         ctx.stroke();
@@ -1372,7 +1654,7 @@
       }
 
       // Seat back
-      seg(seatBackBase, seatBackTop, COLORS.seat, 4.2);
+      segNamed("hip", "seat", seatBackBase, seatBackTop, COLORS.seat, 4.2);
 
       // Crank circle
       const cc = toScreen(crankCenter);
@@ -1381,12 +1663,12 @@
       ctx.beginPath();
       ctx.setLineDash([]);
       ctx.arc(cc.x, cc.y, crankR, 0, Math.PI * 2);
-      ctx.strokeStyle = COLORS.crank;
-      ctx.lineWidth = 2.2;
+      ctx.strokeStyle = highlight === "ankle" ? "#fff" : COLORS.crank;
+      ctx.lineWidth = highlight === "ankle" ? 3 : 2.2;
       ctx.stroke();
 
       ctx.beginPath();
-      ctx.arc(pedalS.x, pedalS.y, 5.5, 0, Math.PI * 2);
+      ctx.arc(pedalS.x, pedalS.y, highlight === "ankle" ? 7 : 5.5, 0, Math.PI * 2);
       ctx.fillStyle = COLORS.crank;
       ctx.strokeStyle = "#0b1220";
       ctx.lineWidth = 1.2;
@@ -1394,18 +1676,18 @@
       ctx.stroke();
 
       // Skeleton
-      seg(hip, shoulder, COLORS.torso, 5.2);
-      seg(hip, knee, color, 5.2);
-      seg(knee, ankle, color, 5.2);
-      seg(shoulder, elbow, COLORS.arms, 4.5);
-      seg(elbow, hand, COLORS.arms, 4.2);
+      segNamed("hip", "shoulder", hip, shoulder, COLORS.torso, 5.2);
+      segNamed("hip", "knee", hip, knee, color, 5.2);
+      segNamed("knee", "ankle", knee, ankle, color, 5.2);
+      segNamed("shoulder", "elbow", shoulder, elbow, COLORS.arms, 4.5);
+      segNamed("elbow", "hand", elbow, hand, COLORS.arms, 4.2);
 
-      joint(hip, "Hip");
-      joint(knee, "Knee");
-      joint(ankle, "Ankle");
-      joint(shoulder, "Shoulder");
-      joint(elbow, "Elbow");
-      joint(hand, "Hand");
+      joint(hip, "hip", "Hip");
+      joint(knee, "knee", "Knee");
+      joint(ankle, "ankle", "Ankle");
+      joint(shoulder, "shoulder", "Shoulder");
+      joint(elbow, "elbow", "Elbow");
+      joint(hand, "hand", "Hand");
 
       angleBadge(knee, `${angles.knee.toFixed(0)}°`, { x: -20, y: 22 }, color);
       angleBadge(elbow, `${angles.elbow.toFixed(0)}°`, { x: 18, y: -18 }, COLORS.arms);
@@ -1422,6 +1704,7 @@
 
       const showBoth = showBothCheckbox.checked;
       const pilotsToDraw = showBoth ? [1, 2] : [activePilot];
+      const highlight = interactionState.hover;
 
       const points = [];
       for (const idx of pilotsToDraw) {
@@ -1436,6 +1719,23 @@
       );
 
       sideCtx.clearRect(0, 0, sideCanvas.width, sideCanvas.height);
+
+      const screenJoints = { 1: {}, 2: {} };
+      [
+        { idx: 1, data: data1 },
+        { idx: 2, data: data2 },
+      ].forEach(({ idx, data }) => {
+        Object.entries(data.joints).forEach(([name, p]) => {
+          screenJoints[idx][name] = toScreen(p);
+        });
+      });
+
+      lastSideViewState = {
+        toScreen,
+        screenJoints,
+        data: { 1: data1, 2: data2 },
+        pilotsDrawn: pilotsToDraw,
+      };
 
       const referenceJoints = (activePilot === 1 ? data1 : data2).joints;
 
@@ -1472,7 +1772,11 @@
       const drawOne = (idx) => {
         const data = idx === 1 ? data1 : data2;
         const color = idx === 1 ? COLORS.pilot1 : COLORS.pilot2;
-        drawPilot(sideCtx, toScreen, data, color, `Pilot ${idx}`);
+        drawPilot(sideCtx, toScreen, data, color, `Pilot ${idx}`, {
+          pilotIndex: idx,
+          highlightJoint: highlight?.joint,
+          highlightPilot: highlight?.pilot,
+        });
       };
 
       if (showBoth) {
@@ -1481,6 +1785,150 @@
       } else {
         drawOne(activePilot);
       }
+
+      if (highlight && interactionState.mouse) {
+        drawSideTooltip(highlight);
+      }
+    }
+
+    function drawSideTooltip(info) {
+      const mouse = interactionState.mouse;
+      if (!mouse) return;
+      const lines = [
+        `${info.label} (${info.pilot === 1 ? "P1" : "P2"})`,
+        `X: ${info.world.x.toFixed(1)} mm`,
+        `Y: ${info.world.y.toFixed(1)} mm`,
+      ];
+      if (info.angle) lines.push(`Angle: ${info.angle.toFixed(1)}°`);
+
+      sideCtx.save();
+      sideCtx.font = '11px "SFMono-Regular", monospace';
+      const padding = 8;
+      const width =
+        Math.max(...lines.map((l) => sideCtx.measureText(l).width)) + padding * 2;
+      const height = lines.length * 14 + padding;
+      const x = clamp(mouse.x + 12, 8, sideCanvas.width - width - 8);
+      const y = clamp(mouse.y - height, 8, sideCanvas.height - height - 8);
+
+      sideCtx.fillStyle = "rgba(5, 8, 22, 0.92)";
+      sideCtx.strokeStyle = "rgba(255,255,255,0.2)";
+      sideCtx.lineWidth = 1;
+      sideCtx.beginPath();
+      if (sideCtx.roundRect) {
+        sideCtx.roundRect(x, y, width, height, 8);
+      } else {
+        sideCtx.moveTo(x + 8, y);
+        sideCtx.lineTo(x + width - 8, y);
+        sideCtx.quadraticCurveTo(x + width, y, x + width, y + 8);
+        sideCtx.lineTo(x + width, y + height - 8);
+        sideCtx.quadraticCurveTo(x + width, y + height, x + width - 8, y + height);
+        sideCtx.lineTo(x + 8, y + height);
+        sideCtx.quadraticCurveTo(x, y + height, x, y + height - 8);
+        sideCtx.lineTo(x, y + 8);
+        sideCtx.quadraticCurveTo(x, y, x + 8, y);
+      }
+      sideCtx.fill();
+      sideCtx.stroke();
+
+      sideCtx.fillStyle = "#e5e7eb";
+      lines.forEach((line, i) => {
+        sideCtx.fillText(line, x + padding, y + padding + i * 14 + 6);
+      });
+      sideCtx.restore();
+    }
+
+    function findHoverTarget(x, y) {
+      if (!lastSideViewState) return null;
+      const { screenJoints, data } = lastSideViewState;
+      const labelMap = {
+        hip: "Hip",
+        knee: "Knee",
+        ankle: "Ankle",
+        shoulder: "Shoulder",
+        elbow: "Elbow",
+        hand: "Hand",
+      };
+      const pilotsToCheck = showBothCheckbox.checked
+        ? lastSideViewState.pilotsDrawn
+        : [activePilot];
+
+      let best = null;
+      let bestDist = 18;
+
+      pilotsToCheck.forEach((idx) => {
+        Object.entries(screenJoints[idx]).forEach(([name, screen]) => {
+          const dist = Math.hypot(x - screen.x, y - screen.y);
+          if (dist < bestDist) {
+            bestDist = dist;
+            best = {
+              pilot: idx,
+              joint: name,
+              screen,
+              world: data[idx].joints[name],
+              angle: data[idx].angles[name] || null,
+              label: labelMap[name] || name,
+            };
+          }
+        });
+      });
+
+      return best;
+    }
+
+    function handleCrankDrag(x, y) {
+      if (!lastSideViewState) return;
+      const pilotState = lastSideViewState.data[activePilot];
+      if (!pilotState) return;
+      const world = lastSideViewState.toScreen.toWorld({ x, y });
+      const cc = pilotState.joints.crankCenter;
+      const angle = radToDeg(Math.atan2(world.y - cc.y, world.x - cc.x));
+      pilots[activePilot].crankAngle = clamp(angle, -180, 180);
+      crankAngleInput.value = pilots[activePilot].crankAngle.toFixed(1);
+      if (mirrorFeetCheckbox.checked) {
+        const other = activePilot === 1 ? 2 : 1;
+        pilots[other].crankAngle = -pilots[activePilot].crankAngle;
+      }
+      render();
+    }
+
+    function handleSideMouseMove(evt) {
+      const rect = sideCanvas.getBoundingClientRect();
+      const x = evt.clientX - rect.left;
+      const y = evt.clientY - rect.top;
+      interactionState.mouse = { x, y };
+
+      if (interactionState.dragging?.type === "crank") {
+        handleCrankDrag(x, y);
+        return;
+      }
+
+      const hover = findHoverTarget(x, y);
+      interactionState.hover = hover;
+      sideCanvas.style.cursor = hover ? "pointer" : "default";
+      drawSideView();
+    }
+
+    function handleSideMouseDown(evt) {
+      const rect = sideCanvas.getBoundingClientRect();
+      const x = evt.clientX - rect.left;
+      const y = evt.clientY - rect.top;
+      if (!lastSideViewState) return;
+      const pilotJoints = lastSideViewState.screenJoints[activePilot];
+      const cc = pilotJoints?.crankCenter;
+      const pedal = pilotJoints?.ankle;
+      if (!cc || !pedal) return;
+      const radius = Math.hypot(pedal.x - cc.x, pedal.y - cc.y);
+      const distToCircle = Math.abs(Math.hypot(x - cc.x, y - cc.y) - radius);
+      const distToPedal = Math.hypot(x - pedal.x, y - pedal.y);
+      if (distToCircle < 12 || distToPedal < 16) {
+        interactionState.dragging = { type: "crank" };
+        handleCrankDrag(x, y);
+      }
+    }
+
+    function handleSideMouseUp() {
+      interactionState.dragging = null;
+      drawSideView();
     }
 
     // --------------- DRAWING: TOP-DOWN ----------------
@@ -1676,6 +2124,75 @@
       return { radiusMm, steeringAngle, outerWidth };
     }
 
+    function rangeStatus(range, comfort) {
+      const inside = range.min >= comfort.min && range.max <= comfort.max;
+      if (inside) return { label: "OK", className: "status-ok" };
+      const overlaps = range.max >= comfort.min && range.min <= comfort.max;
+      if (overlaps)
+        return {
+          label: "Check",
+          className: "status-warn",
+        };
+      return { label: "Outside", className: "status-bad" };
+    }
+
+    function formatAngleRow(name, val, status) {
+      const label = `${name[0].toUpperCase()}${name.slice(1)}`;
+      const range = COMFORT[name];
+      const padding = 20;
+      const minVal = Math.min(val, range.min - padding);
+      const maxVal = Math.max(val, range.max + padding);
+      const span = Math.max(maxVal - minVal, 1);
+      const rangeStart = ((range.min - minVal) / span) * 100;
+      const rangeWidth = ((range.max - minVal) / span) * 100;
+      const markerPos = ((val - minVal) / span) * 100;
+      const markerClass =
+        status.className === "status-ok"
+          ? "ok"
+          : status.className === "status-warn"
+          ? "warn"
+          : "bad";
+      const statusLabel =
+        status.className === "status-bad"
+          ? "Outside"
+          : status.warn
+          ? "Check Δ"
+          : "OK";
+
+      return `
+        <div class="angle-row">
+          <div>
+            <div class="angle-name">${label}</div>
+            <div class="angle-value">${val.toFixed(1)}°</div>
+          </div>
+          <div class="angle-bar" aria-label="${label} angle bar">
+            <div class="range" style="left:${rangeStart}%; width:${rangeWidth}%;"></div>
+            <div class="marker ${markerClass}" style="left:${markerPos}%;"></div>
+          </div>
+          <div class="angle-status ${status.className}">${statusLabel}</div>
+        </div>
+      `;
+    }
+
+    function computePedalEnvelope(pilot) {
+      const samples = [];
+      let minKnee = Infinity,
+        maxKnee = -Infinity,
+        minHip = Infinity,
+        maxHip = -Infinity;
+
+      for (let a = -180; a <= 180; a += 5) {
+        const geo = computePilotGeometry({ ...pilot, crankAngle: a });
+        minKnee = Math.min(minKnee, geo.angles.knee);
+        maxKnee = Math.max(maxKnee, geo.angles.knee);
+        minHip = Math.min(minHip, geo.angles.hip);
+        maxHip = Math.max(maxHip, geo.angles.hip);
+        samples.push({ crank: a, knee: geo.angles.knee, hip: geo.angles.hip });
+      }
+
+      return { samples, knee: { min: minKnee, max: maxKnee }, hip: { min: minHip, max: maxHip } };
+    }
+
     function buildPilotSummary(pilotIndex) {
       const pilot = pilots[pilotIndex];
       const { joints, segments, angles } = computePilotGeometry(pilot);
@@ -1759,6 +2276,25 @@
       };
     }
 
+    function renderSummaryText(sections) {
+      const headingPattern = /^(Pilot \d|JOINT COORDINATES|SEGMENT LENGTHS|ANGLES|Inputs|ROVER GEOMETRY HELPER)/;
+      const html = sections
+        .map((section) => {
+          const lines = section.split("\n").map((line) => {
+            const safe = escapeHtml(line);
+            if (!line.trim()) return "";
+            if (headingPattern.test(line)) {
+              return `<span class="summary-heading">${safe}</span>`;
+            }
+            return safe;
+          });
+          lines.push("");
+          return `<pre>${lines.join("\n")}</pre>`;
+        })
+        .join("");
+      summaryOutput.innerHTML = html;
+    }
+
     function renderOutputs() {
       const showBoth = showBothCheckbox.checked;
       const pilotsToShow = showBoth ? [1, 2] : [activePilot];
@@ -1775,25 +2311,14 @@
         const okCount = total - warnCount;
 
         const rows = summary.angleTable
-          .map(({ name, val, status }) => {
-            const label = `${name[0].toUpperCase()}${name.slice(1)}`;
-            const statusLabel = status.warn ? "Check Δ" : "OK";
-            return `
-              <div class="angle-row">
-                <span class="status-dot ${status.className}"></span>
-                <span class="angle-name">${label}</span>
-                <span class="angle-value">${val.toFixed(1)}°</span>
-                <span class="angle-status ${status.className}">${statusLabel}</span>
-              </div>
-            `;
-          })
+          .map(({ name, val, status }) => formatAngleRow(name, val, status))
           .join("");
 
         angleBlocks.push(`
           <div class="angle-block ${colorClass}">
             <h4>Pilot ${idx}</h4>
             <div class="angle-summary">Pilot ${idx}: ${okCount}/${total} angles OK${
-          warnCount ? ` (${warnCount} check${warnCount > 1 ? "s" : ""})` : ""
+          warnCount ? ` (${warnCount} out of range)` : " (all OK)"
         }</div>
             ${rows}
           </div>
@@ -1816,8 +2341,97 @@
         ].join("\n")
       );
 
-      summaryOutput.textContent = sections.join("\n\n");
+      renderSummaryText(sections);
       angleOutput.innerHTML = angleBlocks.join("<br><br>");
+      renderEnvelope();
+    }
+
+    function renderEnvelope() {
+      if (!envelopeOutput) return;
+      const envelope = computePedalEnvelope(pilots[activePilot]);
+      const kneeStatus = rangeStatus(envelope.knee, COMFORT.knee);
+      const hipStatus = rangeStatus(envelope.hip, COMFORT.hip);
+
+      const summaryLine =
+        kneeStatus.className === "status-ok" && hipStatus.className === "status-ok"
+          ? "All within recommended range."
+          : kneeStatus.className === "status-bad" || hipStatus.className === "status-bad"
+          ? "Some parts of the stroke are outside the recommended envelope."
+          : "Mostly OK, but check the highlighted ranges.";
+
+      envelopeOutput.innerHTML = `
+        <h4>Pedal stroke envelope (Pilot ${activePilot})</h4>
+        <div class="envelope-row">
+          <span>Knee</span>
+          <span>${envelope.knee.min.toFixed(0)}° – ${envelope.knee.max.toFixed(0)}°</span>
+          <span class="envelope-status ${kneeStatus.className}">${kneeStatus.label}</span>
+        </div>
+        <div class="envelope-row">
+          <span>Hip</span>
+          <span>${envelope.hip.min.toFixed(0)}° – ${envelope.hip.max.toFixed(0)}°</span>
+          <span class="envelope-status ${hipStatus.className}">${hipStatus.label}</span>
+        </div>
+        <div class="hint">${summaryLine}</div>
+        <canvas id="envelopeChart" width="320" height="140"></canvas>
+      `;
+
+      drawEnvelopeChart(envelope);
+    }
+
+    function drawEnvelopeChart(envelope) {
+      const canvas = document.getElementById("envelopeChart");
+      if (!canvas) return;
+      canvas.width = canvas.clientWidth;
+      canvas.height = canvas.clientHeight;
+      const ctx = canvas.getContext("2d");
+      const { width, height } = canvas;
+      ctx.clearRect(0, 0, width, height);
+
+      const padding = 28;
+      const minVal = Math.min(envelope.hip.min, envelope.knee.min);
+      const maxVal = Math.max(envelope.hip.max, envelope.knee.max);
+      const span = Math.max(maxVal - minVal, 1);
+
+      const toPoint = (sample, key) => {
+        const x =
+          ((sample.crank + 180) / 360) * (width - padding * 2) + padding;
+        const y =
+          height -
+          padding -
+          ((sample[key] - minVal) / span) * (height - padding * 2);
+        return { x, y };
+      };
+
+      // Grid lines
+      ctx.strokeStyle = "rgba(255,255,255,0.08)";
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(padding, height - padding);
+      ctx.lineTo(width - padding, height - padding);
+      ctx.moveTo(padding, padding);
+      ctx.lineTo(padding, height - padding);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      const drawLine = (key, color) => {
+        ctx.beginPath();
+        envelope.samples.forEach((s, idx) => {
+          const p = toPoint(s, key);
+          if (idx === 0) ctx.moveTo(p.x, p.y);
+          else ctx.lineTo(p.x, p.y);
+        });
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 1.6;
+        ctx.stroke();
+      };
+
+      drawLine("knee", activePilot === 1 ? COLORS.pilot1 : COLORS.pilot2);
+      drawLine("hip", "#9ca3af");
+
+      ctx.fillStyle = "#9ca3af";
+      ctx.font = '10px "SFMono-Regular", monospace';
+      ctx.fillText("Crank angle (deg)", padding, height - padding + 18);
     }
 
     // --------------- EXPORT HELPERS ----------------
@@ -1902,6 +2516,7 @@
       drawTopDown();
       renderOutputs();
       updateActivePilotIndicator();
+      persistState();
     }
 
     // --------------- EVENTS ----------------
@@ -1921,6 +2536,7 @@
     });
 
     inputsForm.addEventListener("input", (e) => {
+      e.target.classList.remove("input-error");
       if (e.target === targetKneeInput) setSolveNotice("knee", "");
       if (e.target === targetElbowInput) setSolveNotice("elbow", "");
       render();
@@ -1935,6 +2551,10 @@
       e.target.value = "";
     });
 
+    savePresetButton.addEventListener("click", () => {
+      saveCustomPreset();
+    });
+
     resetPilotButton.addEventListener("click", resetPilotToPreset);
 
     showBothCheckbox.addEventListener("change", render);
@@ -1946,6 +2566,16 @@
       }
       render();
     });
+
+    sideCanvas.addEventListener("mousemove", handleSideMouseMove);
+    sideCanvas.addEventListener("mouseleave", () => {
+      interactionState.hover = null;
+      interactionState.dragging = null;
+      sideCanvas.style.cursor = "default";
+      drawSideView();
+    });
+    sideCanvas.addEventListener("mousedown", handleSideMouseDown);
+    window.addEventListener("mouseup", handleSideMouseUp);
 
     document
       .getElementById("copySummary")
@@ -1985,7 +2615,10 @@
 
     // Initial load
     window.addEventListener("load", () => {
+      loadStateFromStorage();
+      refreshPresetOptions();
       fillFormFromState(activePilot);
+      updateActivePilotIndicator();
       render();
     });
   </script>
