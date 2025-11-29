@@ -35,9 +35,10 @@
       margin: 0;
       background: radial-gradient(circle at top left, #0b1220, #020617);
       color: var(--text);
-      line-height: 1.45;
+      line-height: 1.5;
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
+      font-size: 14px;
     }
 
     header {
@@ -261,15 +262,15 @@
       grid-template-columns: 1fr 1.35fr;
       gap: 10px;
       align-items: start;
-      font-size: 13px;
-      color: var(--muted);
+      font-size: 13.5px;
+      color: #d3ddf7;
     }
 
     .field label {
       white-space: nowrap;
       font-weight: 600;
-      font-size: 13px;
-      color: #d8e1fb;
+      font-size: 13.5px;
+      color: #e6ecff;
     }
 
     .field input[type="number"] {
@@ -283,32 +284,33 @@
     }
 
     .field--solver {
-      grid-template-columns: 1fr minmax(260px, 1.5fr);
+      grid-template-columns: 1fr minmax(0, 1.6fr);
       grid-auto-rows: auto;
       align-items: center;
     }
 
     .field-solver-row {
       grid-column: 2;
+      width: 100%;
     }
 
-    .inline-solve-row {
+    .solver-row {
       display: flex;
       align-items: center;
       gap: 0.75rem;
       flex-wrap: wrap;
-      justify-content: flex-start;
     }
 
-    .inline-solve-row input[type="number"] {
-      min-width: 90px;
-      flex: 0 0 auto;
+    .solver-input {
+      flex: 0 0 90px;
       text-align: right;
+      min-width: 0;
     }
 
-    .inline-solve-row button {
-      white-space: nowrap;
+    .solver-button {
       flex: 0 0 auto;
+      padding-inline: 1.25rem;
+      white-space: nowrap;
     }
 
     .field-solver-status {
@@ -394,7 +396,7 @@
 
     .canvas-grid {
       display: grid;
-      grid-template-rows: minmax(300px, 380px) minmax(240px, 300px) auto;
+      grid-template-rows: minmax(320px, 420px) auto;
       gap: 12px;
       min-height: 0;
     }
@@ -449,13 +451,15 @@
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 14px;
       align-items: start;
+      font-size: 13.5px;
+      color: #dbe4ff;
     }
 
     .output-panel h3 {
       margin: 0 0 10px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+      color: #e6ecff;
       letter-spacing: 0.3px;
       text-transform: uppercase;
     }
@@ -477,6 +481,8 @@
       border-radius: 10px;
       border: 1px solid var(--border-soft);
       background: rgba(255, 255, 255, 0.02);
+      color: #e8ecff;
+      font-size: 13px;
     }
 
     .summary-output pre + pre {
@@ -489,8 +495,8 @@
       border: 1px solid var(--border-soft);
       padding: 10px;
       font-family: "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
-      font-size: 12px;
-      color: var(--text);
+      font-size: 13px;
+      color: #e8ecff;
       white-space: pre;
       overflow: auto;
       max-height: 300px;
@@ -515,16 +521,18 @@
       background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
       border: 1px solid var(--border-soft);
       border-radius: 10px;
-      padding: 10px;
+      padding: 12px;
       display: grid;
-      gap: 10px;
+      gap: 12px;
+      color: #dbe4ff;
+      font-size: 13.5px;
     }
 
     .power-card h4 {
       margin: 0;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+      color: #e6ecff;
       letter-spacing: 0.25px;
     }
 
@@ -537,8 +545,8 @@
     .power-inputs label {
       display: grid;
       gap: 6px;
-      color: var(--muted);
-      font-size: 12px;
+      color: #d3ddf7;
+      font-size: 13px;
     }
 
     .power-inputs input[type="number"],
@@ -552,31 +560,46 @@
       font-size: 13px;
     }
 
-    .power-output-row {
-      display: flex;
+    .power-grid {
+      display: grid;
+      grid-template-columns: minmax(160px, 1fr) auto;
+      gap: 10px;
       align-items: center;
-      justify-content: space-between;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid var(--border-soft);
-      padding: 8px 10px;
-      border-radius: 8px;
-      font-size: 13px;
-      color: var(--muted);
     }
 
-    .power-output-row strong {
-      color: #fff;
+    .power-row {
+      display: contents;
+      font-size: 13.5px;
+    }
+
+    .power-label {
+      color: #d3ddf7;
+      font-weight: 600;
+    }
+
+    .power-value {
+      text-align: right;
+      color: #f8fbff;
+      font-weight: 700;
       letter-spacing: 0.2px;
     }
 
+    .power-value.good {
+      color: var(--success);
+    }
+
+    .power-value.warn {
+      color: var(--warning);
+    }
+
     .power-note {
-      font-size: 12px;
-      color: var(--muted);
+      font-size: 12.5px;
+      color: #c0c9e6;
       line-height: 1.5;
     }
 
     .power-warning {
-      font-size: 12px;
+      font-size: 12.5px;
       color: var(--warning);
     }
 
@@ -644,8 +667,8 @@
 
     .legend {
       margin-top: 8px;
-      font-size: 10px;
-      color: var(--muted);
+      font-size: 11px;
+      color: #c3cce8;
       display: flex;
       gap: 10px;
       align-items: center;
@@ -691,8 +714,8 @@
 
     .angle-block h4 {
       margin: 0 0 6px;
-      font-size: 12px;
-      color: var(--muted);
+      font-size: 13px;
+      color: #dbe4ff;
       letter-spacing: 0.2px;
     }
 
@@ -705,10 +728,10 @@
     }
 
     .angle-summary {
-      font-size: 12px;
-      color: #e5e7eb;
+      font-size: 13px;
+      color: #f2f4ff;
       margin: 0;
-      font-weight: 600;
+      font-weight: 700;
     }
 
     .angle-row {
@@ -717,9 +740,9 @@
       align-items: center;
       gap: 12px;
       font-family: "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
-      font-size: 12px;
-      padding: 8px 0;
-      border-bottom: 1px dashed rgba(255, 255, 255, 0.06);
+      font-size: 13px;
+      padding: 9px 0;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
     }
 
     .angle-name {
@@ -977,16 +1000,17 @@
             </div>
             <div class="field field--solver">
               <label for="targetKnee">Target knee angle (deg)</label>
-              <div class="field-solver-row inline-solve-row">
+              <div class="field-solver-row solver-row">
                 <input
                   id="targetKnee"
+                  class="solver-input"
                   type="number"
                   value="110"
                   min="60"
                   max="150"
                   step="1"
                 />
-                <button type="button" class="btn small" id="solveKnee">
+                <button type="button" class="btn small solver-button" id="solveKnee">
                   Solve
                 </button>
               </div>
@@ -1008,16 +1032,17 @@
             </div>
             <div class="field field--solver">
               <label for="targetElbow">Target elbow angle (deg)</label>
-              <div class="field-solver-row inline-solve-row">
+              <div class="field-solver-row solver-row">
                 <input
                   id="targetElbow"
+                  class="solver-input"
                   type="number"
                   value="110"
                   min="70"
                   max="150"
                   step="1"
                 />
-                <button type="button" class="btn small" id="solveElbow">
+                <button type="button" class="btn small solver-button" id="solveElbow">
                   Solve
                 </button>
               </div>
@@ -1046,7 +1071,7 @@
               <input id="targetRadius" data-field="targetRadius" type="number" value="5" min="2" max="12" step="0.1" />
             </div>
             <div class="hint">
-              Used for the top-down steering helper only (shared for both pilots).
+              Used for footprint estimates and exports (shared for both pilots).
             </div>
           </div>
         </details>
@@ -1065,10 +1090,6 @@
         <div class="canvas-wrapper">
           <div class="canvas-title">Side view – recumbent stick figures</div>
           <canvas id="sideView" width="1000" height="520"></canvas>
-        </div>
-        <div class="canvas-wrapper">
-          <div class="canvas-title">Top-down steering helper</div>
-          <canvas id="topView" width="1000" height="320"></canvas>
         </div>
         <div class="output-panel">
           <div>
@@ -1102,16 +1123,18 @@
                 </select>
               </label>
             </div>
-            <div class="power-output-row">
-              <span>Estimated crank power</span>
-              <strong id="powerValue">— W</strong>
-            </div>
-            <div class="power-output-row">
-              <span>Position efficiency</span>
-              <strong id="efficiencyValue">—%</strong>
+            <div class="power-grid">
+              <div class="power-row">
+                <span class="power-label">Estimated crank power</span>
+                <span class="power-value" id="powerValue">— W</span>
+              </div>
+              <div class="power-row">
+                <span class="power-label">Position efficiency</span>
+                <span class="power-value" id="efficiencyValue">—%</span>
+              </div>
             </div>
             <div class="power-warning" id="efficiencyWarning"></div>
-            <div class="power-note">
+            <div class="power-note" id="powerNote" title="Heuristic for fit tuning only; not a physiological model">
               Based on knee and hip angles; for fit tuning only, not a physiological model.
             </div>
           </div>
@@ -1211,7 +1234,6 @@
     };
 
     let sideViewSize = { width: 0, height: 0 };
-    let topViewSize = { width: 0, height: 0 };
 
     // --------------- UTILITIES ----------------
     const degToRad = (d) => (d * Math.PI) / 180;
@@ -1399,8 +1421,6 @@
     const inputsForm = document.getElementById("inputs");
     const sideCanvas = document.getElementById("sideView");
     const sideCtx = sideCanvas.getContext("2d");
-    const topCanvas = document.getElementById("topView");
-    const topCtx = topCanvas.getContext("2d");
     const summaryOutput = document.getElementById("summaryOutput");
     const angleOutput = document.getElementById("angleOutput");
     const envelopeOutput = document.getElementById("envelopeOutput");
@@ -1437,7 +1457,6 @@
 
     function resizeAllCanvases() {
       sideViewSize = resizeCanvas(sideCanvas, sideCtx);
-      topViewSize = resizeCanvas(topCanvas, topCtx);
     }
 
     const presetSelect = document.getElementById("presetSelect");
@@ -1804,7 +1823,8 @@
         ctx.stroke();
 
         const text = name;
-        ctx.font = '11px "Segoe UI", system-ui, sans-serif';
+        ctx.font =
+          '11px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
         const metrics = ctx.measureText(text);
         const textHeight = 12;
         const padding = 6;
@@ -1838,7 +1858,8 @@
       function angleBadge(point, text, offset, themeColor) {
         const s = toScreen(point);
         const textPos = { x: s.x + offset.x, y: s.y + offset.y };
-        ctx.font = '10px "Segoe UI", system-ui, sans-serif';
+        ctx.font =
+          '11px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
         const padding = 5;
         const metrics = ctx.measureText(text);
         const rectW = metrics.width + padding * 2;
@@ -1907,7 +1928,8 @@
 
       // Pilot label
       ctx.fillStyle = color;
-      ctx.font = '13px "Segoe UI", sans-serif';
+      ctx.font =
+        '13px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
       ctx.fillText(label, 14, 20 + (label === "Pilot 2" ? 18 : 0));
     }
 
@@ -1983,8 +2005,8 @@
       sideCtx.restore();
 
       // Origin label
-      sideCtx.fillStyle = "#9ca3af";
-      sideCtx.font = '11px "SFMono-Regular", monospace';
+      sideCtx.fillStyle = "#d3d8e5";
+      sideCtx.font = '11px "SFMono-Regular", Menlo, Consolas, monospace';
       sideCtx.fillText("(0,0) hip", originS.x + 6, originS.y - 4);
 
       const drawOne = (idx) => {
@@ -2151,190 +2173,6 @@
       drawSideView();
     }
 
-    // --------------- DRAWING: TOP-DOWN ----------------
-
-    function drawTopDown() {
-      const { trackWidth, wheelbase, crankWidth, targetRadius } =
-        SHARED_GEOMETRY;
-
-      const { width: topWidth, height: topHeight } =
-        topViewSize.width && topViewSize.height
-          ? topViewSize
-          : resizeCanvas(topCanvas, topCtx);
-
-      clearCanvas(topCtx, topCanvas);
-
-      const margin = 180;
-      const spanX = wheelbase + 2 * margin;
-      const spanY = trackWidth + 2 * margin;
-      const scale = Math.min(topWidth / spanX, topHeight / spanY);
-
-      const toScreen = (p) => ({
-        x: (p.x + margin) * scale,
-        y: topHeight - (p.y + margin) * scale,
-      });
-
-      const roundedRectPath = (ctx, x, y, w, h, r = 4) => {
-        const radius = Math.min(r, w / 2, h / 2);
-        ctx.beginPath();
-        ctx.moveTo(x + radius, y);
-        ctx.lineTo(x + w - radius, y);
-        ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
-        ctx.lineTo(x + w, y + h - radius);
-        ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
-        ctx.lineTo(x + radius, y + h);
-        ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
-        ctx.lineTo(x, y + radius);
-        ctx.quadraticCurveTo(x, y, x + radius, y);
-        ctx.closePath();
-      };
-
-      // Light grid for scale
-      const gridStep = 250;
-      topCtx.save();
-      topCtx.strokeStyle = "rgba(255,255,255,0.06)";
-      topCtx.lineWidth = 1;
-      topCtx.setLineDash([2, 10]);
-      for (let x = -margin; x <= wheelbase + margin; x += gridStep) {
-        const start = toScreen({ x, y: -margin });
-        const end = toScreen({ x, y: trackWidth + margin });
-        topCtx.beginPath();
-        topCtx.moveTo(start.x, start.y);
-        topCtx.lineTo(end.x, end.y);
-        topCtx.stroke();
-      }
-      for (let y = -margin; y <= trackWidth + margin; y += gridStep) {
-        const start = toScreen({ x: -margin, y });
-        const end = toScreen({ x: wheelbase + margin, y });
-        topCtx.beginPath();
-        topCtx.moveTo(start.x, start.y);
-        topCtx.lineTo(end.x, end.y);
-        topCtx.stroke();
-      }
-      topCtx.restore();
-
-      // Centerline
-      topCtx.save();
-      topCtx.strokeStyle = COLORS.grid;
-      topCtx.lineWidth = 1;
-      topCtx.setLineDash([8, 8]);
-      const origin = toScreen({ x: 0, y: 0 });
-      topCtx.beginPath();
-      topCtx.moveTo(0, origin.y);
-      topCtx.lineTo(topWidth, origin.y);
-      topCtx.stroke();
-
-      // Turning circle
-      const radiusMm = targetRadius * 1000;
-      const circleCenter = toScreen({ x: 0, y: radiusMm });
-      const rPx = radiusMm * scale;
-      topCtx.setLineDash([4, 6]);
-      topCtx.beginPath();
-      topCtx.arc(circleCenter.x, circleCenter.y, rPx, 0, Math.PI * 2);
-      topCtx.stroke();
-      topCtx.restore();
-
-      // Wheels
-      const leftWheel = toScreen({ x: wheelbase, y: trackWidth / 2 });
-      const rightWheel = toScreen({ x: wheelbase, y: -trackWidth / 2 });
-      const wheelR = 24;
-      [leftWheel, rightWheel].forEach((w) => {
-        topCtx.beginPath();
-        topCtx.arc(w.x, w.y, wheelR, 0, Math.PI * 2);
-        topCtx.fillStyle = "rgba(74,163,255,0.08)";
-        topCtx.strokeStyle = COLORS.accent;
-        topCtx.lineWidth = 2;
-        topCtx.fill();
-        topCtx.stroke();
-
-        topCtx.beginPath();
-        topCtx.arc(w.x, w.y, 10, 0, Math.PI * 2);
-        topCtx.strokeStyle = "rgba(255,255,255,0.35)";
-        topCtx.lineWidth = 1.2;
-        topCtx.stroke();
-      });
-
-      // Hips
-      const hip1 = toScreen({ x: 0, y: crankWidth / 2 });
-      const hip2 = toScreen({ x: 0, y: -crankWidth / 2 });
-      topCtx.beginPath();
-      topCtx.arc(hip1.x, hip1.y, 6, 0, Math.PI * 2);
-      topCtx.fillStyle = COLORS.pilot1;
-      topCtx.fill();
-      topCtx.beginPath();
-      topCtx.arc(hip2.x, hip2.y, 6, 0, Math.PI * 2);
-      topCtx.fillStyle = COLORS.pilot2;
-      topCtx.fill();
-
-      // Hip labels
-      const labelHip = (p, text, color) => {
-        topCtx.font = '11px "SFMono-Regular", monospace';
-        const padding = 5;
-        const metrics = topCtx.measureText(text);
-        const rectW = metrics.width + padding * 2;
-        const rectH = 14 + padding;
-        const rectX = p.x + 10;
-        const rectY = p.y - rectH / 2;
-        topCtx.fillStyle = "rgba(8, 12, 24, 0.9)";
-        topCtx.strokeStyle = `${color}66`;
-        topCtx.lineWidth = 1;
-        roundedRectPath(topCtx, rectX, rectY, rectW, rectH, 4);
-        topCtx.fill();
-        topCtx.stroke();
-        topCtx.fillStyle = "#e5e7eb";
-        topCtx.textBaseline = "middle";
-        topCtx.fillText(text, rectX + padding, rectY + rectH / 2 + 0.5);
-      };
-
-      labelHip(hip1, "Hip P1", COLORS.pilot1);
-      labelHip(hip2, "Hip P2", COLORS.pilot2);
-
-      // Outer footprint rectangle
-      const outerWidth = trackWidth + 200;
-      const rectTopLeft = toScreen({
-        x: wheelbase - 150,
-        y: outerWidth / 2,
-      });
-      const rectBottomRight = toScreen({
-        x: -200,
-        y: -outerWidth / 2,
-      });
-      topCtx.save();
-      topCtx.setLineDash([10, 6]);
-      topCtx.strokeStyle = "rgba(248,250,252,0.25)";
-      topCtx.strokeRect(
-        rectBottomRight.x,
-        rectTopLeft.y,
-        rectTopLeft.x - rectBottomRight.x,
-        rectBottomRight.y - rectTopLeft.y
-      );
-      topCtx.restore();
-
-      // Labels
-      topCtx.fillStyle = "#e5e7eb";
-      topCtx.font = '11px "SFMono-Regular", monospace';
-      const frontLabelX = (leftWheel.x + rightWheel.x) / 2 - 34;
-      topCtx.fillText("Front axle", frontLabelX, leftWheel.y - 30);
-      topCtx.fillText(
-        "Target radius",
-        circleCenter.x + 8,
-        circleCenter.y - rPx - 6
-      );
-
-      // Scale legend
-      const legendText = `Grid ≈ ${gridStep} mm`;
-      const legendW = topCtx.measureText(legendText).width + 10;
-      topCtx.fillStyle = "rgba(8, 12, 24, 0.92)";
-      topCtx.strokeStyle = "rgba(255,255,255,0.12)";
-      topCtx.lineWidth = 1;
-      roundedRectPath(topCtx, topWidth - legendW - 14, topHeight - 28, legendW, 20, 6);
-      topCtx.fill();
-      topCtx.stroke();
-      topCtx.fillStyle = "#e5e7eb";
-      topCtx.textBaseline = "middle";
-      topCtx.fillText(legendText, topWidth - legendW - 8, topHeight - 13);
-    }
-
     // --------------- OUTPUTS ----------------
 
     function roverOutputs() {
@@ -2368,6 +2206,7 @@
       const rangeStart = ((range.min - minVal) / span) * 100;
       const rangeWidth = ((range.max - minVal) / span) * 100;
       const markerPos = ((val - minVal) / span) * 100;
+      const tooltip = `Typical target range: ${range.min}–${range.max}°`;
       const markerClass =
         status.className === "status-ok"
           ? "ok"
@@ -2384,7 +2223,7 @@
       return `
         <div class="angle-row">
           <div>
-            <div class="angle-name">${label}</div>
+            <div class="angle-name" title="${tooltip}">${label}</div>
             <div class="angle-value">${val.toFixed(1)}°</div>
           </div>
           <div class="angle-bar" aria-label="${label} angle bar">
@@ -2451,7 +2290,14 @@
 
       const roundedPower = Math.round(powerWatts / 5) * 5;
       powerValue.textContent = `${Math.max(0, roundedPower).toFixed(0)} W`;
-      efficiencyValue.textContent = `${Math.round(positionEfficiency * 100)}%`;
+      const efficiencyPercent = Math.round(positionEfficiency * 100);
+      efficiencyValue.textContent = `${efficiencyPercent}%`;
+      efficiencyValue.classList.remove("good", "warn");
+      if (efficiencyPercent >= 90) {
+        efficiencyValue.classList.add("good");
+      } else if (efficiencyPercent < 75) {
+        efficiencyValue.classList.add("warn");
+      }
 
       efficiencyWarning.textContent =
         positionEfficiency < 0.3
@@ -2648,10 +2494,14 @@
     function drawEnvelopeChart(envelope) {
       const canvas = document.getElementById("envelopeChart");
       if (!canvas) return;
-      canvas.width = canvas.clientWidth;
-      canvas.height = canvas.clientHeight;
+      const rect = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
       const ctx = canvas.getContext("2d");
-      const { width, height } = canvas;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const width = rect.width;
+      const height = rect.height;
       ctx.clearRect(0, 0, width, height);
 
       const padding = 28;
@@ -2696,8 +2546,8 @@
       drawLine("knee", activePilot === 1 ? COLORS.pilot1 : COLORS.pilot2);
       drawLine("hip", "#9ca3af");
 
-      ctx.fillStyle = "#9ca3af";
-      ctx.font = '10px "SFMono-Regular", monospace';
+      ctx.fillStyle = "#d3d8e5";
+      ctx.font = '11px "SFMono-Regular", Menlo, Consolas, monospace';
       ctx.fillText("Crank angle (deg)", padding, height - padding + 18);
     }
 
@@ -2778,12 +2628,11 @@
     // --------------- MAIN RENDER ----------------
 
     function render() {
-      if (!sideViewSize.width || !topViewSize.width) {
+      if (!sideViewSize.width) {
         resizeAllCanvases();
       }
       readFormIntoState();
       drawSideView();
-      drawTopDown();
       renderOutputs();
       updateActivePilotIndicator();
       persistState();
