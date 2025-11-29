@@ -412,7 +412,7 @@
       border-radius: 12px;
       border: 1px solid var(--border);
       overflow: hidden;
-      min-height: 360px;
+      min-height: 400px;
     }
 
     .canvas-title {
@@ -450,10 +450,11 @@
 
     .results-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 16px;
-      align-items: start;
+      align-items: stretch;
       margin-top: 4px;
+      grid-auto-rows: 1fr;
     }
 
     .result-card {
@@ -470,6 +471,7 @@
       flex-direction: column;
       gap: 10px;
       min-height: 0;
+      height: 100%;
     }
 
     .result-card h3 {
@@ -551,6 +553,10 @@
       font-weight: 700;
       color: #e6ecff;
       letter-spacing: 0.25px;
+    }
+
+    .pedal-card {
+      gap: 14px;
     }
 
     .power-inputs {
@@ -857,10 +863,8 @@
       .panel-visual {
         position: sticky;
         top: 72px;
-        max-height: calc(100vh - 88px);
         display: flex;
         flex-direction: column;
-        overflow: auto;
       }
 
       .panel-visual .canvas-grid {
@@ -1058,30 +1062,6 @@
           </div>
         </details>
 
-        <details class="group" open>
-          <summary>Rover geometry (top-down)</summary>
-          <div class="group-body">
-            <div class="field">
-              <label for="trackWidth">Front track width</label>
-              <input id="trackWidth" data-field="trackWidth" type="number" value="800" step="10" />
-            </div>
-            <div class="field">
-              <label for="wheelbase">Wheelbase (hip→front axle)</label>
-              <input id="wheelbase" data-field="wheelbase" type="number" value="1300" step="10" />
-            </div>
-            <div class="field">
-              <label for="crankWidth">Crank width</label>
-              <input id="crankWidth" data-field="crankWidth" type="number" value="160" step="5" />
-            </div>
-            <div class="field">
-              <label for="targetRadius">Target turning radius (m)</label>
-              <input id="targetRadius" data-field="targetRadius" type="number" value="5" min="2" max="12" step="0.1" />
-            </div>
-            <div class="hint">
-              Used for footprint estimates and exports (shared for both pilots).
-            </div>
-          </div>
-        </details>
       </form>
 
       <div class="actions">
@@ -1115,40 +1095,39 @@
             </div>
           </div>
 
-          <div class="result-card" id="envelopeCard">
+          <div class="result-card pedal-card" id="envelopeCard">
             <div class="envelope-card" id="envelopeOutput"></div>
-          </div>
-
-          <div class="result-card power-card" id="powerCard">
-            <h4 id="powerCardTitle">Pedal power estimate (Pilot 1)</h4>
-            <div class="power-inputs">
-              <label>
-                Cadence (rpm)
-                <input type="number" id="cadenceInput" value="60" min="20" max="140" step="1" />
-              </label>
-              <label>
-                Effort level
-                <select id="effortLevel">
-                  <option value="easy">Easy</option>
-                  <option value="endurance" selected>Endurance</option>
-                  <option value="tempo">Tempo</option>
-                  <option value="max">Max effort</option>
-                </select>
-              </label>
-            </div>
-            <div class="power-grid">
-              <div class="power-row">
-                <span class="power-label">Estimated crank power</span>
-                <span class="power-value" id="powerValue">— W</span>
+            <div class="power-card" id="powerCard">
+              <h4 id="powerCardTitle">Pedal power estimate (Pilot 1)</h4>
+              <div class="power-inputs">
+                <label>
+                  Cadence (rpm)
+                  <input type="number" id="cadenceInput" value="60" min="20" max="140" step="1" />
+                </label>
+                <label>
+                  Effort level
+                  <select id="effortLevel">
+                    <option value="easy">Easy</option>
+                    <option value="endurance" selected>Endurance</option>
+                    <option value="tempo">Tempo</option>
+                    <option value="max">Max effort</option>
+                  </select>
+                </label>
               </div>
-              <div class="power-row">
-                <span class="power-label">Position efficiency</span>
-                <span class="power-value" id="efficiencyValue">—%</span>
+              <div class="power-grid">
+                <div class="power-row">
+                  <span class="power-label">Estimated crank power</span>
+                  <span class="power-value" id="powerValue">— W</span>
+                </div>
+                <div class="power-row">
+                  <span class="power-label">Position efficiency</span>
+                  <span class="power-value" id="efficiencyValue">—%</span>
+                </div>
               </div>
-            </div>
-            <div class="power-warning" id="efficiencyWarning"></div>
-            <div class="power-note" id="powerNote" title="Heuristic for fit tuning only; not a physiological model">
-              Based on knee and hip angles; for fit tuning only, not a physiological model.
+              <div class="power-warning" id="efficiencyWarning"></div>
+              <div class="power-note" id="powerNote" title="Heuristic for fit tuning only; not a physiological model">
+                Based on knee and hip angles; for fit tuning only, not a physiological model.
+              </div>
             </div>
           </div>
         </div>
@@ -1222,13 +1201,6 @@
     const BASELINE_PILOTS = {
       1: { ...DEFAULT_PILOT },
       2: { ...DEFAULT_PILOT, crankAngle: -10, barX: 380 },
-    };
-
-    const SHARED_GEOMETRY = {
-      trackWidth: 800,
-      wheelbase: 1300,
-      crankWidth: 160,
-      targetRadius: 5,
     };
 
     const pilots = {
@@ -1306,9 +1278,10 @@
     }
 
     function worldToScreenFactory(bounds, width, height) {
-      const margin = 120;
       const spanX = bounds.maxX - bounds.minX || 1;
       const spanY = bounds.maxY - bounds.minY || 1;
+      const largestSpan = Math.max(spanX, spanY) || 1;
+      const margin = Math.max(80, largestSpan * 0.12);
       const scale = Math.min(
         width / (spanX + 2 * margin),
         height / (spanY + 2 * margin)
@@ -1396,10 +1369,25 @@
         computeHingePoint(shoulder, hand, upperArmLen, foreArmLen, -1),
       ];
 
-      // Prefer the elbow position that bends downward visually when both are valid.
-      const elbow = elbowCandidates
-        .filter((p) => Number.isFinite(p.x) && Number.isFinite(p.y))
-        .sort((a, b) => a.y - b.y)[0] || elbowCandidates[0];
+      const validElbows = elbowCandidates.filter(
+        (p) => Number.isFinite(p.x) && Number.isFinite(p.y)
+      );
+
+      const torsoSide = Math.sign(
+        (hand.x - shoulder.x) * (hip.y - shoulder.y) -
+          (hand.y - shoulder.y) * (hip.x - shoulder.x)
+      );
+
+      const elbow =
+        validElbows.find((p) => {
+          const elbowSide = Math.sign(
+            (hand.x - shoulder.x) * (p.y - shoulder.y) -
+              (hand.y - shoulder.y) * (p.x - shoulder.x)
+          );
+          return torsoSide ? elbowSide === torsoSide : p.y <= shoulder.y;
+        }) ||
+        validElbows.sort((a, b) => a.y - b.y)[0] ||
+        elbowCandidates[0];
 
       const seatBackBase = { x: hip.x - 100, y: hip.y - 40 };
       const seatBackTop = {
@@ -1434,6 +1422,7 @@
           foreArmLen,
           torsoLength,
         },
+        crankRadius,
         angles: { hip: hipAngle, knee: kneeAngle, elbow: elbowAngle, ankle: ankleAngle },
       };
     }
@@ -1498,11 +1487,7 @@
         const val = parseFloat(el.value);
         if (!Number.isFinite(val)) return;
 
-        if (key in SHARED_GEOMETRY) {
-          SHARED_GEOMETRY[key] = val;
-        } else {
-          pilot[key] = val;
-        }
+        pilot[key] = val;
       });
     }
 
@@ -1510,9 +1495,7 @@
       const pilot = pilots[pilotIndex];
       inputsForm.querySelectorAll("[data-field]").forEach((el) => {
         const key = el.dataset.field;
-        if (key in SHARED_GEOMETRY) {
-          el.value = SHARED_GEOMETRY[key];
-        } else if (pilot[key] !== undefined) {
+        if (pilot[key] !== undefined) {
           el.value = pilot[key];
         }
       });
@@ -1572,7 +1555,6 @@
       try {
         const payload = {
           pilots,
-          sharedGeometry: { ...SHARED_GEOMETRY },
           activePilot,
           lastPreset,
           showBoth: showBothCheckbox.checked,
@@ -1604,7 +1586,6 @@
           pilots[1] = { ...pilots[1], ...parsed.pilots[1] };
           pilots[2] = { ...pilots[2], ...parsed.pilots[2] };
         }
-        if (parsed.sharedGeometry) Object.assign(SHARED_GEOMETRY, parsed.sharedGeometry);
         if (parsed.activePilot) activePilot = parsed.activePilot;
         if (parsed.lastPreset) lastPreset = parsed.lastPreset;
         if (parsed.showBoth !== undefined)
@@ -1970,7 +1951,17 @@
       const points = [];
       for (const idx of pilotsToDraw) {
         const joints = (idx === 1 ? data1 : data2).joints;
+        const crankRadius = (idx === 1 ? data1 : data2).crankRadius;
+        const crankCenter = joints.crankCenter;
         points.push(...Object.values(joints));
+        if (crankCenter && Number.isFinite(crankRadius)) {
+          points.push(
+            { x: crankCenter.x + crankRadius, y: crankCenter.y },
+            { x: crankCenter.x - crankRadius, y: crankCenter.y },
+            { x: crankCenter.x, y: crankCenter.y + crankRadius },
+            { x: crankCenter.x, y: crankCenter.y - crankRadius }
+          );
+        }
       }
       const bounds = computeBounds(points);
       const toScreen = worldToScreenFactory(
@@ -2196,15 +2187,6 @@
 
     // --------------- OUTPUTS ----------------
 
-    function roverOutputs() {
-      const radiusMm = SHARED_GEOMETRY.targetRadius * 1000;
-      const steeringAngle = radToDeg(
-        Math.atan(SHARED_GEOMETRY.wheelbase / radiusMm)
-      );
-      const outerWidth = SHARED_GEOMETRY.trackWidth + 200;
-      return { radiusMm, steeringAngle, outerWidth };
-    }
-
     function rangeStatus(range, comfort) {
       const inside = range.min >= comfort.min && range.max <= comfort.max;
       if (inside) return { label: "OK", className: "status-ok" };
@@ -2410,7 +2392,7 @@
     }
 
     function renderSummaryText(sections) {
-      const headingPattern = /^(Pilot \d|JOINT COORDINATES|SEGMENT LENGTHS|ANGLES|Inputs|ROVER GEOMETRY HELPER)/;
+      const headingPattern = /^(Pilot \d|JOINT COORDINATES|SEGMENT LENGTHS|ANGLES|Inputs)/;
       const html = sections
         .map((section) => {
           const lines = section.split("\n").map((line) => {
@@ -2457,22 +2439,6 @@
           </div>
         `);
       });
-
-      const rover = roverOutputs();
-      sections.push(
-        [
-          "ROVER GEOMETRY HELPER",
-          `Wheelbase (hip→axle): ${SHARED_GEOMETRY.wheelbase.toFixed(1)} mm`,
-          `Front track width: ${SHARED_GEOMETRY.trackWidth.toFixed(1)} mm`,
-          `Turning radius target: ${SHARED_GEOMETRY.targetRadius.toFixed(
-            2
-          )} m (${rover.radiusMm.toFixed(0)} mm)`,
-          `Steering angle (approx): ${rover.steeringAngle.toFixed(1)} deg`,
-          `Suggested outer footprint width: ${rover.outerWidth.toFixed(
-            1
-          )} mm`,
-        ].join("\n")
-      );
 
       renderSummaryText(sections);
       angleOutput.innerHTML = angleBlocks.join("<br><br>");
@@ -2623,17 +2589,6 @@
         rows.push("");
       });
 
-      rows.push("Rover geometry,,,,");
-
-      const rover = roverOutputs();
-      Object.entries(SHARED_GEOMETRY).forEach(([k, v]) =>
-        rows.push(`Geometry,,${k},${v}`)
-      );
-      rows.push(`Geometry,,steeringAngleDeg,${rover.steeringAngle.toFixed(2)}`);
-      rows.push(
-        `Geometry,,outerFootprintWidth,${rover.outerWidth.toFixed(1)}`
-      );
-
       return rows.join("\n");
     }
 
@@ -2641,7 +2596,6 @@
       const payload = {
         pilot1: { inputs: pilots[1], ...computePilotGeometry(pilots[1]) },
         pilot2: { inputs: pilots[2], ...computePilotGeometry(pilots[2]) },
-        rover: { ...SHARED_GEOMETRY, ...roverOutputs() },
       };
       return JSON.stringify(payload, null, 2);
     }
