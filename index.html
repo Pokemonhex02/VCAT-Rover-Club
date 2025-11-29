@@ -66,7 +66,7 @@
 
     main.layout {
       display: grid;
-      grid-template-columns: 400px minmax(0, 1fr);
+      grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
       gap: 16px;
       padding: 16px 18px 18px;
       min-height: calc(100vh - 74px);
@@ -79,6 +79,9 @@
       border: 1px solid var(--border);
       box-shadow: var(--shadow);
       padding: 16px;
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
     }
 
     .panel h2 {
@@ -297,18 +300,18 @@
     .solver-row {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-      flex-wrap: wrap;
+      gap: 8px;
+      flex-wrap: nowrap;
     }
 
     .solver-input {
-      flex: 0 0 90px;
+      flex: 0 0 100px;
       text-align: right;
       min-width: 0;
     }
 
     .solver-button {
-      flex: 0 0 auto;
+      flex: 1 0 auto;
       padding-inline: 1.25rem;
       white-space: nowrap;
     }
@@ -386,8 +389,10 @@
 
     .visual-panel {
       padding: 12px;
-      max-height: calc(100vh - 110px);
-      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-height: 0;
     }
 
     .panel-visual {
@@ -395,9 +400,9 @@
     }
 
     .canvas-grid {
-      display: grid;
-      grid-template-rows: minmax(320px, 420px) auto;
-      gap: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
       min-height: 0;
     }
 
@@ -407,6 +412,7 @@
       border-radius: 12px;
       border: 1px solid var(--border);
       overflow: hidden;
+      min-height: 360px;
     }
 
     .canvas-title {
@@ -442,20 +448,31 @@
       z-index: 2;
     }
 
-    .output-panel {
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      align-items: start;
+      margin-top: 4px;
+    }
+
+    .result-card {
       background: #020617;
       border-radius: 12px;
       border: 1px solid var(--border);
       padding: 12px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 14px;
-      align-items: start;
       font-size: 13.5px;
       color: #dbe4ff;
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 0;
     }
 
-    .output-panel h3 {
+    .result-card h3 {
       margin: 0 0 10px;
       font-size: 14px;
       font-weight: 700;
@@ -604,11 +621,11 @@
     }
 
     .envelope-card {
-      margin-top: 12px;
       padding: 10px;
       border: 1px solid var(--border-soft);
       border-radius: 10px;
       background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
+      width: 100%;
     }
 
     .envelope-card h4 {
@@ -833,7 +850,7 @@
 
     @media (min-width: 1100px) {
       main.layout {
-        grid-template-columns: 360px minmax(0, 1fr);
+        grid-template-columns: minmax(300px, 380px) minmax(0, 1fr);
         align-items: flex-start;
       }
 
@@ -843,24 +860,13 @@
         max-height: calc(100vh - 88px);
         display: flex;
         flex-direction: column;
-        overflow: hidden;
+        overflow: auto;
       }
 
       .panel-visual .canvas-grid {
         flex: 1 1 auto;
         min-height: 0;
-        display: grid;
-        grid-template-rows: minmax(260px, 0.55fr) minmax(200px, 0.35fr) auto;
-        gap: 10px;
-      }
-
-      .panel-visual .canvas-wrapper {
-        min-height: 0;
-      }
-
-      .panel-visual .output-panel {
-        max-height: 300px;
-        overflow: auto;
+        gap: 14px;
       }
     }
 
@@ -868,14 +874,15 @@
       main.layout {
         grid-template-columns: 1fr;
       }
-      .canvas-grid {
-        grid-template-rows: 340px 250px auto;
-      }
     }
 
     @media (max-width: 700px) {
-      .output-panel {
+      .results-grid {
         grid-template-columns: 1fr;
+      }
+
+      .solver-row {
+        flex-wrap: wrap;
       }
 
       .field,
@@ -1091,12 +1098,14 @@
           <div class="canvas-title">Side view – recumbent stick figures</div>
           <canvas id="sideView" width="1000" height="520"></canvas>
         </div>
-        <div class="output-panel">
-          <div>
+
+        <div class="results-grid">
+          <div class="result-card">
             <h3>Summary (coordinates, lengths, angles)</h3>
             <div class="output-text summary-output" id="summaryOutput"></div>
           </div>
-          <div>
+
+          <div class="result-card">
             <h3>Angle health</h3>
             <div class="output-text angle-text" id="angleOutput"></div>
             <div class="legend">
@@ -1104,9 +1113,13 @@
               <span class="swatch pilot2"></span> Pilot 2
               <span>• <span class="status-ok">OK</span> &nbsp;• <span class="status-warn">Check</span> &nbsp;• <span class="status-bad">Outside range</span></span>
             </div>
+          </div>
+
+          <div class="result-card" id="envelopeCard">
             <div class="envelope-card" id="envelopeOutput"></div>
           </div>
-          <div class="power-card" id="powerCard">
+
+          <div class="result-card power-card" id="powerCard">
             <h4 id="powerCardTitle">Pedal power estimate (Pilot 1)</h4>
             <div class="power-inputs">
               <label>
@@ -1378,7 +1391,15 @@
       const hand = { x: barX, y: barY };
       const upperArmLen = armLength * upperArmRatio;
       const foreArmLen = armLength - upperArmLen;
-      const elbow = computeHingePoint(shoulder, hand, upperArmLen, foreArmLen, 1);
+      const elbowCandidates = [
+        computeHingePoint(shoulder, hand, upperArmLen, foreArmLen, 1),
+        computeHingePoint(shoulder, hand, upperArmLen, foreArmLen, -1),
+      ];
+
+      // Prefer the elbow position that bends downward visually when both are valid.
+      const elbow = elbowCandidates
+        .filter((p) => Number.isFinite(p.x) && Number.isFinite(p.y))
+        .sort((a, b) => a.y - b.y)[0] || elbowCandidates[0];
 
       const seatBackBase = { x: hip.x - 100, y: hip.y - 40 };
       const seatBackTop = {
@@ -1859,11 +1880,11 @@
         const s = toScreen(point);
         const textPos = { x: s.x + offset.x, y: s.y + offset.y };
         ctx.font =
-          '11px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
-        const padding = 5;
+          '12px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+        const padding = 6;
         const metrics = ctx.measureText(text);
         const rectW = metrics.width + padding * 2;
-        const rectH = 14 + padding;
+        const rectH = 16 + padding;
         const rectX = textPos.x;
         const rectY = textPos.y - rectH / 2;
 
