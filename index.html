@@ -36,6 +36,8 @@
       background: radial-gradient(circle at top left, #0b1220, #020617);
       color: var(--text);
       line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
     }
 
     header {
@@ -281,27 +283,32 @@
     }
 
     .field--solver {
-      grid-template-columns: 1fr 240px;
+      grid-template-columns: 1fr minmax(260px, 1.5fr);
       grid-auto-rows: auto;
       align-items: center;
     }
 
     .field-solver-row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
       grid-column: 2;
     }
 
-    .field-solver-row input[type="number"] {
-      flex: 0 0 80px;
+    .inline-solve-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+    }
+
+    .inline-solve-row input[type="number"] {
+      min-width: 90px;
+      flex: 0 0 auto;
       text-align: right;
     }
 
-    .field-solver-row button {
-      flex: 1 1 auto;
-      min-width: 140px;
+    .inline-solve-row button {
       white-space: nowrap;
+      flex: 0 0 auto;
     }
 
     .field-solver-status {
@@ -439,7 +446,7 @@
       border: 1px solid var(--border);
       padding: 12px;
       display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 14px;
       align-items: start;
     }
@@ -502,6 +509,75 @@
 
     .output-text::-webkit-scrollbar-track {
       background: rgba(255, 255, 255, 0.03);
+    }
+
+    .power-card {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      padding: 10px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .power-card h4 {
+      margin: 0;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.25px;
+    }
+
+    .power-inputs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+    }
+
+    .power-inputs label {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .power-inputs input[type="number"],
+    .power-inputs select {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #020617;
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .power-output-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-soft);
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .power-output-row strong {
+      color: #fff;
+      letter-spacing: 0.2px;
+    }
+
+    .power-note {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .power-warning {
+      font-size: 12px;
+      color: var(--warning);
     }
 
     .envelope-card {
@@ -760,7 +836,7 @@
       }
 
       .panel-visual .output-panel {
-        max-height: 260px;
+        max-height: 300px;
         overflow: auto;
       }
     }
@@ -777,6 +853,15 @@
     @media (max-width: 700px) {
       .output-panel {
         grid-template-columns: 1fr;
+      }
+
+      .field,
+      .field--solver {
+        grid-template-columns: 1fr;
+      }
+
+      .field label {
+        white-space: normal;
       }
     }
   </style>
@@ -892,7 +977,7 @@
             </div>
             <div class="field field--solver">
               <label for="targetKnee">Target knee angle (deg)</label>
-              <div class="field-solver-row">
+              <div class="field-solver-row inline-solve-row">
                 <input
                   id="targetKnee"
                   type="number"
@@ -902,7 +987,7 @@
                   step="1"
                 />
                 <button type="button" class="btn small" id="solveKnee">
-                  Solve for crank angle
+                  Solve
                 </button>
               </div>
               <div class="field-solver-status" id="kneeSolveStatus"></div>
@@ -923,7 +1008,7 @@
             </div>
             <div class="field field--solver">
               <label for="targetElbow">Target elbow angle (deg)</label>
-              <div class="field-solver-row">
+              <div class="field-solver-row inline-solve-row">
                 <input
                   id="targetElbow"
                   type="number"
@@ -933,7 +1018,7 @@
                   step="1"
                 />
                 <button type="button" class="btn small" id="solveElbow">
-                  Solve for elbow angle
+                  Solve
                 </button>
               </div>
               <div class="field-solver-status" id="elbowSolveStatus"></div>
@@ -999,6 +1084,36 @@
               <span>• <span class="status-ok">OK</span> &nbsp;• <span class="status-warn">Check</span> &nbsp;• <span class="status-bad">Outside range</span></span>
             </div>
             <div class="envelope-card" id="envelopeOutput"></div>
+          </div>
+          <div class="power-card" id="powerCard">
+            <h4 id="powerCardTitle">Pedal power estimate (Pilot 1)</h4>
+            <div class="power-inputs">
+              <label>
+                Cadence (rpm)
+                <input type="number" id="cadenceInput" value="60" min="20" max="140" step="1" />
+              </label>
+              <label>
+                Effort level
+                <select id="effortLevel">
+                  <option value="easy">Easy</option>
+                  <option value="endurance" selected>Endurance</option>
+                  <option value="tempo">Tempo</option>
+                  <option value="max">Max effort</option>
+                </select>
+              </label>
+            </div>
+            <div class="power-output-row">
+              <span>Estimated crank power</span>
+              <strong id="powerValue">— W</strong>
+            </div>
+            <div class="power-output-row">
+              <span>Position efficiency</span>
+              <strong id="efficiencyValue">—%</strong>
+            </div>
+            <div class="power-warning" id="efficiencyWarning"></div>
+            <div class="power-note">
+              Based on knee and hip angles; for fit tuning only, not a physiological model.
+            </div>
           </div>
         </div>
       </div>
@@ -1289,6 +1404,12 @@
     const summaryOutput = document.getElementById("summaryOutput");
     const angleOutput = document.getElementById("angleOutput");
     const envelopeOutput = document.getElementById("envelopeOutput");
+    const powerCardTitle = document.getElementById("powerCardTitle");
+    const cadenceInput = document.getElementById("cadenceInput");
+    const effortLevelSelect = document.getElementById("effortLevel");
+    const powerValue = document.getElementById("powerValue");
+    const efficiencyValue = document.getElementById("efficiencyValue");
+    const efficiencyWarning = document.getElementById("efficiencyWarning");
     const targetKneeInput = document.getElementById("targetKnee");
     const targetElbowInput = document.getElementById("targetElbow");
     const crankAngleInput = document.getElementById("crankAngle");
@@ -2294,6 +2415,50 @@
       return { samples, knee: { min: minKnee, max: maxKnee }, hip: { min: minHip, max: maxHip } };
     }
 
+    // Smooth weighting helper centered on an optimal joint angle.
+    function gaussianWeight(angle, optimal, width) {
+      const x = (angle - optimal) / width;
+      return Math.exp(-0.5 * x * x);
+    }
+
+    // Lightweight pedal power / efficiency estimate based on current knee/hip angles.
+    function estimatePedalPower(pilot, cadenceRpm, effortKey) {
+      const { angles } = computePilotGeometry(pilot);
+      const kneeWeight = gaussianWeight(angles.knee, 110, 25);
+      const hipWeight = gaussianWeight(angles.hip, 100, 30);
+      const positionEfficiency = Math.max(0, Math.min(1, kneeWeight * hipWeight));
+
+      const torqueMap = { easy: 35, endurance: 70, tempo: 110, max: 180 };
+      const maxTorqueForEffort = torqueMap[effortKey] ?? torqueMap.endurance;
+      const omega = (2 * Math.PI * cadenceRpm) / 60; // rad/s from rpm cadence
+
+      const torque = maxTorqueForEffort * positionEfficiency;
+      const powerWatts = torque * omega;
+
+      return { powerWatts, positionEfficiency };
+    }
+
+    function renderPowerPanel() {
+      const cadence = parseFloat(cadenceInput.value) || 0;
+      const effort = effortLevelSelect.value || "endurance";
+      powerCardTitle.textContent = `Pedal power estimate (Pilot ${activePilot})`;
+
+      const { powerWatts, positionEfficiency } = estimatePedalPower(
+        pilots[activePilot],
+        cadence,
+        effort
+      );
+
+      const roundedPower = Math.round(powerWatts / 5) * 5;
+      powerValue.textContent = `${Math.max(0, roundedPower).toFixed(0)} W`;
+      efficiencyValue.textContent = `${Math.round(positionEfficiency * 100)}%`;
+
+      efficiencyWarning.textContent =
+        positionEfficiency < 0.3
+          ? "Current geometry is far from optimal; try bringing knee ~100–115° and hip ~95–105° at mid-stroke."
+          : "";
+    }
+
     function buildPilotSummary(pilotIndex) {
       const pilot = pilots[pilotIndex];
       const { joints, segments, angles } = computePilotGeometry(pilot);
@@ -2445,6 +2610,7 @@
       renderSummaryText(sections);
       angleOutput.innerHTML = angleBlocks.join("<br><br>");
       renderEnvelope();
+      renderPowerPanel();
     }
 
     function renderEnvelope() {
@@ -2645,6 +2811,9 @@
       if (e.target === targetElbowInput) setSolveNotice("elbow", "");
       render();
     });
+
+    cadenceInput.addEventListener("input", render);
+    effortLevelSelect.addEventListener("change", render);
 
     solveKneeButton.addEventListener("click", solveKneeAngleForActivePilot);
     solveElbowButton.addEventListener("click", solveElbowAngleForActivePilot);
