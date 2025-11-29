@@ -66,7 +66,7 @@
 
     main.layout {
       display: grid;
-      grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+      grid-template-columns: minmax(300px, 360px) minmax(0, 1fr);
       gap: 16px;
       padding: 16px 18px 18px;
       min-height: calc(100vh - 74px);
@@ -95,6 +95,7 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
+      max-width: 360px;
     }
 
     /* Pilot tabs */
@@ -157,10 +158,9 @@
 
     .top-row-controls {
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-      justify-content: space-between;
+      flex-direction: column;
+      gap: 8px;
+      align-items: stretch;
       font-size: 13px;
       color: var(--muted);
       margin-top: 6px;
@@ -181,6 +181,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      flex-wrap: wrap;
     }
 
     .preset-select {
@@ -190,7 +191,8 @@
       background: #020617;
       color: var(--text);
       font-size: 13px;
-      min-width: 150px;
+      min-width: 180px;
+      flex: 1 0 150px;
     }
 
     .active-pilot-indicator {
@@ -256,21 +258,22 @@
     .group-body {
       margin-top: 0;
       padding: 8px 12px 8px;
-      display: grid;
-      gap: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
     .field {
-      display: grid;
-      grid-template-columns: 1fr 1.35fr;
-      gap: 10px;
-      align-items: start;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: stretch;
       font-size: 13.5px;
       color: #d3ddf7;
     }
 
     .field label {
-      white-space: nowrap;
+      white-space: normal;
       font-weight: 600;
       font-size: 13.5px;
       color: #e6ecff;
@@ -287,37 +290,31 @@
     }
 
     .field--solver {
-      grid-template-columns: 1fr minmax(0, 1.6fr);
-      grid-auto-rows: auto;
-      align-items: center;
+      align-items: stretch;
     }
 
     .field-solver-row {
-      grid-column: 2;
       width: 100%;
     }
 
-    .solver-row {
-      display: flex;
-      align-items: center;
+    .solve-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
       gap: 8px;
-      flex-wrap: nowrap;
+      align-items: center;
     }
 
     .solver-input {
-      flex: 0 0 100px;
       text-align: right;
       min-width: 0;
     }
 
     .solver-button {
-      flex: 1 0 auto;
-      padding-inline: 1.25rem;
+      padding-inline: 1rem;
       white-space: nowrap;
     }
 
     .field-solver-status {
-      grid-column: 2;
       font-size: 12px;
       color: var(--muted);
       margin-top: 2px;
@@ -412,7 +409,7 @@
       border-radius: 12px;
       border: 1px solid var(--border);
       overflow: hidden;
-      min-height: 400px;
+      min-height: 420px;
     }
 
     .canvas-title {
@@ -448,13 +445,13 @@
       z-index: 2;
     }
 
-    .results-grid {
+    .lower-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.1fr) minmax(0, 1.2fr);
       gap: 16px;
       align-items: stretch;
       margin-top: 4px;
-      grid-auto-rows: 1fr;
+      grid-auto-rows: minmax(0, 1fr);
     }
 
     .result-card {
@@ -518,8 +515,9 @@
       color: #e8ecff;
       white-space: pre;
       overflow: auto;
-      max-height: 300px;
       line-height: 1.55;
+      flex: 1;
+      min-height: 0;
     }
 
     .output-text::-webkit-scrollbar {
@@ -878,24 +876,15 @@
       main.layout {
         grid-template-columns: 1fr;
       }
+
+      .lower-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (max-width: 700px) {
-      .results-grid {
+      .solve-row {
         grid-template-columns: 1fr;
-      }
-
-      .solver-row {
-        flex-wrap: wrap;
-      }
-
-      .field,
-      .field--solver {
-        grid-template-columns: 1fr;
-      }
-
-      .field label {
-        white-space: normal;
       }
     }
   </style>
@@ -903,7 +892,7 @@
 <body>
   <header>
     <h1>VCAT Human-Powered Rover — Seating Position Tool</h1>
-    <p>Recumbent two-pilot layout helper with side/top views, joint angles, and CAD-ready exports.</p>
+    <p>Recumbent two-pilot layout helper with responsive side view, joint angles, and CAD-ready exports.</p>
   </header>
 
   <main class="layout">
@@ -1011,7 +1000,7 @@
             </div>
             <div class="field field--solver">
               <label for="targetKnee">Target knee angle (deg)</label>
-              <div class="field-solver-row solver-row">
+              <div class="field-solver-row solve-row">
                 <input
                   id="targetKnee"
                   class="solver-input"
@@ -1043,7 +1032,7 @@
             </div>
             <div class="field field--solver">
               <label for="targetElbow">Target elbow angle (deg)</label>
-              <div class="field-solver-row solver-row">
+              <div class="field-solver-row solve-row">
                 <input
                   id="targetElbow"
                   class="solver-input"
@@ -1076,10 +1065,10 @@
       <div class="canvas-grid">
         <div class="canvas-wrapper">
           <div class="canvas-title">Side view – recumbent stick figures</div>
-          <canvas id="sideView" width="1000" height="520"></canvas>
+          <canvas id="sideView"></canvas>
         </div>
 
-        <div class="results-grid">
+        <div class="lower-grid">
           <div class="result-card">
             <h3>Summary (coordinates, lengths, angles)</h3>
             <div class="output-text summary-output" id="summaryOutput"></div>
@@ -1277,29 +1266,47 @@
       return { minX, maxX, minY, maxY };
     }
 
-    function worldToScreenFactory(bounds, width, height) {
-      const spanX = bounds.maxX - bounds.minX || 1;
-      const spanY = bounds.maxY - bounds.minY || 1;
-      const largestSpan = Math.max(spanX, spanY) || 1;
-      const margin = Math.max(80, largestSpan * 0.12);
-      const scale = Math.min(
-        width / (spanX + 2 * margin),
-        height / (spanY + 2 * margin)
-      );
+    function worldToScreenFactory(bounds, width, height, hipModel = { x: 0, y: 0 }) {
+      const spanX = Math.max(bounds.maxX - bounds.minX, 1);
+      const spanY = Math.max(bounds.maxY - bounds.minY, 1);
+      const paddingFactor = 1.15;
+      const targetWidth = spanX * paddingFactor;
+      const targetHeight = spanY * paddingFactor;
+      const scale = Math.min((width * 0.9) / targetWidth, (height * 0.9) / targetHeight);
+
+      const centerX = (bounds.minX + bounds.maxX) / 2;
+      const centerY = (bounds.minY + bounds.maxY) / 2;
+
+      const desiredHipX = width * 0.42;
+      const baseHipX = (hipModel.x - centerX) * scale + width / 2;
+      let offsetX = width / 2 + (desiredHipX - baseHipX);
+      let offsetY = height / 2;
+
+      const paddingX = width * 0.06;
+      const paddingY = height * 0.08;
+      const screenLeft = (bounds.minX - centerX) * scale + offsetX;
+      const screenRight = (bounds.maxX - centerX) * scale + offsetX;
+      const screenTop = height / 2 - (bounds.maxY - centerY) * scale;
+      const screenBottom = height / 2 - (bounds.minY - centerY) * scale;
+
+      if (screenLeft < paddingX) offsetX += paddingX - screenLeft;
+      if (screenRight > width - paddingX) offsetX -= screenRight - (width - paddingX);
+      if (screenTop < paddingY) offsetY += paddingY - screenTop;
+      if (screenBottom > height - paddingY) offsetY -= screenBottom - (height - paddingY);
 
       function toScreen(p) {
-        const x = (p.x - bounds.minX + margin) * scale;
-        const y = height - (p.y - bounds.minY + margin) * scale;
+        const x = (p.x - centerX) * scale + offsetX;
+        const y = offsetY - (p.y - centerY) * scale;
         return { x, y };
       }
 
       toScreen.toWorld = (p) => {
-        const x = p.x / scale + bounds.minX - margin;
-        const y = (height - p.y) / scale + bounds.minY - margin;
+        const x = (p.x - offsetX) / scale + centerX;
+        const y = (offsetY - p.y) / scale + centerY;
         return { x, y };
       };
 
-      toScreen.meta = { bounds, margin, scale, width, height };
+      toScreen.meta = { bounds, scale, width, height };
 
       return toScreen;
     }
@@ -1369,25 +1376,22 @@
         computeHingePoint(shoulder, hand, upperArmLen, foreArmLen, -1),
       ];
 
-      const validElbows = elbowCandidates.filter(
-        (p) => Number.isFinite(p.x) && Number.isFinite(p.y)
-      );
+      const elbowOptions = elbowCandidates
+        .filter((p) => Number.isFinite(p.x) && Number.isFinite(p.y))
+        .map((p) => ({
+          point: p,
+          angle: angleBetween(p, shoulder, hand),
+          sameSide: Math.sign(p.x - shoulder.x) === Math.sign(hand.x - shoulder.x),
+        }));
 
-      const torsoSide = Math.sign(
-        (hand.x - shoulder.x) * (hip.y - shoulder.y) -
-          (hand.y - shoulder.y) * (hip.x - shoulder.x)
-      );
+      const natural = elbowOptions.length
+        ? elbowOptions
+            .filter((opt) => opt.angle >= 60 && opt.angle <= 170 && (opt.sameSide || Math.abs(opt.point.x - shoulder.x) < 8))
+            .sort((a, b) => Math.abs(a.angle - 120) - Math.abs(b.angle - 120))
+        : [];
 
-      const elbow =
-        validElbows.find((p) => {
-          const elbowSide = Math.sign(
-            (hand.x - shoulder.x) * (p.y - shoulder.y) -
-              (hand.y - shoulder.y) * (p.x - shoulder.x)
-          );
-          return torsoSide ? elbowSide === torsoSide : p.y <= shoulder.y;
-        }) ||
-        validElbows.sort((a, b) => a.y - b.y)[0] ||
-        elbowCandidates[0];
+      const elbow = (natural[0] || elbowOptions[0] || { point: elbowCandidates[0] })
+        .point;
 
       const seatBackBase = { x: hip.x - 100, y: hip.y - 40 };
       const seatBackTop = {
@@ -1397,6 +1401,8 @@
 
       const hipAngle = angleBetween(hip, shoulder, knee);
       const kneeAngle = angleBetween(knee, hip, ankle);
+      // Elbow angle is the interior angle at the joint (shoulder–elbow–hand),
+      // chosen so the arm naturally bends toward the handlebar side.
       const elbowAngle = angleBetween(elbow, shoulder, hand);
       const ankleAngle = angleBetween(ankle, knee, {
         x: ankle.x + 50,
@@ -1452,6 +1458,8 @@
     function resizeCanvas(canvas, ctx) {
       const rect = canvas.getBoundingClientRect();
       const dpr = window.devicePixelRatio || 1;
+      canvas.style.width = `${rect.width}px`;
+      canvas.style.height = `${rect.height}px`;
       canvas.width = rect.width * dpr;
       canvas.height = rect.height * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -1767,6 +1775,56 @@
 
     // --------------- DRAWING: SIDE VIEW ----------------
 
+    function drawSeatAngles(ctx, toCanvas, hipModel, seatBaseAngleDeg, backAngleDeg) {
+      const hip = toCanvas(hipModel.x, hipModel.y);
+
+      const radius = 60;
+
+      const baseRad = (seatBaseAngleDeg * Math.PI) / 180;
+      const backRad = (backAngleDeg * Math.PI) / 180;
+
+      ctx.save();
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+      ctx.lineWidth = 1;
+
+      const start = baseRad;
+      const end = backRad;
+      ctx.beginPath();
+      ctx.arc(hip.x, hip.y, radius, start, end, backRad < baseRad);
+      ctx.stroke();
+
+      const guideLen = radius + 10;
+      function drawGuide(angleRad) {
+        const dx = Math.cos(angleRad) * guideLen;
+        const dy = -Math.sin(angleRad) * guideLen;
+        ctx.beginPath();
+        ctx.moveTo(hip.x, hip.y);
+        ctx.lineTo(hip.x + dx, hip.y + dy);
+        ctx.stroke();
+      }
+      drawGuide(baseRad);
+      drawGuide(backRad);
+
+      ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
+      ctx.font =
+        "11px system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+
+      const midRad = (baseRad + backRad) / 2;
+      const labelRadius = radius + 18;
+      const lx = hip.x + Math.cos(midRad) * labelRadius;
+      const ly = hip.y - Math.sin(midRad) * labelRadius;
+      const backLabel = `Backrest ${backAngleDeg.toFixed(1)}°`;
+      ctx.fillText(backLabel, lx - ctx.measureText(backLabel).width / 2, ly);
+
+      const baseLabelRadius = radius + 26;
+      const blx = hip.x + Math.cos(baseRad) * baseLabelRadius;
+      const bly = hip.y - Math.sin(baseRad) * baseLabelRadius;
+      const baseLabel = `Base ${seatBaseAngleDeg.toFixed(1)}°`;
+      ctx.fillText(baseLabel, blx - ctx.measureText(baseLabel).width / 2, bly);
+
+      ctx.restore();
+    }
+
     function drawPilot(ctx, toScreen, data, color, label, opts = {}) {
       const { joints, angles } = data;
       const { hip, knee, ankle, shoulder, elbow, hand, crankCenter, seatBackBase, seatBackTop } =
@@ -1964,10 +2022,12 @@
         }
       }
       const bounds = computeBounds(points);
+      const referencePilotData = activePilot === 1 ? data1 : data2;
       const toScreen = worldToScreenFactory(
         bounds,
         sideWidth,
-        sideHeight
+        sideHeight,
+        referencePilotData.joints.hip
       );
 
       clearCanvas(sideCtx, sideCanvas);
@@ -1989,7 +2049,7 @@
         pilotsDrawn: pilotsToDraw,
       };
 
-      const referenceJoints = (activePilot === 1 ? data1 : data2).joints;
+      const referenceJoints = referencePilotData.joints;
 
       // Axes
       const originS = toScreen({ x: 0, y: 0 });
@@ -2037,6 +2097,14 @@
       } else {
         drawOne(activePilot);
       }
+
+      drawSeatAngles(
+        sideCtx,
+        toScreen,
+        referenceJoints.hip,
+        0,
+        pilots[activePilot].backAngle
+      );
 
       if (highlight && interactionState.mouse) {
         drawSideTooltip(highlight);
