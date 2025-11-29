@@ -56,7 +56,7 @@
 
     header p {
       margin: 0;
-      font-size: 12px;
+      font-size: 13px;
       color: var(--muted);
       max-width: 980px;
     }
@@ -155,7 +155,7 @@
       gap: 10px;
       align-items: center;
       justify-content: space-between;
-      font-size: 11px;
+      font-size: 13px;
       color: var(--muted);
       margin-top: 6px;
     }
@@ -183,7 +183,7 @@
       border: 1px solid var(--border);
       background: #020617;
       color: var(--text);
-      font-size: 12px;
+      font-size: 13px;
       min-width: 150px;
     }
 
@@ -220,7 +220,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-size: 12px;
+      font-size: 13px;
       color: var(--text);
       padding: 10px 12px;
       background: linear-gradient(90deg, rgba(255, 255, 255, 0.02), transparent);
@@ -259,13 +259,14 @@
       grid-template-columns: 1fr 1.35fr;
       gap: 10px;
       align-items: start;
-      font-size: 12px;
+      font-size: 13px;
       color: var(--muted);
     }
 
     .field label {
       white-space: nowrap;
-      font-weight: 650;
+      font-weight: 600;
+      font-size: 13px;
       color: #d8e1fb;
     }
 
@@ -276,52 +277,54 @@
       border: 1px solid var(--border);
       background: #020617;
       color: var(--text);
-      font-size: 12px;
+      font-size: 13px;
     }
 
-    .field-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .solver-row {
-      display: flex;
-      gap: 8px;
+    .field--solver {
+      grid-template-columns: 1fr 240px;
+      grid-auto-rows: auto;
       align-items: center;
     }
 
-    .solver-row input[type="number"] {
-      flex: 0 0 120px;
-      max-width: 140px;
-      min-width: 0;
+    .field-solver-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      grid-column: 2;
     }
 
-    .solver-row button {
+    .field-solver-row input[type="number"] {
+      flex: 0 0 80px;
+      text-align: right;
+    }
+
+    .field-solver-row button {
       flex: 1 1 auto;
+      min-width: 140px;
       white-space: nowrap;
     }
 
+    .field-solver-status {
+      grid-column: 2;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+      line-height: 1.4;
+      min-height: 16px;
+    }
+
     .hint {
-      font-size: 11px;
+      font-size: 12px;
       color: var(--muted);
       margin-top: 2px;
       line-height: 1.4;
     }
 
     .preset-message {
-      font-size: 11px;
+      font-size: 12px;
       color: var(--warning);
       margin-top: 2px;
       min-height: 12px;
-    }
-
-    .solver-status {
-      font-size: 11px;
-      color: var(--danger);
-      margin-top: 4px;
-      padding-left: 4px;
-      min-height: 14px;
     }
 
     .input-error {
@@ -444,6 +447,7 @@
     .output-panel h3 {
       margin: 0 0 10px;
       font-size: 13px;
+      font-weight: 600;
       color: var(--muted);
       letter-spacing: 0.3px;
       text-transform: uppercase;
@@ -510,7 +514,8 @@
 
     .envelope-card h4 {
       margin: 0 0 6px;
-      font-size: 12px;
+      font-size: 13px;
+      font-weight: 600;
       color: var(--muted);
       letter-spacing: 0.2px;
     }
@@ -885,24 +890,22 @@
               <label for="crankAngle">Crank angle (deg)</label>
               <input id="crankAngle" data-field="crankAngle" type="number" value="10" min="-180" max="180" step="1" />
             </div>
-            <div class="field">
+            <div class="field field--solver">
               <label for="targetKnee">Target knee angle (deg)</label>
-              <div class="field-stack">
-                <div class="solver-row">
-                  <input
-                    id="targetKnee"
-                    type="number"
-                    value="110"
-                    min="60"
-                    max="150"
-                    step="1"
-                  />
-                  <button type="button" class="btn small" id="solveKnee">
-                    Solve for crank angle
-                  </button>
-                </div>
-                <div class="solver-status" id="kneeSolveStatus"></div>
+              <div class="field-solver-row">
+                <input
+                  id="targetKnee"
+                  type="number"
+                  value="110"
+                  min="60"
+                  max="150"
+                  step="1"
+                />
+                <button type="button" class="btn small" id="solveKnee">
+                  Solve for crank angle
+                </button>
               </div>
+              <div class="field-solver-status" id="kneeSolveStatus"></div>
             </div>
           </div>
         </details>
@@ -918,24 +921,22 @@
               <label for="barY">Bar Y</label>
               <input id="barY" data-field="barY" type="number" value="450" step="10" />
             </div>
-            <div class="field">
+            <div class="field field--solver">
               <label for="targetElbow">Target elbow angle (deg)</label>
-              <div class="field-stack">
-                <div class="solver-row">
-                  <input
-                    id="targetElbow"
-                    type="number"
-                    value="110"
-                    min="70"
-                    max="150"
-                    step="1"
-                  />
-                  <button type="button" class="btn small" id="solveElbow">
-                    Solve for elbow angle
-                  </button>
-                </div>
-                <div class="solver-status" id="elbowSolveStatus"></div>
+              <div class="field-solver-row">
+                <input
+                  id="targetElbow"
+                  type="number"
+                  value="110"
+                  min="70"
+                  max="150"
+                  step="1"
+                />
+                <button type="button" class="btn small" id="solveElbow">
+                  Solve for elbow angle
+                </button>
               </div>
+              <div class="field-solver-status" id="elbowSolveStatus"></div>
             </div>
           </div>
         </details>
@@ -1093,6 +1094,9 @@
       dragging: null,
       mouse: null,
     };
+
+    let sideViewSize = { width: 0, height: 0 };
+    let topViewSize = { width: 0, height: 0 };
 
     // --------------- UTILITIES ----------------
     const degToRad = (d) => (d * Math.PI) / 180;
@@ -1293,6 +1297,27 @@
     const solveElbowButton = document.getElementById("solveElbow");
     const kneeSolveStatus = document.getElementById("kneeSolveStatus");
     const elbowSolveStatus = document.getElementById("elbowSolveStatus");
+
+    function resizeCanvas(canvas, ctx) {
+      const rect = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return { width: rect.width, height: rect.height };
+    }
+
+    function clearCanvas(ctx, canvas) {
+      ctx.save();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.restore();
+    }
+
+    function resizeAllCanvases() {
+      sideViewSize = resizeCanvas(sideCanvas, sideCtx);
+      topViewSize = resizeCanvas(topCanvas, topCtx);
+    }
 
     const presetSelect = document.getElementById("presetSelect");
     const resetPilotButton = document.getElementById("resetPilot");
@@ -1766,6 +1791,11 @@
     }
 
     function drawSideView() {
+      const { width: sideWidth, height: sideHeight } =
+        sideViewSize.width && sideViewSize.height
+          ? sideViewSize
+          : resizeCanvas(sideCanvas, sideCtx);
+
       const data1 = computePilotGeometry(pilots[1]);
       const data2 = computePilotGeometry(pilots[2]);
 
@@ -1781,11 +1811,11 @@
       const bounds = computeBounds(points);
       const toScreen = worldToScreenFactory(
         bounds,
-        sideCanvas.width,
-        sideCanvas.height
+        sideWidth,
+        sideHeight
       );
 
-      sideCtx.clearRect(0, 0, sideCanvas.width, sideCanvas.height);
+      clearCanvas(sideCtx, sideCanvas);
 
       const screenJoints = { 1: {}, 2: {} };
       [
@@ -1814,9 +1844,9 @@
       sideCtx.setLineDash([4, 8]);
       sideCtx.beginPath();
       sideCtx.moveTo(0, originS.y);
-      sideCtx.lineTo(sideCanvas.width, originS.y);
+      sideCtx.lineTo(sideWidth, originS.y);
       sideCtx.moveTo(originS.x, 0);
-      sideCtx.lineTo(originS.x, sideCanvas.height);
+      sideCtx.lineTo(originS.x, sideHeight);
       sideCtx.stroke();
       sideCtx.restore();
 
@@ -1827,7 +1857,7 @@
       sideCtx.strokeStyle = "rgba(255,255,255,0.08)";
       sideCtx.beginPath();
       sideCtx.moveTo(0, pedalLineY);
-      sideCtx.lineTo(sideCanvas.width, pedalLineY);
+      sideCtx.lineTo(sideWidth, pedalLineY);
       sideCtx.stroke();
       sideCtx.restore();
 
@@ -1874,8 +1904,10 @@
       const width =
         Math.max(...lines.map((l) => sideCtx.measureText(l).width)) + padding * 2;
       const height = lines.length * 14 + padding;
-      const x = clamp(mouse.x + 12, 8, sideCanvas.width - width - 8);
-      const y = clamp(mouse.y - height, 8, sideCanvas.height - height - 8);
+      const viewWidth = sideViewSize.width || sideCanvas.getBoundingClientRect().width;
+      const viewHeight = sideViewSize.height || sideCanvas.getBoundingClientRect().height;
+      const x = clamp(mouse.x + 12, 8, viewWidth - width - 8);
+      const y = clamp(mouse.y - height, 8, viewHeight - height - 8);
 
       sideCtx.fillStyle = "rgba(5, 8, 22, 0.92)";
       sideCtx.strokeStyle = "rgba(255,255,255,0.2)";
@@ -2004,19 +2036,21 @@
       const { trackWidth, wheelbase, crankWidth, targetRadius } =
         SHARED_GEOMETRY;
 
-      topCtx.clearRect(0, 0, topCanvas.width, topCanvas.height);
+      const { width: topWidth, height: topHeight } =
+        topViewSize.width && topViewSize.height
+          ? topViewSize
+          : resizeCanvas(topCanvas, topCtx);
+
+      clearCanvas(topCtx, topCanvas);
 
       const margin = 180;
       const spanX = wheelbase + 2 * margin;
       const spanY = trackWidth + 2 * margin;
-      const scale = Math.min(
-        topCanvas.width / spanX,
-        topCanvas.height / spanY
-      );
+      const scale = Math.min(topWidth / spanX, topHeight / spanY);
 
       const toScreen = (p) => ({
         x: (p.x + margin) * scale,
-        y: topCanvas.height - (p.y + margin) * scale,
+        y: topHeight - (p.y + margin) * scale,
       });
 
       const roundedRectPath = (ctx, x, y, w, h, r = 4) => {
@@ -2066,7 +2100,7 @@
       const origin = toScreen({ x: 0, y: 0 });
       topCtx.beginPath();
       topCtx.moveTo(0, origin.y);
-      topCtx.lineTo(topCanvas.width, origin.y);
+      topCtx.lineTo(topWidth, origin.y);
       topCtx.stroke();
 
       // Turning circle
@@ -2172,12 +2206,12 @@
       topCtx.fillStyle = "rgba(8, 12, 24, 0.92)";
       topCtx.strokeStyle = "rgba(255,255,255,0.12)";
       topCtx.lineWidth = 1;
-      roundedRectPath(topCtx, topCanvas.width - legendW - 14, topCanvas.height - 28, legendW, 20, 6);
+      roundedRectPath(topCtx, topWidth - legendW - 14, topHeight - 28, legendW, 20, 6);
       topCtx.fill();
       topCtx.stroke();
       topCtx.fillStyle = "#e5e7eb";
       topCtx.textBaseline = "middle";
-      topCtx.fillText(legendText, topCanvas.width - legendW - 8, topCanvas.height - 13);
+      topCtx.fillText(legendText, topWidth - legendW - 8, topHeight - 13);
     }
 
     // --------------- OUTPUTS ----------------
@@ -2578,6 +2612,9 @@
     // --------------- MAIN RENDER ----------------
 
     function render() {
+      if (!sideViewSize.width || !topViewSize.width) {
+        resizeAllCanvases();
+      }
       readFormIntoState();
       drawSideView();
       drawTopDown();
@@ -2678,7 +2715,10 @@
         downloadFile("seating_export.json", json, "application/json");
       });
 
-    window.addEventListener("resize", render);
+    window.addEventListener("resize", () => {
+      resizeAllCanvases();
+      render();
+    });
 
     // Initial load
     window.addEventListener("load", () => {
@@ -2686,6 +2726,7 @@
       refreshPresetOptions();
       fillFormFromState(activePilot);
       updateActivePilotIndicator();
+      resizeAllCanvases();
       render();
     });
   </script>
